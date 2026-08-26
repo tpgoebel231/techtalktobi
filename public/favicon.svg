@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="TechTalkTobi">
+  <rect width="32" height="32" rx="6" fill="#0B0D11"/>
+  <!-- TTT ligature: shared top bar, three equal stems -->
+  <path fill="#7BA3C0" d="M6 6h20v4H22v8h-4V10h-4v8h-4V10H6V6z"/>
+  <!-- horizon -->
+  <rect x="6" y="21" width="20" height="2" fill="#7BA3C0"/>
+  <!-- vanishing-point road -->
+  <path fill="#7BA3C0" d="M16 21l8 7H8z"/>
+  <path fill="#0B0D11" d="M16 23.2l5.2 4.8H10.8z"/>
+</svg>
