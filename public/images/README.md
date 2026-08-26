@@ -1,20 +1,15 @@
 # Photos
 
-Hero, research, consulting, headshot, and `public/og.jpg` are binary JPEGs.
-They live in the Grok Build workspace and cannot be pushed through the GitHub text API without corrupting the files.
+JPEG/PNG binaries are not committed as-is (the GitHub connector used to
+fill this repo cannot transport raw binary files without corrupting them).
 
-Copy these from the workspace when you clone, or drop replacements with the same names:
+Source of truth for GitHub: `scripts/image-payloads/**/*.b64`
 
-- `hero-highway.jpg`
-- `research-self-driving.jpg`
-- `research-speed-safety.jpg`
-- `research-ecosystem.jpg`
-- `research-robotics.jpg`
-- `research-fsd-matrix.jpg`
-- `research-waymo.jpg`
-- `media-field.jpg`
-- `consulting-desk.jpg`
-- `tobias.jpg`
-- `../og.jpg`
+CI and a fresh clone restore them with:
 
-`techtalktobi-old` (the live GitHub Pages site) was not modified.
+```bash
+node scripts/decode-images.mjs
+```
+
+The decoder skips any destination that already exists, so a local
+full-resolution copy is left alone.
