@@ -62,6 +62,7 @@ jobs:
           node-version: "22"
 
       - run: npm install
+      - run: node scripts/decode-images.mjs
       - run: npm run typecheck
 
       - name: Install Vercel CLI
