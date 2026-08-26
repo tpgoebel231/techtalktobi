@@ -4,6 +4,8 @@ Editorial site for [TechTalkTobi](https://techtalktobi.com) — tracking the Aut
 
 Bilingual **English** and **German**. German includes a paid consulting page on autonomous-driving technology and regulation.
 
+This repo is the **new** TanStack Start app. The live GitHub Pages site (`techtalktobi-old`) and `techtalktobi.com` were not changed. Cut over only when you are ready.
+
 ## Stack
 
 TanStack Start, Vite, Tailwind CSS v4. Production target is Vercel.
@@ -26,8 +28,10 @@ Vercel’s built-in Git deploys are disabled in `vercel.json` so Actions is the 
 ## Local
 
 ```bash
-npm ci
+npm install
 npm run dev
 ```
 
 Auth is off (`VITE_AUTH_ENABLED=false`).
+
+Hero / research / portrait JPEGs are listed in `public/images/README.md` — add them after clone. The app builds without them; those pages will just show broken images until the files are present.

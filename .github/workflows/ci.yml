@@ -26,6 +26,7 @@ jobs:
         with:
           node-version: "22"
           cache: npm
-      - run: npm ci
+      # Lockfile is large binary-adjacent JSON; until it is in the repo, install from package.json.
+      - run: npm install
       - run: npm run typecheck
       - run: npm run build
