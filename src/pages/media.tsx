@@ -6,15 +6,23 @@ import { Button } from "@/components/ui/button";
 import { YoutubeCard } from "@/components/youtube-card";
 import {
   channels,
-  reports,
+  links,
+  reportVideos,
   techTalkVideos,
   teslaTobiVideos,
+  videosByTopic,
 } from "@/data/media";
 import { useCopy, useLocale } from "@/lib/i18n";
 
 export function MediaPage() {
   const locale = useLocale();
   const copy = useCopy();
+
+  const teslaRobotics = videosByTopic(teslaTobiVideos, "robotics");
+  const teslaDriving = videosByTopic(teslaTobiVideos, "self-driving");
+  const talkSociety = videosByTopic(techTalkVideos, "ai-society");
+  const talkDriving = videosByTopic(techTalkVideos, "self-driving");
+  const talkRobotics = videosByTopic(techTalkVideos, "robotics");
 
   return (
     <Container className="py-14 sm:py-20">
@@ -26,16 +34,54 @@ export function MediaPage() {
       </h1>
       <p className="mt-4 max-w-2xl text-muted">{copy.media.dek}</p>
 
+      <section className="mt-10 rounded-xl bg-surface p-6 shadow-[var(--shadow-border)] sm:p-8">
+        <h2 className="font-display text-2xl text-fg">{copy.media.pressTitle}</h2>
+        <p className="mt-2 max-w-2xl text-sm text-muted">{copy.media.pressDek}</p>
+        <div className="mt-5 flex flex-wrap gap-3">
+          <Button asChild>
+            <a href={links.mediaKit} download>
+              {copy.about.mediaKitCta}
+            </a>
+          </Button>
+          <Button asChild variant="outline">
+            <Link to="/$locale/media-kit" params={{ locale }}>
+              {copy.nav.mediaKit}
+            </Link>
+          </Button>
+        </div>
+      </section>
+
       <section className="mt-16">
+        <h2 className="font-display text-3xl text-fg">{copy.media.reportsTitle}</h2>
+        <p className="mt-2 max-w-xl text-muted">{copy.media.reportsDek}</p>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          {reportVideos.map((video) => (
+            <YoutubeCard key={video.id} video={video} />
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-20">
         <ChannelHead
           name={channels.teslatobi.name[locale]}
           handle={channels.teslatobi.handle}
           dek={copy.media.teslaTobiDek}
           url={channels.teslatobi.url}
-          meta={channels.teslatobi.stats[locale]}
+          meta={channels.teslatobi.lang[locale]}
         />
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {teslaTobiVideos.map((video) => (
+        <h3 className="mt-10 font-mono text-[11px] tracking-widest text-muted uppercase">
+          {copy.media.topicRobotics}
+        </h3>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {teslaRobotics.map((video) => (
+            <YoutubeCard key={video.id} video={video} />
+          ))}
+        </div>
+        <h3 className="mt-12 font-mono text-[11px] tracking-widest text-muted uppercase">
+          {copy.media.topicDriving}
+        </h3>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {teslaDriving.map((video) => (
             <YoutubeCard key={video.id} video={video} />
           ))}
         </div>
@@ -47,43 +93,30 @@ export function MediaPage() {
           handle={channels.techtalktobi.handle}
           dek={copy.media.techTalkDek}
           url={channels.techtalktobi.url}
-          meta={channels.techtalktobi.stats[locale]}
+          meta={channels.techtalktobi.lang[locale]}
         />
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {techTalkVideos.map((video) => (
+        <h3 className="mt-10 font-mono text-[11px] tracking-widest text-muted uppercase">
+          {copy.media.topicRobotics}
+        </h3>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {talkRobotics.map((video) => (
             <YoutubeCard key={video.id} video={video} />
           ))}
         </div>
-      </section>
-
-      <section className="mt-20 border-t border-border pt-16">
-        <h2 className="font-display text-3xl text-fg">{copy.media.reportsTitle}</h2>
-        <p className="mt-2 max-w-xl text-muted">{copy.media.reportsDek}</p>
-        <div className="mt-8 grid gap-5 md:grid-cols-2">
-          {reports.map((report) => (
-            <Link
-              key={report.slug}
-              to="/$locale/media/$slug"
-              params={{ locale, slug: report.slug }}
-              className="group overflow-hidden rounded-xl bg-surface no-underline shadow-[var(--shadow-border)] transition-[box-shadow] duration-150 hover:shadow-[var(--shadow-border-hover)]"
-            >
-              <img
-                src={report.image}
-                alt=""
-                className="aspect-video w-full object-cover"
-              />
-              <div className="p-5">
-                <p className="font-mono text-[11px] text-faint">{report.date}</p>
-                <h3 className="mt-2 font-display text-2xl text-fg">
-                  {report.title[locale]}
-                </h3>
-                <p className="mt-2 text-sm text-muted">{report.dek[locale]}</p>
-                <span className="mt-4 inline-flex items-center gap-1 text-sm text-accent">
-                  {copy.media.reportCta}
-                  <ArrowUpRight className="size-4" />
-                </span>
-              </div>
-            </Link>
+        <h3 className="mt-12 font-mono text-[11px] tracking-widest text-muted uppercase">
+          {copy.media.topicSociety}
+        </h3>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {talkSociety.map((video) => (
+            <YoutubeCard key={video.id} video={video} />
+          ))}
+        </div>
+        <h3 className="mt-12 font-mono text-[11px] tracking-widest text-muted uppercase">
+          {copy.media.topicDriving}
+        </h3>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {talkDriving.map((video) => (
+            <YoutubeCard key={video.id} video={video} />
           ))}
         </div>
       </section>
@@ -118,6 +151,7 @@ function ChannelHead({
       <Button asChild variant="outline">
         <a href={url} target="_blank" rel="noreferrer">
           {copy.media.subscribe}
+          <ArrowUpRight className="size-4" />
         </a>
       </Button>
     </div>

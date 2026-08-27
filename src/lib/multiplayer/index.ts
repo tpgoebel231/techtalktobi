@@ -1,2 +1,9 @@
-/** P2P multiplayer is unused by TechTalkTobi. Scaffold kept as a no-op. */
-export {};
+export { P2PRoom, defaultIceServers } from "./p2p";
+export type {
+  PeerInfo,
+  P2PRoomOptions,
+  SignalKind,
+  PeerRow,
+  SignalRow,
+  RtcPollResponse,
+} from "./p2p";

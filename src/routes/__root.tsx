@@ -3,12 +3,13 @@ import {
   HeadContent,
   Outlet,
   Scripts,
+  useRouterState,
 } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import appCss from "../styles.css?url";
 
-const APP_NAME = "TechTalkTobi";
+const APP_NAME = "Tobias P. Goebel";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -19,15 +20,15 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "Tracking the Autonomy Revolution — in-depth analysis of AI, robotics, autonomous vehicles, and the Tesla and competitive ecosystem.",
+          "Tobias P. Goebel — media and advisory on autonomous systems. TeslaTobi, TechTalkTobi, published analysis. Online: tpgoebel.",
       },
       { name: "theme-color", content: "#0B0D11" },
     ],
     links: [
-      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
+      { rel: "apple-touch-icon", href: "/icon-180.png" },
       { rel: "stylesheet", href: appCss },
       { rel: "manifest", href: "/__grok/manifest.webmanifest" },
-      { rel: "apple-touch-icon", href: "/__grok/icon-180.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       {
         rel: "preconnect",
@@ -36,7 +37,7 @@ export const Route = createRootRoute({
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@500;600;700&display=swap",
       },
     ],
   }),
@@ -45,8 +46,11 @@ export const Route = createRootRoute({
 });
 
 function RootDocument() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const lang = pathname.startsWith("/de") ? "de" : "en";
+
   return (
-    <html lang="en" className="antialiased" suppressHydrationWarning>
+    <html lang={lang} className="antialiased" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
@@ -62,16 +66,21 @@ function RootDocument() {
 }
 
 function NotFound() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const de = pathname.startsWith("/de");
+
   return (
     <main className="mx-auto flex min-h-dvh max-w-lg flex-col justify-center gap-4 px-6">
       <p className="font-mono text-xs tracking-widest text-muted uppercase">
         404
       </p>
       <h1 className="font-display text-4xl leading-tight text-fg">
-        This road is closed.
+        {de ? "Diese Seite gibt es nicht." : "This road is closed."}
       </h1>
       <p className="text-muted">
-        The page you asked for is not on this map. Head back to the desk.
+        {de
+          ? "Unter dieser Adresse liegt keine Seite. Zurück zur Startseite."
+          : "That page is not on this map. Head back to the site."}
       </p>
       <p className="flex gap-4 text-sm">
         <a href="/en" className="text-accent hover:underline">

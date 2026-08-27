@@ -10,13 +10,13 @@ export function MediaKitPage() {
 
   const short =
     locale === "de"
-      ? "Tobi Goebel ist Technologe und Medienproduzent in Boston. Er dokumentiert Tesla Full Self-Driving auf TeslaTobi (DE) und ordnet Autonomie, KI und Robotik auf TechTalkTobi (EN) ein. Fan der Technik, kein Fanboy."
-      : "Tobi Goebel is a Boston-based technologist and media producer. He documents Tesla Full Self-Driving on TeslaTobi (DE) and covers autonomy, AI, and robotics on TechTalkTobi (EN). A fan of the technology, not a fanboy.";
+      ? "Tobias P. Goebel ist Technologe und Medienproduzent in Boston. Online: tpgoebel. Er dokumentiert Tesla Full Self-Driving auf TeslaTobi (DE) und ordnet Autonomie, KI und Robotik auf TechTalkTobi (EN) ein. Fan der Technik, kein Fanboy."
+      : "Tobias P. Goebel is a Boston-based technologist and media producer. Online: tpgoebel. He documents Tesla Full Self-Driving on TeslaTobi (DE) and covers autonomy, AI, and robotics on TechTalkTobi (EN). A fan of the technology, not a fanboy.";
 
   const long =
     locale === "de"
-      ? "Tobias Goebel, genannt Tobi, ist in Deutschland aufgewachsen und lebt in Boston. Zwei Jahrzehnte Enterprise-Software (R&D, Produkt, Sales Engineering, Technical Product Marketing). Seit Jahren fährt er Tesla FSD Supervised im US-Alltag und veröffentlicht die Befunde. Der deutsche Kanal TeslaTobi ist das Fahrprotokoll; TechTalkTobi der englische Analyse-Desk; TechTalkTobi.com das öffentliche Research-Notizbuch. Schnittstelle: US-Technikrealität und europäische Regulierung (StVG, UNECE, EU)."
-      : "Tobias Goebel — Tobi — grew up in Germany and lives in Boston. Two decades in enterprise software spanning R&D, product, sales engineering, and technical product marketing. For years he has driven Tesla FSD Supervised as a US daily driver and published what he finds. TeslaTobi is the German driving record; TechTalkTobi the English analysis desk; TechTalkTobi.com the public research notebook. The beat is the gap between US technical reality and European regulation (StVG, UNECE, EU).";
+      ? "Tobias P. Goebel — Tobi — ist in Deutschland aufgewachsen und lebt in Boston. Zwei Jahrzehnte Enterprise-Software (Forschung, Produkt, Sales Engineering, technisches Produktmarketing). Seit Jahren fährt er Tesla FSD Supervised im US-Alltag und veröffentlicht die Befunde. TeslaTobi ist der deutsche Kommentar-Kanal; TechTalkTobi der englische; techtalktobi.com die öffentliche Forschungsseite. Online überall: tpgoebel. Sein Thema: die Lücke zwischen US-Technikrealität und europäischer Regulierung (StVG, UNECE, EU)."
+      : "Tobias P. Goebel — Tobi — grew up in Germany and lives in Boston. Two decades in enterprise software spanning R&D, product, sales engineering, and technical product marketing. For years he has driven Tesla FSD Supervised as a US daily driver and published what he finds. TeslaTobi is the German commentary channel; TechTalkTobi the English one; techtalktobi.com the public research site. Online everywhere: tpgoebel. The beat is the gap between US technical reality and European regulation (StVG, UNECE, EU).";
 
   const topics =
     locale === "de"
@@ -24,7 +24,7 @@ export function MediaKitPage() {
           "FSD Supervised im US-Alltag — was die Software tut, wo sie scheitert",
           "SAE-Stufen gegen Marketingsprache",
           "Robotaxi-Stacks im Vergleich (Tesla, Waymo, andere)",
-          "Humanoide: Stack, Stunden, Safety Case",
+          "Humanoide: Technik-Stack, Betriebsstunden, Sicherheitsnachweis",
           "Regulierung DE / EU / UNECE vs. US-Praxis",
         ]
       : [
@@ -61,7 +61,7 @@ export function MediaKitPage() {
       <div className="mt-12 grid gap-10 lg:grid-cols-12">
         <img
           src="/images/tobias.jpg"
-          alt="Tobi Goebel"
+          alt={copy.brand.name}
           className="w-full max-w-xs rounded-xl object-cover lg:col-span-4"
         />
         <div className="lg:col-span-8">

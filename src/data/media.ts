@@ -1,70 +1,137 @@
 import type { Locale } from "@/lib/locale";
 
+export type VideoTopic = "reports" | "robotics" | "self-driving" | "ai-society";
+
 export type Video = {
   id: string;
   title: Record<Locale, string>;
-  channel: "teslatobi" | "techtalktobi";
+  channel: "teslatobi" | "techtalktobi" | "reports";
+  topic: VideoTopic;
 };
+
+export const reportVideos: Video[] = [
+  {
+    id: "YBE-JfTlpf0",
+    title: {
+      en: "Inaugural race of ProRL: The first professional robotics league in the US",
+      de: "Eröffnungslauf der ProRL: Die erste professionelle Robotik-Liga in den USA",
+    },
+    channel: "reports",
+    topic: "reports",
+  },
+  {
+    id: "HeCNKWzG80E",
+    title: {
+      en: "Impressive progress in robotics — exclusive impressions from Robotics Expo 2026 Boston",
+      de: "Beeindruckende Fortschritte in der Robotik — Exklusive Eindrücke von der Robotics Expo 2026 Boston",
+    },
+    channel: "reports",
+    topic: "reports",
+  },
+];
 
 export const teslaTobiVideos: Video[] = [
   {
-    id: "j9NHKEZNngc",
+    id: "_mH2BBknCTk",
     title: {
-      en: "Dangerous traffic situations — Tesla FSD acts like a champ",
-      de: "Gefährliche Verkehrslagen — Tesla FSD hält sich wacker",
+      en: "Tesla Optimus V3: Mass production ahead — strategy or Musk hype?",
+      de: "Tesla Optimus V3: Massenproduktion steht bevor – Strategie oder Musk-Hype?",
     },
     channel: "teslatobi",
+    topic: "robotics",
   },
   {
-    id: "Uj7gWJBCMek",
+    id: "uObXl89zyYE",
     title: {
-      en: "Tesla FSD 14.1.3 — first drive with the new version",
-      de: "Tesla FSD 14.1.3 — erste Fahrt mit der neuen Version",
+      en: "Digital Optimus and Macrohard: Elon’s challenge to the tech giants",
+      de: "Digital Optimus und Macrohard: Elons Kampfansage an die Tech-Giganten",
     },
     channel: "teslatobi",
+    topic: "robotics",
   },
   {
-    id: "i-4BKMaB_Jo",
+    id: "3RNnCa0jSEU",
     title: {
-      en: "FSD 14 through the drive-thru",
-      de: "FSD 14 durch den Drive-thru",
+      en: "Tesla rival shows a 24/7 livestream of humanoid robots at work",
+      de: "Krass: Tesla-Konkurrent zeigt 24/7-Livestream von humanoiden Robotern bei der Arbeit",
     },
     channel: "teslatobi",
+    topic: "robotics",
   },
   {
-    id: "YSrekbylDRU",
+    id: "dnPNOR_NNSg",
     title: {
-      en: "Clarity for HW3 owners: what Elon actually said",
-      de: "Klarheit für HW3-Besitzer: was Elon wirklich gesagt hat",
+      en: "Done with end-to-end AI? A new approach takes on Tesla FSD in Munich",
+      de: "Schluss mit End-to-End-KI? Dieser neue Ansatz greift Tesla FSD in München beim autonomen Fahren an",
     },
     channel: "teslatobi",
+    topic: "self-driving",
   },
   {
-    id: "L91-oc-e5Rk",
+    id: "5kC7SkaC9aw",
     title: {
-      en: "FSD Supervised in Europe — why the authorities have a point",
-      de: "FSD Supervised in Europa — warum die Behörden einen Punkt haben",
+      en: "Why the whole Tesla LiDAR debate is asking the wrong question",
+      de: "Warum die ganze Tesla-LiDAR-Debatte die FALSCHE FRAGE STELLT",
     },
     channel: "teslatobi",
+    topic: "self-driving",
   },
   {
-    id: "XqeYcjH9iFM",
+    id: "Gs9PdWpSuWY",
     title: {
-      en: "When can HW3 owners expect FSD v14?",
-      de: "Wann können HW3-Besitzer FSD v14 erwarten?",
+      en: "Tesla FSD meets a spontaneous fire-department roadblock — my three-way test",
+      de: "Tesla FSD wird mit spontaner Straßenblockade durch die Feuerwehr konfrontiert — mein Dreifachtest",
     },
     channel: "teslatobi",
+    topic: "self-driving",
+  },
+  {
+    id: "bBy8IwQj08w",
+    title: {
+      en: "Rural robotaxis: why the Eifel is a Tesla pioneer in Europe, and who may use the service",
+      de: "Robotaxis auf dem Land: Warum die Eifel Tesla-Vorreiter in Europa ist und wer den Dienst nutzen darf",
+    },
+    channel: "teslatobi",
+    topic: "self-driving",
   },
 ];
 
 export const techTalkVideos: Video[] = [
   {
-    id: "q5xAIei9la4",
+    id: "Q6Z9dfxS1D4",
     title: {
-      en: "Welcome to Tech Talk Tobi",
-      de: "Willkommen bei Tech Talk Tobi",
+      en: "BREAKTHROUGH: Humanoid Robotics just got their own \"ChatGPT moment\". One-Shot Learning is Now Real!",
+      de: "Durchbruch: Humanoide Robotik hat ihren ChatGPT-Moment. One-Shot Learning ist Realität",
     },
     channel: "techtalktobi",
+    topic: "robotics",
+  },
+  {
+    id: "29pAii3Jk_w",
+    title: {
+      en: "Tesla FSD Supervised in Europe, the UK and Japan? New UNECE rules might delay it further",
+      de: "Tesla FSD Supervised in Europa, Großbritannien und Japan? Neue UNECE-Regeln könnten es weiter verzögern",
+    },
+    channel: "techtalktobi",
+    topic: "self-driving",
+  },
+  {
+    id: "wtmmbC0c1ms",
+    title: {
+      en: "AI against populists? A vibe-coded live fact-checker to fight misinformation shows promise",
+      de: "KI gegen Populisten? Ein Live-Faktenchecker gegen Desinformation zeigt Potenzial",
+    },
+    channel: "techtalktobi",
+    topic: "ai-society",
+  },
+  {
+    id: "Q01JG1-jSGQ",
+    title: {
+      en: "Tesla FSD Supervised needs to change before it can come to Europe — and here is why",
+      de: "Tesla FSD Supervised muss sich ändern, bevor es nach Europa kommen kann — und hier ist der Grund",
+    },
+    channel: "techtalktobi",
+    topic: "self-driving",
   },
 ];
 
@@ -73,17 +140,29 @@ export const channels = {
     handle: "@TeslaTobi",
     url: "https://www.youtube.com/@TeslaTobi",
     name: { en: "TeslaTobi", de: "TeslaTobi" },
-    lang: { en: "German", de: "Deutsch" },
-    stats: { en: "German FSD desk · 500+ films", de: "Deutsche FSD-Redaktion · 500+ Filme" },
+    lang: { en: "German commentary channel", de: "Deutschsprachiger Kommentar-Kanal" },
+    stats: { en: "German commentary channel", de: "Deutschsprachiger Kommentar-Kanal" },
   },
   techtalktobi: {
     handle: "@TechTalk-Tobi",
     url: "https://www.youtube.com/@TechTalk-Tobi",
     name: { en: "TechTalkTobi", de: "TechTalkTobi" },
-    lang: { en: "English", de: "Englisch" },
-    stats: { en: "English analysis desk", de: "Englischer Analyse-Desk" },
+    lang: { en: "English commentary channel", de: "Englischsprachiger Kommentar-Kanal" },
+    stats: { en: "English commentary channel", de: "Englischsprachiger Kommentar-Kanal" },
   },
 } as const;
+
+export const links = {
+  x: "https://x.com/tpgoebel",
+  teslaTobi: "https://www.youtube.com/@TeslaTobi",
+  techTalk: "https://www.youtube.com/@TechTalk-Tobi",
+  email: "info@techtalktobi.com",
+  mediaKit: "/TeslaTobi_MediaKit_July_2026.pdf",
+};
+
+export function videosByTopic(list: Video[], topic: VideoTopic) {
+  return list.filter((video) => video.topic === topic);
+}
 
 export type Report = {
   slug: string;
@@ -94,58 +173,8 @@ export type Report = {
   body: Array<Record<Locale, string>>;
 };
 
-export const reports: Report[] = [
-  {
-    slug: "robotaxi-week",
-    date: "2026-07",
-    image: "/images/research-waymo.jpg",
-    title: {
-      en: "Robotaxi week-one notes",
-      de: "Robotaxi: Notizen aus Woche eins",
-    },
-    dek: {
-      en: "A TV-style field report from overlapping service areas — what the passenger actually sees when two stacks share a city.",
-      de: "TV-naher Feldbericht aus überlappenden Servicegebieten — was Fahrgäste sehen, wenn zwei Stacks eine Stadt teilen.",
-    },
-    body: [
-      {
-        en: "The interesting picture is not a single viral clip. It is the choreography of pickup, the way a vehicle holds a lane in a rain cell, and whether the cabin feels like a taxi or a science project.",
-        de: "Das interessante Bild ist nicht ein viraler Clip. Es ist die Choreographie der Abholung, wie ein Fahrzeug in einer Regenwalze die Spur hält, und ob die Kabine sich nach Taxi oder nach Versuchsanordnung anfühlt.",
-      },
-      {
-        en: "I shot this as a report, not a review: timestamps, locations, and the moments a safety operator — or the absence of one — changes the social contract in the back seat.",
-        de: "Gedreht als Report, nicht als Review: Zeitstempel, Orte, und die Momente, in denen ein Safety Operator — oder sein Fehlen — den Sozialvertrag auf der Rückbank ändert.",
-      },
-    ],
-  },
-  {
-    slug: "fsd-europe-briefing",
-    date: "2026-03",
-    image: "/images/media-field.jpg",
-    title: {
-      en: "FSD and Europe: a briefing in plain language",
-      de: "FSD und Europa: ein Briefing in Klartext",
-    },
-    dek: {
-      en: "What supervised FSD would actually bump into under StVG, AFGBV, and UNECE rules already on the books.",
-      de: "Woran beaufsichtigtes FSD unter StVG, AFGBV und bereits geltendem UNECE-Recht konkret stößt.",
-    },
-    body: [
-      {
-        en: "European viewers keep asking when FSD is 'coming'. The honest answer is a stack of type-approval, driver-duty, and data questions — not a software toggle. This report walks those layers without the press-release fog.",
-        de: "Europäische Zuschauer fragen, wann FSD 'kommt'. Die ehrliche Antwort ist ein Stapel aus Typgenehmigung, Fahrerpflicht und Datenfragen — kein Software-Schalter. Dieser Report geht die Lagen ohne Pressenebel durch.",
-      },
-    ],
-  },
-];
+export const reports: Report[] = [];
 
-export function getReport(slug: string): Report | undefined {
+export function getReport(slug: string) {
   return reports.find((item) => item.slug === slug);
 }
-
-export const links = {
-  x: "https://x.com/tpgoebel",
-  teslaTobi: "https://www.youtube.com/@TeslaTobi",
-  techTalk: "https://www.youtube.com/@TechTalk-Tobi",
-  email: "info@techtalktobi.com",
-};

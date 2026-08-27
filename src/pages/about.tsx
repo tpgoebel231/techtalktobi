@@ -9,26 +9,29 @@ export function AboutPage() {
   const locale = useLocale();
   const copy = useCopy();
 
-  const contacts = [
+  const reach = [
+    {
+      label: links.email,
+      href: `mailto:${links.email}`,
+      hint: "Email",
+    },
     {
       label: "@tpgoebel",
       href: links.x,
       hint: "X",
     },
+  ];
+
+  const channelRows = [
     {
-      label: "@TeslaTobi",
+      label: "TeslaTobi (YouTube)",
       href: links.teslaTobi,
       hint: "YouTube",
     },
     {
-      label: "@TechTalk-Tobi",
+      label: "TechTalkTobi (YouTube)",
       href: links.techTalk,
       hint: "YouTube",
-    },
-    {
-      label: links.email,
-      href: `mailto:${links.email}`,
-      hint: "Email",
     },
   ];
 
@@ -38,7 +41,7 @@ export function AboutPage() {
         <div className="lg:col-span-5">
           <img
             src="/images/tobias.jpg"
-            alt="Tobi Goebel"
+            alt={copy.brand.name}
             className="w-full rounded-xl object-cover"
           />
         </div>
@@ -62,59 +65,65 @@ export function AboutPage() {
 
       <section className="mt-20 border-t border-border pt-12">
         <h2 className="font-display text-3xl text-fg">{copy.about.contact}</h2>
-        <ul className="mt-6 divide-y divide-border rounded-xl bg-surface shadow-[var(--shadow-border)]">
-          {contacts.map((item) => (
-            <li key={item.href}>
-              <a
-                href={item.href}
-                target={item.href.startsWith("mailto:") ? undefined : "_blank"}
-                rel="noreferrer"
-                className="flex h-16 items-center justify-between gap-4 px-5 no-underline hover:bg-surface-2"
-              >
-                <span className="flex items-center gap-3 text-fg">
-                  {item.hint === "Email" ? (
-                    <Mail className="size-4 text-muted" />
-                  ) : item.hint === "YouTube" ? (
-                    <Youtube className="size-4 text-muted" />
-                  ) : (
-                    <span className="w-4 text-center font-mono text-xs text-muted">
-                      X
-                    </span>
-                  )}
-                  {item.label}
-                </span>
-                <span className="font-mono text-[11px] text-faint">{item.hint}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
+
+        <h3 className="mt-8 text-sm font-medium tracking-wide text-muted uppercase">
+          {copy.about.reach}
+        </h3>
+        <ContactList rows={reach} />
+
+        <h3 className="mt-10 text-sm font-medium tracking-wide text-muted uppercase">
+          {copy.about.channels}
+        </h3>
+        <ContactList rows={channelRows} />
 
         <div className="mt-8 flex flex-wrap gap-3">
           <Button asChild>
-            <Link to="/$locale/media-kit" params={{ locale }}>
+            <a href={links.mediaKit} download>
               {copy.about.mediaKitCta}
+            </a>
+          </Button>
+          <Button asChild variant="outline">
+            <Link to="/$locale/consulting" params={{ locale }}>
+              {copy.about.consultCta}
             </Link>
           </Button>
-          {locale === "de" ? (
-            <Button asChild variant="outline">
-              <Link to="/$locale/consulting" params={{ locale }}>
-                {copy.about.consultCta}
-              </Link>
-            </Button>
-          ) : (
-            <p className="flex items-center text-sm text-muted">
-              {copy.about.consultNote}{" "}
-              <Link
-                to="/$locale/consulting"
-                params={{ locale: "de" }}
-                className="ml-2 text-accent"
-              >
-                {copy.about.consultCta}
-              </Link>
-            </p>
-          )}
         </div>
       </section>
     </Container>
+  );
+}
+
+function ContactList({
+  rows,
+}: {
+  rows: { label: string; href: string; hint: string }[];
+}) {
+  return (
+    <ul className="mt-4 divide-y divide-border rounded-xl bg-surface shadow-[var(--shadow-border)]">
+      {rows.map((item) => (
+        <li key={item.href}>
+          <a
+            href={item.href}
+            target={item.href.startsWith("mailto:") ? undefined : "_blank"}
+            rel="noreferrer"
+            className="flex h-16 items-center justify-between gap-4 px-5 no-underline hover:bg-surface-2"
+          >
+            <span className="flex items-center gap-3 text-fg">
+              {item.hint === "Email" ? (
+                <Mail className="size-4 text-muted" />
+              ) : item.hint === "YouTube" ? (
+                <Youtube className="size-4 text-muted" />
+              ) : (
+                <span className="w-4 text-center font-mono text-xs text-muted">
+                  X
+                </span>
+              )}
+              {item.label}
+            </span>
+            <span className="font-mono text-[11px] text-faint">{item.hint}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
   );
 }

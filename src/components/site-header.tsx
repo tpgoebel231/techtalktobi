@@ -20,14 +20,11 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   const items: NavItem[] = [
-    { to: "/$locale/research", label: copy.nav.research },
     { to: "/$locale/media", label: copy.nav.media },
+    { to: "/$locale/research", label: copy.nav.research },
+    { to: "/$locale/consulting", label: copy.nav.consulting },
     { to: "/$locale/about", label: copy.nav.about },
   ];
-
-  if (locale === "de") {
-    items.push({ to: "/$locale/consulting", label: copy.nav.consulting });
-  }
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-bg print:hidden">
@@ -36,17 +33,20 @@ export function SiteHeader() {
           to="/$locale"
           params={{ locale }}
           className="flex items-center gap-3 text-fg no-underline"
+          aria-label={copy.brand.name}
         >
-          <Mark className="size-8 shrink-0 rounded-sm shadow-[var(--shadow-border)]" />
+          <Mark className="size-10 shrink-0 sm:size-11" alt="" />
           <span className="leading-tight">
-            <span className="block font-medium tracking-tight">TechTalkTobi</span>
+            <span className="block font-display text-[15px] tracking-tight sm:text-lg">
+              {copy.brand.name}
+            </span>
             <span className="hidden font-mono text-[10px] tracking-widest text-muted uppercase sm:block">
-              Autonomy desk
+              {copy.brand.tagline}
             </span>
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-7 md:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-7 md:flex" aria-label={copy.nav.primary}>
           {items.map((item) => (
             <Link
               key={item.to}
@@ -68,14 +68,17 @@ export function SiteHeader() {
                 variant="ghost"
                 size="icon"
                 className="md:hidden"
-                aria-label="Menu"
+                aria-label={copy.nav.menu}
               >
                 <Menu />
               </Button>
             </SheetTrigger>
             <SheetContent>
-              <SheetTitle className="pr-8">TechTalkTobi</SheetTitle>
-              <nav className="mt-8 flex flex-col gap-1" aria-label="Mobile">
+              <SheetTitle className="flex items-center gap-3 pr-8">
+                <Mark className="size-8" alt="" />
+                {copy.brand.name}
+              </SheetTitle>
+              <nav className="mt-8 flex flex-col gap-1" aria-label={copy.nav.menu}>
                 {items.map((item) => (
                   <Link
                     key={item.to}
@@ -87,6 +90,9 @@ export function SiteHeader() {
                     {item.label}
                   </Link>
                 ))}
+                <div className="mt-6">
+                  <LangSwitcher />
+                </div>
               </nav>
             </SheetContent>
           </Sheet>

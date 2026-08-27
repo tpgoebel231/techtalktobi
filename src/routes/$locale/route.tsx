@@ -9,16 +9,24 @@ export const Route = createFileRoute("/$locale")({
       throw redirect({ to: "/$locale", params: { locale: "en" } });
     }
   },
-  head: ({ params }) => ({
-    meta: [
-      {
-        title:
-          params.locale === "de"
-            ? "TechTalkTobi — Die Autonomie-Revolution im Blick"
-            : "TechTalkTobi — Tracking the Autonomy Revolution",
-      },
-    ],
-  }),
+  head: ({ params }) => {
+    const de = params.locale === "de";
+    return {
+      meta: [
+        {
+          title: de
+            ? "Tobias P. Goebel — Medien & Beratung"
+            : "Tobias P. Goebel — Media & Advisory",
+        },
+        {
+          name: "description",
+          content: de
+            ? "Journalist und Berater für autonome Systeme. TeslaTobi, TechTalkTobi, öffentliche Analysen. Beratung zu Technik und Regulierung. Online: tpgoebel."
+            : "Journalist and advisor on autonomous systems. TeslaTobi, TechTalkTobi, published analysis. Advisory on the technology and the rules. Online: tpgoebel.",
+        },
+      ],
+    };
+  },
   component: LocaleLayout,
 });
 

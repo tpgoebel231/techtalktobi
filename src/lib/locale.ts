@@ -5,8 +5,9 @@ export function isLocale(value: string | undefined): value is Locale {
   return value === "en" || value === "de";
 }
 
-export function switchLocalePath(pathname: string, next: Locale): string {
-  const replaced = pathname.replace(/^\/(en|de)(?=\/|$)/, `/${next}`);
+/** Swap the locale prefix of a path (and optional search/hash). */
+export function switchLocalePath(path: string, next: Locale): string {
+  const replaced = path.replace(/^\/(en|de)(?=\/|\?|#|$)/, `/${next}`);
   if (replaced.startsWith(`/${next}`)) return replaced;
   return `/${next}`;
 }

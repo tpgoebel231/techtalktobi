@@ -33,11 +33,11 @@ export const research: ResearchPiece[] = [
     image: "/images/research-self-driving.jpg",
     title: {
       en: "Self-Driving Analysis",
-      de: "Analyse autonomes Fahren",
+      de: "Analyse: Autonomes Fahren",
     },
     dek: {
       en: "Comparative analysis of autonomous development cycles and SAE standards — and why the slideware levels keep getting used as a marketing language.",
-      de: "Vergleichende Analyse der Entwicklungszyklen und SAE-Stufen — und warum Folien-Level weiterhin als Marketingsprache dienen.",
+      de: "Vergleichende Analyse der Entwicklungszyklen und SAE-Stufen — und warum Folienstufen weiterhin als Marketingsprache dienen.",
     },
     tags: [
       { en: "SAE J3016", de: "SAE J3016" },
@@ -46,15 +46,15 @@ export const research: ResearchPiece[] = [
     paragraphs: [
       {
         en: "SAE J3016 was written as an engineering taxonomy, not a consumer label. Level 2 still means the human is the driver. Level 4 means the system is the driver inside a defined domain. Most public argument is people using those numbers as a score.",
-        de: "SAE J3016 ist eine ingenieurtechnische Taxonomie, kein Verbraucherlabel. Level 2 heißt: der Mensch ist der Fahrer. Level 4 heißt: das System ist der Fahrer, in einem definierten Bereich. Die öffentliche Debatte behandelt die Zahlen oft wie eine Rangliste.",
+        de: "SAE J3016 ist eine technische Taxonomie, kein Etikett für Endkunden. Level 2 heißt: der Mensch ist der Fahrer. Level 4 heißt: das System ist der Fahrer, in einem festgelegten Bereich. Die öffentliche Debatte behandelt die Zahlen oft wie eine Rangliste.",
       },
       {
         en: "Two development cycles now run in parallel. The mapping-and-ODD school (Waymo and peers) grows competence by fencing the world: geofence, HD map, stacked redundancy, operational playbooks. The vision-and-fleet school (Tesla and a few others) grows competence by collecting edge cases at consumer scale and training through them. Neither cycle is 'faster' in the abstract — they spend time on different risks.",
-        de: "Zwei Entwicklungszyklen laufen parallel. Die Mapping-und-ODD-Schule (Waymo und vergleichbare) wächst, indem sie die Welt einzäunt: Geofence, HD-Karte, Redundanz, Playbooks. Die Vision-und-Flotten-Schule (Tesla und wenige andere) wächst, indem sie Edge Cases in Consumer-Skala einsammelt und durcharbeitet. Kein Zyklus ist abstrakt 'schneller' — sie kaufen unterschiedliche Risiken.",
+        de: "Zwei Entwicklungszyklen laufen parallel. Die Mapping-Schule (Waymo und vergleichbare) wächst, indem sie die Welt eingrenzt: Geofence, HD-Karte, Redundanz, Einsatzregeln. Die Vision-und-Flotten-Schule (Tesla und wenige andere) wächst, indem sie Grenzfälle in der Kundenflotte einsammelt und durcharbeitet. Kein Zyklus ist abstrakt „schneller“ — sie gehen unterschiedliche Risiken ein.",
       },
       {
         en: "A useful question is not 'what level is it?' but 'who is legally the driver, in which domain, with what fallback, and who holds the keys when it fails?' That question maps cleanly onto UNECE automation categories and German StVG obligations — and poorly onto a single SAE integer.",
-        de: "Die bessere Frage ist nicht 'welches Level?', sondern: wer ist rechtlich der Fahrer, in welchem Bereich, mit welchem Fallback, und wer hält die Schlüssel im Fehlerfall? Das lässt sich sauber auf UNECE-Kategorien und das StVG abbilden — und schlecht auf eine einzelne SAE-Zahl.",
+        de: "Die bessere Frage ist nicht „welches Level?“, sondern: wer ist rechtlich der Fahrer, in welchem Bereich, mit welchem Rückfall, und wer hat im Fehlerfall die Kontrolle? Das lässt sich sauber auf UNECE-Kategorien und das StVG abbilden — und schlecht auf eine einzelne SAE-Zahl.",
       },
     ],
   },
@@ -69,7 +69,7 @@ export const research: ResearchPiece[] = [
     },
     dek: {
       en: "Interactive explainer for how speed, reaction time, and road grip affect stopping distance, impact energy, and pedestrian injury risk.",
-      de: "Interaktiver Erklärer: Wie Tempo, Reaktionszeit und Griffigkeit Anhalteweg, Aufprallenergie und Verletzungsrisiko für Fußgänger verändern.",
+      de: "Interaktives Modell: Wie Tempo, Reaktionszeit und Griffigkeit Anhalteweg, Aufprallenergie und Verletzungsrisiko für Fußgänger verändern.",
     },
     tags: [
       { en: "Physics", de: "Physik" },
@@ -78,7 +78,7 @@ export const research: ResearchPiece[] = [
     paragraphs: [
       {
         en: "Kinetic energy scales with the square of speed. Braking distance does too. That is why a 'slightly faster' urban pass is not a slight change in outcome for a pedestrian. Use the sliders; the geometry is the argument.",
-        de: "Kinetische Energie skaliert mit dem Quadrat der Geschwindigkeit. Der Bremsweg ebenfalls. Deshalb ist ein 'bisschen schnelleres' Tempo in der Stadt keine kleine Änderung im Ausgang für Fußgänger. Die Schieber sind das Argument.",
+        de: "Kinetische Energie steigt mit dem Quadrat der Geschwindigkeit. Der Bremsweg ebenfalls. Deshalb ist ein „bisschen schnelleres“ Tempo in der Stadt keine kleine Änderung im Ausgang für Fußgänger. Drehen Sie an den Reglern; die Geometrie ist das Argument.",
       },
     ],
   },
@@ -102,11 +102,11 @@ export const research: ResearchPiece[] = [
     paragraphs: [
       {
         en: "FSD has been sold as a feature, a subscription, an equity story, and a future robotaxi claim. The package price on the window sticker is only one line in that ledger. Compiled below from public announcements; not investment advice.",
-        de: "FSD wurde als Feature, als Abo, als Equity-Story und als künftige Robotaxi-Behauptung verkauft. Der Paketpreis auf dem Sticker ist nur eine Zeile in diesem Buch. Unten zusammengestellt aus öffentlichen Angaben; keine Anlageberatung.",
+        de: "FSD wurde als Funktion, als Abo, als Börsengeschichte und als künftige Robotaxi-Behauptung verkauft. Der Paketpreis auf dem Aufkleber ist nur eine Zeile in diesem Buch. Unten zusammengestellt aus öffentlichen Angaben; keine Anlageberatung.",
       },
       {
         en: "Read the price path as a demand and positioning experiment, not as a cost-plus. When the unsupervised and robotaxi narratives heat up, the option is framed as an appreciating asset. When take-rate matters more, it is framed as a software attach. Both frames can be true in different quarters.",
-        de: "Den Preispfad als Nachfrage- und Positionierungsexperiment lesen, nicht als Cost-plus. Wenn Unsupervised und Robotaxi heißlaufen, wird die Option zum wertsteigernden Asset. Wenn die Take-Rate zählt, wird sie zum Software-Attach. Beide Frames können in unterschiedlichen Quartalen stimmen.",
+        de: "Den Preispfad als Nachfrage- und Positionierungsexperiment lesen, nicht als Kostenaufschlag. Wenn Unsupervised und Robotaxi heißlaufen, wird die Option zum wertsteigernden Asset. Wenn die Abschlussquote zählt, wird sie zum Software-Zusatz. Beide Lesarten können in unterschiedlichen Quartalen stimmen.",
       },
     ],
   },
@@ -121,7 +121,7 @@ export const research: ResearchPiece[] = [
     },
     dek: {
       en: "Mapping the humanoid robotics landscape and the technological stack — actuation, compute, teleoperation, and the policy problems nobody puts in the keynote.",
-      de: "Die Humanoide-Landschaft und der Stack: Aktorik, Compute, Teleoperation — und die Policy-Fragen, die es nicht in die Keynote schaffen.",
+      de: "Die Humanoide-Landschaft und der technische Stack: Aktorik, Rechenleistung, Teleoperation — und die Regulierungsfragen, die es nicht in die Keynote schaffen.",
     },
     tags: [
       { en: "Humanoids", de: "Humanoide" },
@@ -130,11 +130,11 @@ export const research: ResearchPiece[] = [
     paragraphs: [
       {
         en: "A humanoid is a bet that the world is already built for humans, so the robot should be too. The stack underneath that bet is not one product: actuators and gearboxes, battery and thermal, hands, onboard compute, foundation models, teleoperation for data, and a safety case that industrial regulators will actually accept.",
-        de: "Ein Humanoid ist die Wette, dass die Welt für Menschen gebaut ist — also auch der Roboter so sein sollte. Der Stack darunter ist kein Produkt: Aktorik, Getriebe, Batterie und Thermik, Hände, Onboard-Compute, Foundation Models, Teleoperation für Daten, und ein Safety Case, den Industrieaufsicht wirklich akzeptiert.",
+        de: "Ein Humanoid ist die Wette, dass die Welt für Menschen gebaut ist — also auch der Roboter so sein sollte. Der Stack darunter ist kein einzelnes Produkt: Aktorik, Getriebe, Batterie und Thermik, Hände, Rechenleistung an Bord, Foundation Models, Teleoperation für Daten, und ein Sicherheitsnachweis, den die Industrieaufsicht wirklich akzeptiert.",
       },
       {
         en: "The interesting split in 2026 is not 'who has a demo'. It is who is collecting real hours in a real workplace, who still depends on a puppeteer, and who has a path from supervised factory tasks to unsupervised ones without rewriting the safety case every quarter.",
-        de: "Die interessante Trennung 2026 ist nicht 'wer hat eine Demo'. Sondern: wer sammelt echte Stunden am echten Arbeitsplatz, wer hängt noch am Puppenspieler, und wer hat einen Weg von überwachten Fabrikaufgaben zu unüberwachten, ohne jedes Quartal den Safety Case neu zu schreiben.",
+        de: "Die interessante Trennung 2026 ist nicht, wer eine Demo hat. Sondern: wer sammelt echte Stunden am echten Arbeitsplatz, wer hängt noch am Puppenspieler, und wer hat einen Weg von überwachten Fabrikaufgaben zu unüberwachten, ohne jedes Quartal den Sicherheitsnachweis neu zu schreiben.",
       },
     ],
   },
@@ -158,7 +158,7 @@ export const research: ResearchPiece[] = [
     paragraphs: [
       {
         en: "This is not Tesla's scorecard and not a regulator's. It is mine, updated from daily supervised driving around Boston and on US highways. Scores are 1–5. Five does not mean unsupervised; it means 'I rarely intervene in this class of scene'. One means 'I treat it as a demo, not a driver'.",
-        de: "Das ist nicht Teslas Scorecard und nicht die eines Regulators. Es ist meine, fortgeschrieben aus beaufsichtigtem Alltag um Boston und auf US-Highways. Skala 1–5. Fünf heißt nicht Unsupervised; es heißt 'in dieser Szenenklasse greife ich selten ein'. Eins heißt 'Demo, kein Fahrer'.",
+        de: "Das ist nicht Teslas Bewertung und nicht die einer Aufsichtsbehörde. Es ist meine, fortgeschrieben aus beaufsichtigtem Alltag um Boston und auf US-Highways. Skala 1–5. Fünf heißt nicht Unsupervised; es heißt: in dieser Szenenklasse greife ich selten ein. Eins heißt: Demo, kein Fahrer.",
       },
     ],
   },
@@ -173,7 +173,7 @@ export const research: ResearchPiece[] = [
     },
     dek: {
       en: "Tracking Waymo's autonomous vehicle deployment and market expansion — cities, service mode, and what 'driverless' actually covers.",
-      de: "Waymos Ausrollen und Marktexpansion — Städte, Betriebsmodus, und was 'fahrerlos' tatsächlich abdeckt.",
+      de: "Waymos Ausrollen und Marktexpansion — Städte, Betriebsmodus, und was „fahrerlos“ tatsächlich abdeckt.",
     },
     tags: [
       { en: "Robotaxi", de: "Robotaxi" },
@@ -182,7 +182,7 @@ export const research: ResearchPiece[] = [
     paragraphs: [
       {
         en: "Waymo is the existence proof that a geofenced, heavily mapped, multi-sensor L4 service can carry passengers without a person in the seat. The question for 2026 is not 'does it work in Phoenix'. It is how expensive each new city is, how weather and density punish the ODD, and how fast the playbook copies.",
-        de: "Waymo ist der Existenzbeweis, dass ein geofencter, stark kartierter, multisensorischer L4-Dienst Fahrgäste ohne Person auf dem Sitz tragen kann. Die Frage 2026 ist nicht 'geht Phoenix'. Sondern: wie teuer jede neue Stadt ist, wie Wetter und Dichte die ODD bestrafen, und wie schnell das Playbook kopiert.",
+        de: "Waymo ist der Existenzbeweis, dass ein räumlich begrenzter, stark kartierter, multisensorischer L4-Dienst Fahrgäste ohne Person auf dem Sitz befördern kann. Die Frage 2026 ist nicht, ob Phoenix funktioniert. Sondern: wie teuer jede neue Stadt ist, wie Wetter und Dichte den Einsatzbereich belasten, und wie schnell sich das Vorgehen kopieren lässt.",
       },
     ],
   },
@@ -224,7 +224,7 @@ export const fsdMatrix: MatrixRow[] = [
     score: 5,
     note: {
       en: "The most mature class. Still requires supervision at merges, emergency vehicles, and sudden slowdowns.",
-      de: "Die reifste Klasse. Aufsicht bleibt Pflicht bei Einfädeln, Einsatzfahrzeugen und plötzlichem Verzögern.",
+      de: "Die reifste Klasse. Aufsicht bleibt Pflicht beim Einfädeln, bei Einsatzfahrzeugen und bei plötzlichem Verzögern.",
     },
   },
   {
@@ -233,7 +233,7 @@ export const fsdMatrix: MatrixRow[] = [
     score: 4,
     note: {
       en: "Boston suburbs and tight neighborhoods are largely usable. Construction and dual-parked streets still draw interventions.",
-      de: "Bostoner Vororte und enge Viertel sind weitgehend nutzbar. Baustellen und doppeltes Parken fordern weiter Eingriffe.",
+      de: "Bostoner Vororte und enge Viertel sind weitgehend nutzbar. Baustellen und doppeltes Parken erzwingen weiter Eingriffe.",
     },
   },
   {
@@ -251,7 +251,7 @@ export const fsdMatrix: MatrixRow[] = [
     score: 4,
     note: {
       en: "Generally cautious. Rare over-creep at crosswalks is the failure mode I still document.",
-      de: "Grundsätzlich vorsichtig. Gelegentliches Nachrollen am Zebrastreifen dokumentiere ich weiter.",
+      de: "Grundsätzlich vorsichtig. Gelegentliches Nachrollen am Fußgängerüberweg dokumentiere ich weiter.",
     },
   },
   {
@@ -260,7 +260,7 @@ export const fsdMatrix: MatrixRow[] = [
     score: 4,
     note: {
       en: "Vision stack holds up. Poorly lit rural edges and glare remain the watch items.",
-      de: "Vision-Stack hält. Schlecht ausgeleuchtete Ortsränder und Blendung bleiben Beobachtungspunkte.",
+      de: "Der Vision-Stack hält stand. Schlecht ausgeleuchtete Ortsränder und Blendung bleiben Beobachtungspunkte.",
     },
   },
   {
@@ -269,7 +269,7 @@ export const fsdMatrix: MatrixRow[] = [
     score: 3,
     note: {
       en: "Wet Boston winters are a real test. Heavy spray and fog still degrade confidence.",
-      de: "Nasse Boston-Winter sind ein echter Test. Gischt und Nebel senken die Zuversicht.",
+      de: "Nasse Boston-Winter sind ein echter Test. Gischt und Nebel senken die Konfidenz des Systems.",
     },
   },
   {
@@ -287,7 +287,7 @@ export const fsdMatrix: MatrixRow[] = [
     score: 3,
     note: {
       en: "Improved recognition, inconsistent yield choreography. I still take these.",
-      de: "Bessere Erkennung, uneinheitliches Verhalten beim Bilden einer Rettungsgasse. Die nehme ich weiter selbst.",
+      de: "Bessere Erkennung, uneinheitliches Verhalten beim Freimachen der Spur. Die nehme ich weiter selbst.",
     },
   },
   {
@@ -305,7 +305,7 @@ export const fsdMatrix: MatrixRow[] = [
     score: 2,
     note: {
       en: "Not my call to make as a product claim. As a daily supervisor: not yet, not here, not in this weather mix.",
-      de: "Keine Produktbehauptung von mir. Als täglicher Supervisor: noch nicht, nicht hier, nicht in diesem Wetter-Mix.",
+      de: "Keine Produktbehauptung von mir. Als täglicher Nutzer mit Aufsicht: noch nicht, nicht hier, nicht in diesem Wetter-Mix.",
     },
   },
 ];
@@ -327,7 +327,7 @@ export const robotFirms: RobotFirm[] = [
     },
     status: {
       en: "Factory tasks in limited form; public demos ahead of unsupervised hours",
-      de: "Begrenzte Fabrikaufgaben; öffentliche Demos vor unüberwachten Stunden",
+      de: "Begrenzte Fabrikaufgaben; öffentliche Demos liegen vor unüberwachten Stunden",
     },
   },
   {
@@ -335,11 +335,11 @@ export const robotFirms: RobotFirm[] = [
     hq: { en: "USA", de: "USA" },
     stack: {
       en: "Humanoid + BMW-class manufacturing pilots, foundation-model bets",
-      de: "Humanoid + Fertigungspiloten auf BMW-Niveau, Foundation-Model-Wette",
+      de: "Humanoid plus Fertigungspiloten auf BMW-Niveau, Wette auf Foundation Models",
     },
     status: {
       en: "High-visibility pilots; teleop still in the data loop",
-      de: "Sichtbare Piloten; Teleop weiter in der Datenschleife",
+      de: "Sichtbare Piloten; Teleoperation weiter in der Datenschleife",
     },
   },
   {
@@ -347,7 +347,7 @@ export const robotFirms: RobotFirm[] = [
     hq: { en: "USA", de: "USA" },
     stack: {
       en: "Electric Atlas, world-class mobility, Hyundai industrial path",
-      de: "Elektrisches Atlas, Mobility auf Weltniveau, industrieller Hyundai-Pfad",
+      de: "Elektrisches Atlas, Beweglichkeit auf Weltniveau, industrieller Hyundai-Pfad",
     },
     status: {
       en: "Research and industrial transition",
@@ -359,11 +359,11 @@ export const robotFirms: RobotFirm[] = [
     hq: { en: "USA", de: "USA" },
     stack: {
       en: "Biped for logistics, GXO-style warehouse work",
-      de: "Biped für Logistik, Lagerarbeit im GXO-Stil",
+      de: "Zweibeiner für Logistik, Lagerarbeit im GXO-Stil",
     },
     status: {
       en: "Early commercial hours; form factor is the thesis",
-      de: "Frühe kommerzielle Stunden; Formfaktor ist die These",
+      de: "Frühe kommerzielle Stunden; der Formfaktor ist die These",
     },
   },
   {
@@ -371,11 +371,11 @@ export const robotFirms: RobotFirm[] = [
     hq: { en: "Norway / USA", de: "Norwegen / USA" },
     stack: {
       en: "Soft-robotics bias, home thesis, tendon-driven hardware",
-      de: "Soft-Robotics-Hang, These Wohnen, sehnengetriebene Hardware",
+      de: "Hang zu Soft Robotics, These Haushalt, sehnengetriebene Hardware",
     },
     status: {
       en: "Consumer narrative, safety case still the gate",
-      de: "Consumer-Narrativ, Safety Case bleibt das Tor",
+      de: "Konsumenten-Erzählung; der Sicherheitsnachweis bleibt die Hürde",
     },
   },
   {
@@ -399,7 +399,7 @@ export const robotFirms: RobotFirm[] = [
     },
     status: {
       en: "Hardware accessible; stack catching up in public",
-      de: "Hardware zugänglich; Stack holt öffentlich auf",
+      de: "Hardware zugänglich; der Stack holt öffentlich auf",
     },
   },
   {
@@ -411,7 +411,7 @@ export const robotFirms: RobotFirm[] = [
     },
     status: {
       en: "EU-native alternative in the conversation",
-      de: "EU-native Alternative im Gespräch",
+      de: "Europäische Alternative im Gespräch",
     },
   },
 ];
@@ -430,7 +430,7 @@ export const waymoCities: WaymoCity[] = [
     mode: { en: "Public robotaxi", de: "Öffentliches Robotaxi" },
     note: {
       en: "The original commercial ODD. Still the reference city for weather-easy, mapped L4.",
-      de: "Die ursprüngliche kommerzielle ODD. Referenzstadt für wetterleichtes, kartiertes L4.",
+      de: "Die ursprüngliche kommerzielle Betriebszone. Referenzstadt für kartiertes L4 bei einfachem Wetter.",
     },
   },
   {
@@ -439,7 +439,7 @@ export const waymoCities: WaymoCity[] = [
     mode: { en: "Public robotaxi", de: "Öffentliches Robotaxi" },
     note: {
       en: "Density, hills, and politics. The city that taught everyone else about edge cases and city hall.",
-      de: "Dichte, Hügel, Politik. Die Stadt, die alle anderen Edge Cases und City Hall gelehrt hat.",
+      de: "Dichte, Hügel, Politik. Die Stadt, die alle anderen Grenzfälle und Stadtpolitik gelehrt hat.",
     },
   },
   {
@@ -448,7 +448,7 @@ export const waymoCities: WaymoCity[] = [
     mode: { en: "Public robotaxi", de: "Öffentliches Robotaxi" },
     note: {
       en: "Scale play. Freeways plus sprawl — a different ODD than the grid of SF.",
-      de: "Skalenspiel. Freeways plus Fläche — eine andere ODD als das Raster von SF.",
+      de: "Ein Spiel um Größe. Freeways plus Fläche — ein anderer Einsatzbereich als das Raster von San Francisco.",
     },
   },
   {
@@ -457,7 +457,7 @@ export const waymoCities: WaymoCity[] = [
     mode: { en: "Service expanding", de: "Service im Ausbau" },
     note: {
       en: "Overlaps the Tesla robotaxi conversation geographically. Useful for side-by-side watching.",
-      de: "Geographische Überlappung mit der Tesla-Robotaxi-Debatte. Nützlich für den Direktvergleich.",
+      de: "Geografische Überlappung mit der Tesla-Robotaxi-Debatte. Nützlich für den Direktvergleich.",
     },
   },
   {
@@ -466,7 +466,7 @@ export const waymoCities: WaymoCity[] = [
     mode: { en: "Service expanding", de: "Service im Ausbau" },
     note: {
       en: "Airport and highway mix. A test of whether the playbook survives humidity and Southern sprawl.",
-      de: "Airport- und Highway-Mix. Test, ob das Playbook Luftfeuchtigkeit und Southern Sprawl übersteht.",
+      de: "Mix aus Flughafen und Fernstraßen. Test, ob das Vorgehen Luftfeuchtigkeit und südliche Vorstadtfläche übersteht.",
     },
   },
   {
@@ -475,7 +475,7 @@ export const waymoCities: WaymoCity[] = [
     mode: { en: "Announced / staged", de: "Angekündigt / vorbereitet" },
     note: {
       en: "The 2026 question is cadence: how many new ODDs per year before the map-and-ops cost dominates.",
-      de: "Die Frage 2026 ist der Takt: wie viele neue ODDs pro Jahr, bevor Map- und Ops-Kosten dominieren.",
+      de: "Die Frage 2026 ist der Takt: wie viele neue Einsatzgebiete pro Jahr, bevor Karten- und Betriebskosten dominieren.",
     },
   },
 ];
