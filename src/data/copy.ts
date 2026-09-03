@@ -102,7 +102,7 @@ export const copy = {
       reach: "How to reach me",
       channels: "Channels",
       consultCta: "Advisory",
-      mediaKitCta: "Media kit July 2026 (PDF)",
+      mediaKitCta: "Media kit September 2026 (PDF)",
     },
     consulting: {
       eyebrow: "Advisory",
@@ -245,7 +245,7 @@ export const copy = {
       reach: "So erreichen Sie mich",
       channels: "Kanäle",
       consultCta: "Beratung",
-      mediaKitCta: "Media Kit Juli 2026 (PDF)",
+      mediaKitCta: "Media Kit September 2026 (PDF)",
     },
     consulting: {
       eyebrow: "Beratung",

@@ -157,7 +157,7 @@ export const links = {
   teslaTobi: "https://www.youtube.com/@TeslaTobi",
   techTalk: "https://www.youtube.com/@TechTalk-Tobi",
   email: "info@techtalktobi.com",
-  mediaKit: "/TeslaTobi_MediaKit_July_2026.pdf",
+  mediaKit: "/TeslaTobi_MediaKit_Sep_2026.pdf",
 };
 
 export function videosByTopic(list: Video[], topic: VideoTopic) {
