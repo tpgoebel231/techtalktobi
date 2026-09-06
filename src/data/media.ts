@@ -157,6 +157,7 @@ export const links = {
   teslaTobi: "https://www.youtube.com/@TeslaTobi",
   techTalk: "https://www.youtube.com/@TechTalk-Tobi",
   email: "info@techtalktobi.com",
+  costInMyCity: "https://costinmycity.com",
   mediaKit: "/TeslaTobi_MediaKit_Sep_2026.pdf",
 };
 

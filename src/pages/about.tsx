@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Mail, Youtube } from "lucide-react";
+import { Globe, Mail, Youtube } from "lucide-react";
 import { Container } from "@/components/container";
 import { Button } from "@/components/ui/button";
 import { links } from "@/data/media";
@@ -32,6 +32,14 @@ export function AboutPage() {
       label: "TechTalkTobi (YouTube)",
       href: links.techTalk,
       hint: "YouTube",
+    },
+  ];
+
+  const productionRows = [
+    {
+      label: "costinmycity.com",
+      href: links.costInMyCity,
+      hint: "Web",
     },
   ];
 
@@ -76,6 +84,11 @@ export function AboutPage() {
         </h3>
         <ContactList rows={channelRows} />
 
+        <h3 className="mt-10 text-sm font-medium tracking-wide text-muted uppercase">
+          {copy.about.otherProductions}
+        </h3>
+        <ContactList rows={productionRows} />
+
         <div className="mt-8 flex flex-wrap gap-3">
           <Button asChild>
             <a href={links.mediaKit} download>
@@ -113,6 +126,8 @@ function ContactList({
                 <Mail className="size-4 text-muted" />
               ) : item.hint === "YouTube" ? (
                 <Youtube className="size-4 text-muted" />
+              ) : item.hint === "Web" ? (
+                <Globe className="size-4 text-muted" />
               ) : (
                 <span className="w-4 text-center font-mono text-xs text-muted">
                   X
