@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
+import { gaConfigSnippet, gaLoaderSrc } from "@/data/analytics";
 import appCss from "../styles.css?url";
 
 const APP_NAME = "Tobias P. Goebel";
@@ -38,6 +39,15 @@ export const Route = createRootRoute({
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@500;600;700&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        async: true,
+        src: gaLoaderSrc,
+      },
+      {
+        children: gaConfigSnippet,
       },
     ],
   }),
