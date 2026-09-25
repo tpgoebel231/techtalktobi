@@ -1,5 +1,16 @@
-/** Public web-agent id. Not a secret. The Bland API key never lives in this file. */
-export const HELGA_AGENT_ID = "40d57636-a89a-47e5-8043-07bc1c16efd8";
+import type { Locale } from "@/lib/locale";
+
+/** Public web-agent id. Not a secret. Override with VITE_HELGA_AGENT_ID if needed. */
+const DEFAULT_HELGA_AGENT_ID = "40d57636-a89a-47e5-8043-07bc1c16efd8";
+
+function publicAgentId(): string {
+  const fromEnv = import.meta.env.VITE_HELGA_AGENT_ID;
+  if (typeof fromEnv === "string" && fromEnv.trim()) return fromEnv.trim();
+  return DEFAULT_HELGA_AGENT_ID;
+}
+
+/** Public web-agent id. The Bland API key never lives in this file. */
+export const HELGA_AGENT_ID = publicAgentId();
 
 /** Same-origin route that mints a one-time session token. */
 export const HELGA_AUTHORIZE_PATH = "/api/helga/authorize";
@@ -28,11 +39,13 @@ export async function requestMicrophone(): Promise<MicPermission> {
   }
 }
 
-export async function fetchHelgaSession(): Promise<{ token: string; agentId: string }> {
+export async function fetchHelgaSession(
+  locale: Locale,
+): Promise<{ token: string; agentId: string }> {
   const response = await fetch(HELGA_AUTHORIZE_PATH, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: "{}",
+    body: JSON.stringify({ locale }),
     cache: "no-store",
   });
 
