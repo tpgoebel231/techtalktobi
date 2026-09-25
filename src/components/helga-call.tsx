@@ -11,10 +11,10 @@ import { useCopy, useLocale } from "@/lib/i18n";
 
 type CallError = Exclude<MicPermission, "ok"> | "failed" | null;
 
-export function HelgaCall({ variant = "button" }: { variant?: "button" | "panel" }) {
+export function HelgaCall() {
   const copy = useCopy().helga;
   const locale = useLocale();
-  const [open, setOpen] = useState(variant === "panel");
+  const [open, setOpen] = useState(false);
   const [error, setError] = useState<CallError>(null);
   const { state, start, stop } = useWebchat({
     agentId: HELGA_AGENT_ID,
@@ -44,7 +44,7 @@ export function HelgaCall({ variant = "button" }: { variant?: "button" | "panel"
   function onClose() {
     stop();
     setError(null);
-    if (variant === "button") setOpen(false);
+    setOpen(false);
   }
 
   const status = state === "open" ? copy.live : state === "closed" ? copy.idle : copy.connecting;
@@ -56,49 +56,6 @@ export function HelgaCall({ variant = "button" }: { variant?: "button" | "panel"
         : error === "failed"
           ? copy.error
           : null;
-
-  const panel = open ? (
-    <div
-      id="helga-call"
-      className="w-full basis-full rounded-xl bg-surface p-6 shadow-[var(--shadow-border)]"
-    >
-      {variant === "button" ? (
-        <>
-          <h3 className="font-display text-2xl text-fg">Helga</h3>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">{copy.dek}</p>
-        </>
-      ) : null}
-      <p
-        className={variant === "button" ? "mt-4 text-sm text-fg" : "text-sm text-fg"}
-        aria-live="polite"
-      >
-        {errorText ?? status}
-      </p>
-      <div className="mt-4 flex flex-wrap gap-3">
-        <Button type="button" onClick={() => void onStart()} disabled={busy}>
-          {state === "connecting" ? copy.connecting : copy.start}
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => {
-            stop();
-            setError(null);
-          }}
-          disabled={state === "closed"}
-        >
-          {copy.stop}
-        </Button>
-        {variant === "button" ? (
-          <Button type="button" variant="ghost" onClick={onClose}>
-            {copy.close}
-          </Button>
-        ) : null}
-      </div>
-    </div>
-  ) : null;
-
-  if (variant === "panel") return panel;
 
   return (
     <>
@@ -114,7 +71,37 @@ export function HelgaCall({ variant = "button" }: { variant?: "button" | "panel"
       >
         {copy.talk}
       </Button>
-      {panel}
+      {open ? (
+        <div
+          id="helga-call"
+          className="w-full basis-full rounded-xl bg-surface p-6 shadow-[var(--shadow-border)]"
+        >
+          <h3 className="font-display text-2xl text-fg">Helga</h3>
+          <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">{copy.dek}</p>
+          <p className="mt-4 text-sm text-fg" aria-live="polite">
+            {errorText ?? status}
+          </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Button type="button" onClick={() => void onStart()} disabled={busy}>
+              {state === "connecting" ? copy.connecting : copy.start}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                stop();
+                setError(null);
+              }}
+              disabled={state === "closed"}
+            >
+              {copy.stop}
+            </Button>
+            <Button type="button" variant="ghost" onClick={onClose}>
+              {copy.close}
+            </Button>
+          </div>
+        </div>
+      ) : null}
     </>
   );
 }

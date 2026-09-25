@@ -16,7 +16,6 @@ export const copy = {
       mediaKit: "Media kit",
       menu: "Menu",
       primary: "Primary",
-      assistant: "Assistant",
     },
     lang: { en: "EN", de: "DE", label: "Language" },
     footer: {
@@ -102,8 +101,6 @@ export const copy = {
       mediaKitCta: "Media kit September 2026 (PDF)",
     },
     helga: {
-      eyebrow: "Assistant",
-      title: "Helga",
       talk: "Talk to Helga",
       close: "Close",
       dek: "Helga is Tobias Goebel's assistant. She can talk about what he has published. The microphone is used only while the call is open.",
@@ -172,7 +169,6 @@ export const copy = {
       mediaKit: "Media Kit",
       menu: "Menü",
       primary: "Hauptnavigation",
-      assistant: "Assistentin",
     },
     lang: { en: "EN", de: "DE", label: "Sprache" },
     footer: {
@@ -260,8 +256,6 @@ export const copy = {
       mediaKitCta: "Media Kit September 2026 (PDF)",
     },
     helga: {
-      eyebrow: "Assistentin",
-      title: "Helga",
       talk: "Mit Helga sprechen",
       close: "Schließen",
       dek: "Helga ist die Assistentin von Tobias Goebel. Sie kann über das sprechen, was er veröffentlicht hat. Das Mikrofon wird nur während des Gesprächs verwendet.",

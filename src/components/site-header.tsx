@@ -19,7 +19,6 @@ export function SiteHeader() {
     { to: "/$locale/research", label: copy.nav.research },
     { to: "/$locale/consulting", label: copy.nav.consulting },
     { to: "/$locale/about", label: copy.nav.about },
-    { to: "/$locale/assistant", label: copy.nav.assistant },
   ];
 
   return (

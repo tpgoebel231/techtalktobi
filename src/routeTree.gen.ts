@@ -13,7 +13,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as LocaleRouteRouteImport } from './routes/$locale/route'
 import { Route as LocaleIndexRouteImport } from './routes/$locale/index'
 import { Route as LocaleAboutRouteImport } from './routes/$locale/about'
-import { Route as LocaleAssistantRouteImport } from './routes/$locale/assistant'
 import { Route as LocaleConsultingRouteImport } from './routes/$locale/consulting'
 import { Route as LocaleMediaKitRouteImport } from './routes/$locale/media-kit'
 import { Route as LocaleMediaIndexRouteImport } from './routes/$locale/media/index'
@@ -40,11 +39,6 @@ const LocaleIndexRoute = LocaleIndexRouteImport.update({
 const LocaleAboutRoute = LocaleAboutRouteImport.update({
   id: '/about',
   path: '/about',
-  getParentRoute: () => LocaleRouteRoute,
-} as any)
-const LocaleAssistantRoute = LocaleAssistantRouteImport.update({
-  id: '/assistant',
-  path: '/assistant',
   getParentRoute: () => LocaleRouteRoute,
 } as any)
 const LocaleConsultingRoute = LocaleConsultingRouteImport.update({
@@ -87,7 +81,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$locale': typeof LocaleRouteRouteWithChildren
   '/$locale/about': typeof LocaleAboutRoute
-  '/$locale/assistant': typeof LocaleAssistantRoute
   '/$locale/consulting': typeof LocaleConsultingRoute
   '/$locale/media-kit': typeof LocaleMediaKitRoute
   '/$locale/': typeof LocaleIndexRoute
@@ -100,7 +93,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$locale/about': typeof LocaleAboutRoute
-  '/$locale/assistant': typeof LocaleAssistantRoute
   '/$locale/consulting': typeof LocaleConsultingRoute
   '/$locale/media-kit': typeof LocaleMediaKitRoute
   '/$locale': typeof LocaleIndexRoute
@@ -115,7 +107,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$locale': typeof LocaleRouteRouteWithChildren
   '/$locale/about': typeof LocaleAboutRoute
-  '/$locale/assistant': typeof LocaleAssistantRoute
   '/$locale/consulting': typeof LocaleConsultingRoute
   '/$locale/media-kit': typeof LocaleMediaKitRoute
   '/$locale/': typeof LocaleIndexRoute
@@ -131,7 +122,6 @@ export interface FileRouteTypes {
     | '/'
     | '/$locale'
     | '/$locale/about'
-    | '/$locale/assistant'
     | '/$locale/consulting'
     | '/$locale/media-kit'
     | '/$locale/'
@@ -144,7 +134,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$locale/about'
-    | '/$locale/assistant'
     | '/$locale/consulting'
     | '/$locale/media-kit'
     | '/$locale'
@@ -158,7 +147,6 @@ export interface FileRouteTypes {
     | '/'
     | '/$locale'
     | '/$locale/about'
-    | '/$locale/assistant'
     | '/$locale/consulting'
     | '/$locale/media-kit'
     | '/$locale/'
@@ -203,13 +191,6 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/$locale/about'
       preLoaderRoute: typeof LocaleAboutRouteImport
-      parentRoute: typeof LocaleRouteRoute
-    }
-    '/$locale/assistant': {
-      id: '/$locale/assistant'
-      path: '/assistant'
-      fullPath: '/$locale/assistant'
-      preLoaderRoute: typeof LocaleAssistantRouteImport
       parentRoute: typeof LocaleRouteRoute
     }
     '/$locale/consulting': {
@@ -266,7 +247,6 @@ declare module '@tanstack/react-router' {
 
 interface LocaleRouteRouteChildren {
   LocaleAboutRoute: typeof LocaleAboutRoute
-  LocaleAssistantRoute: typeof LocaleAssistantRoute
   LocaleConsultingRoute: typeof LocaleConsultingRoute
   LocaleMediaKitRoute: typeof LocaleMediaKitRoute
   LocaleIndexRoute: typeof LocaleIndexRoute
@@ -278,7 +258,6 @@ interface LocaleRouteRouteChildren {
 
 const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
   LocaleAboutRoute: LocaleAboutRoute,
-  LocaleAssistantRoute: LocaleAssistantRoute,
   LocaleConsultingRoute: LocaleConsultingRoute,
   LocaleMediaKitRoute: LocaleMediaKitRoute,
   LocaleIndexRoute: LocaleIndexRoute,

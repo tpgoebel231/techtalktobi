@@ -49,13 +49,6 @@ export function SiteFooter() {
           >
             {copy.nav.about}
           </Link>
-          <Link
-            to="/$locale/assistant"
-            params={{ locale }}
-            className="text-muted no-underline hover:text-fg"
-          >
-            {copy.nav.assistant}
-          </Link>
           <a
             href={links.x}
             className="text-muted no-underline hover:text-fg"
