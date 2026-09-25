@@ -4,12 +4,7 @@ import { useState } from "react";
 import { LangSwitcher } from "@/components/lang-switcher";
 import { Mark } from "@/components/mark";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useCopy, useLocale } from "@/lib/i18n";
 
 type NavItem = { to: string; label: string };
@@ -64,12 +59,7 @@ export function SiteHeader() {
           <LangSwitcher />
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="md:hidden"
-                aria-label={copy.nav.menu}
-              >
+              <Button variant="ghost" size="icon" className="md:hidden" aria-label={copy.nav.menu}>
                 <Menu />
               </Button>
             </SheetTrigger>

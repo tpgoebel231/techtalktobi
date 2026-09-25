@@ -19,6 +19,7 @@ import { Route as LocaleMediaIndexRouteImport } from './routes/$locale/media/ind
 import { Route as LocaleMediaSlugRouteImport } from './routes/$locale/media/$slug'
 import { Route as LocaleResearchIndexRouteImport } from './routes/$locale/research/index'
 import { Route as LocaleResearchSlugRouteImport } from './routes/$locale/research/$slug'
+import { Route as ApiHelgaAuthorizeRouteImport } from './routes/api/helga/authorize'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -70,6 +71,11 @@ const LocaleResearchSlugRoute = LocaleResearchSlugRouteImport.update({
   path: '/research/$slug',
   getParentRoute: () => LocaleRouteRoute,
 } as any)
+const ApiHelgaAuthorizeRoute = ApiHelgaAuthorizeRouteImport.update({
+  id: '/api/helga/authorize',
+  path: '/api/helga/authorize',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -80,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/$locale/': typeof LocaleIndexRoute
   '/$locale/media/$slug': typeof LocaleMediaSlugRoute
   '/$locale/research/$slug': typeof LocaleResearchSlugRoute
+  '/api/helga/authorize': typeof ApiHelgaAuthorizeRoute
   '/$locale/media/': typeof LocaleMediaIndexRoute
   '/$locale/research/': typeof LocaleResearchIndexRoute
 }
@@ -91,6 +98,7 @@ export interface FileRoutesByTo {
   '/$locale': typeof LocaleIndexRoute
   '/$locale/media/$slug': typeof LocaleMediaSlugRoute
   '/$locale/research/$slug': typeof LocaleResearchSlugRoute
+  '/api/helga/authorize': typeof ApiHelgaAuthorizeRoute
   '/$locale/media': typeof LocaleMediaIndexRoute
   '/$locale/research': typeof LocaleResearchIndexRoute
 }
@@ -104,6 +112,7 @@ export interface FileRoutesById {
   '/$locale/': typeof LocaleIndexRoute
   '/$locale/media/$slug': typeof LocaleMediaSlugRoute
   '/$locale/research/$slug': typeof LocaleResearchSlugRoute
+  '/api/helga/authorize': typeof ApiHelgaAuthorizeRoute
   '/$locale/media/': typeof LocaleMediaIndexRoute
   '/$locale/research/': typeof LocaleResearchIndexRoute
 }
@@ -118,6 +127,7 @@ export interface FileRouteTypes {
     | '/$locale/'
     | '/$locale/media/$slug'
     | '/$locale/research/$slug'
+    | '/api/helga/authorize'
     | '/$locale/media/'
     | '/$locale/research/'
   fileRoutesByTo: FileRoutesByTo
@@ -129,6 +139,7 @@ export interface FileRouteTypes {
     | '/$locale'
     | '/$locale/media/$slug'
     | '/$locale/research/$slug'
+    | '/api/helga/authorize'
     | '/$locale/media'
     | '/$locale/research'
   id:
@@ -141,6 +152,7 @@ export interface FileRouteTypes {
     | '/$locale/'
     | '/$locale/media/$slug'
     | '/$locale/research/$slug'
+    | '/api/helga/authorize'
     | '/$locale/media/'
     | '/$locale/research/'
   fileRoutesById: FileRoutesById
@@ -148,6 +160,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LocaleRouteRoute: typeof LocaleRouteRouteWithChildren
+  ApiHelgaAuthorizeRoute: typeof ApiHelgaAuthorizeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -222,6 +235,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocaleResearchSlugRouteImport
       parentRoute: typeof LocaleRouteRoute
     }
+    '/api/helga/authorize': {
+      id: '/api/helga/authorize'
+      path: '/api/helga/authorize'
+      fullPath: '/api/helga/authorize'
+      preLoaderRoute: typeof ApiHelgaAuthorizeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -254,6 +274,7 @@ const LocaleRouteRouteWithChildren = LocaleRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LocaleRouteRoute: LocaleRouteRouteWithChildren,
+  ApiHelgaAuthorizeRoute: ApiHelgaAuthorizeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

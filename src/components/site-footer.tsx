@@ -18,9 +18,7 @@ export function SiteFooter() {
             {copy.footer.mark}
           </p>
           <p className="mt-3 font-display text-xl text-muted">{copy.footer.line}</p>
-          <p className="mt-4 text-xs leading-relaxed text-faint">
-            {copy.footer.rights}
-          </p>
+          <p className="mt-4 text-xs leading-relaxed text-faint">{copy.footer.rights}</p>
         </div>
         <div className="flex flex-wrap gap-x-8 gap-y-3 text-sm">
           <Link
@@ -59,10 +57,7 @@ export function SiteFooter() {
           >
             @{copy.brand.handle}
           </a>
-          <a
-            href={`mailto:${links.email}`}
-            className="text-muted no-underline hover:text-fg"
-          >
+          <a href={`mailto:${links.email}`} className="text-muted no-underline hover:text-fg">
             {links.email}
           </a>
           <LangSwitcher />

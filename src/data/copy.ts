@@ -21,8 +21,7 @@ export const copy = {
     footer: {
       mark: "Tobias P. Goebel",
       line: "Media & Advisory",
-      rights:
-        "Independent. Not affiliated with Tesla, Waymo, or any automaker. Online: tpgoebel.",
+      rights: "Independent. Not affiliated with Tesla, Waymo, or any automaker. Online: tpgoebel.",
     },
     home: {
       eyebrow: "Media & Advisory · Boston",
@@ -43,14 +42,12 @@ export const copy = {
         "Independent briefings on what these systems actually do — and what European rules already allow. From Boston, in English or German.",
       advisoryDoorCta: "Advisory",
       featured: "Research",
-      featuredDek:
-        "Published graphics, a public FSD scorecard, and an interactive tool.",
+      featuredDek: "Published graphics, a public FSD scorecard, and an interactive tool.",
       mediaTitle: "TeslaTobi and TechTalkTobi",
       mediaDek:
         "The German commentary channel and the English commentary channel. Event reports in a TV format.",
       aboutTitle: "Independent, reachable",
-      aboutDek:
-        "Online I am tpgoebel. You book Tobias P. Goebel.",
+      aboutDek: "Online I am tpgoebel. You book Tobias P. Goebel.",
       aboutCta: "About and contact",
     },
     research: {
@@ -72,13 +69,11 @@ export const copy = {
       eyebrow: "Media & PR",
       title: "TeslaTobi and TechTalkTobi",
       dek: "Two commentary channels and TV-format event reports. For producers, event agencies, and press officers.",
-      teslaTobiDek:
-        "German commentary channel — robotics and self-driving vehicles.",
+      teslaTobiDek: "German commentary channel — robotics and self-driving vehicles.",
       techTalkDek:
         "English commentary channel — robotics, self-driving vehicles, and AI and society.",
       reportsTitle: "Reports",
-      reportsDek:
-        "Two field reports: the first ProRL race, and Robotics Expo Boston 2026.",
+      reportsDek: "Two field reports: the first ProRL race, and Robotics Expo Boston 2026.",
       watch: "Watch on YouTube",
       subscribe: "YouTube",
       reportCta: "Watch the report",
@@ -104,6 +99,20 @@ export const copy = {
       otherProductions: "Other productions",
       consultCta: "Advisory",
       mediaKitCta: "Media kit September 2026 (PDF)",
+    },
+    helga: {
+      talk: "Talk to Helga",
+      close: "Close",
+      dek: "Helga is Tobias Goebel's assistant. She can talk about what he has published. The microphone is used only while the call is open.",
+      start: "Start",
+      stop: "Stop",
+      connecting: "Connecting…",
+      live: "On the call",
+      idle: "Not on a call",
+      micDenied:
+        "Microphone blocked. Allow the microphone for this site in your browser settings, then try again.",
+      micUnavailable: "This browser has no microphone available.",
+      error: "The call could not start. Try again in a moment.",
     },
     consulting: {
       eyebrow: "Advisory",
@@ -193,8 +202,7 @@ export const copy = {
       mediaDek:
         "Der deutschsprachige und der englischsprachige Kommentar-Kanal. Dazu Eventberichte im TV-Stil.",
       aboutTitle: "Unabhängig, erreichbar",
-      aboutDek:
-        "Online bin ich tpgoebel. Gebucht wird Tobias P. Goebel.",
+      aboutDek: "Online bin ich tpgoebel. Gebucht wird Tobias P. Goebel.",
       aboutCta: "Über mich und Kontakt",
     },
     research: {
@@ -216,13 +224,11 @@ export const copy = {
       eyebrow: "Medien & PR",
       title: "TeslaTobi und TechTalkTobi",
       dek: "Zwei Kommentar-Kanäle und Eventberichte im TV-Stil. Für Produktionen, Eventagenturen und Pressestellen.",
-      teslaTobiDek:
-        "Deutschsprachiger Kommentar-Kanal — Robotik und selbstfahrende Fahrzeuge.",
+      teslaTobiDek: "Deutschsprachiger Kommentar-Kanal — Robotik und selbstfahrende Fahrzeuge.",
       techTalkDek:
         "Englischsprachiger Kommentar-Kanal — Robotik, selbstfahrende Fahrzeuge sowie KI und Gesellschaft.",
       reportsTitle: "Berichte",
-      reportsDek:
-        "Zwei Berichte: der erste ProRL-Lauf und die Robotics Expo Boston 2026.",
+      reportsDek: "Zwei Berichte: der erste ProRL-Lauf und die Robotics Expo Boston 2026.",
       watch: "Auf YouTube ansehen",
       subscribe: "YouTube",
       reportCta: "Bericht ansehen",
@@ -248,6 +254,20 @@ export const copy = {
       otherProductions: "Weitere Produktionen",
       consultCta: "Beratung",
       mediaKitCta: "Media Kit September 2026 (PDF)",
+    },
+    helga: {
+      talk: "Mit Helga sprechen",
+      close: "Schließen",
+      dek: "Helga ist die Assistentin von Tobias Goebel. Sie kann über das sprechen, was er veröffentlicht hat. Das Mikrofon wird nur während des Gesprächs verwendet.",
+      start: "Start",
+      stop: "Beenden",
+      connecting: "Verbindung…",
+      live: "Im Gespräch",
+      idle: "Kein Gespräch",
+      micDenied:
+        "Mikrofon blockiert. Erlauben Sie das Mikrofon für diese Website in den Browser-Einstellungen und versuchen Sie es erneut.",
+      micUnavailable: "In diesem Browser ist kein Mikrofon verfügbar.",
+      error: "Das Gespräch konnte nicht starten. Bitte versuchen Sie es gleich noch einmal.",
     },
     consulting: {
       eyebrow: "Beratung",
