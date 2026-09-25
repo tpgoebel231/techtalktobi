@@ -1,6 +1,10 @@
 # Optional Vercel deploy. Skips (does not fail) when secrets are missing,
 # so this repo can ship via GitHub Pages without flooding failure emails.
 # Does not touch techtalktobi-old.
+#
+# Helga: set BLAND_API_KEY on the Vercel project runtime environment.
+# Do not put that key in this workflow or in any VITE_ variable.
+# GitHub Pages cannot run POST /api/helga/authorize.
 
 name: Deploy
 
