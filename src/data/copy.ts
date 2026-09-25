@@ -105,6 +105,20 @@ export const copy = {
       consultCta: "Advisory",
       mediaKitCta: "Media kit September 2026 (PDF)",
     },
+    helga: {
+      talk: "Talk to Helga",
+      close: "Close",
+      dek: "Helga is Tobias Goebel's assistant. She can talk about what he has published. The microphone is used only while the call is open.",
+      start: "Start",
+      stop: "Stop",
+      connecting: "Connecting…",
+      live: "On the call",
+      idle: "Not on a call",
+      micDenied:
+        "Microphone blocked. Allow the microphone for this site in your browser settings, then try again.",
+      micUnavailable: "This browser has no microphone available.",
+      error: "The call could not start. Try again in a moment.",
+    },
     consulting: {
       eyebrow: "Advisory",
       title: "Advisory on autonomous systems",
@@ -248,6 +262,20 @@ export const copy = {
       otherProductions: "Weitere Produktionen",
       consultCta: "Beratung",
       mediaKitCta: "Media Kit September 2026 (PDF)",
+    },
+    helga: {
+      talk: "Mit Helga sprechen",
+      close: "Schließen",
+      dek: "Helga ist die Assistentin von Tobias Goebel. Sie kann über das sprechen, was er veröffentlicht hat. Das Mikrofon wird nur während des Gesprächs verwendet.",
+      start: "Start",
+      stop: "Beenden",
+      connecting: "Verbindung…",
+      live: "Im Gespräch",
+      idle: "Kein Gespräch",
+      micDenied:
+        "Mikrofon blockiert. Erlauben Sie das Mikrofon für diese Website in den Browser-Einstellungen und versuchen Sie es erneut.",
+      micUnavailable: "In diesem Browser ist kein Mikrofon verfügbar.",
+      error: "Das Gespräch konnte nicht starten. Bitte versuchen Sie es gleich noch einmal.",
     },
     consulting: {
       eyebrow: "Beratung",

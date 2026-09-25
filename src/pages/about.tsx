@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Globe, Mail, Youtube } from "lucide-react";
+import { HelgaCall } from "@/components/helga-call";
 import { Container } from "@/components/container";
 import { Button } from "@/components/ui/button";
 import { links } from "@/data/media";
@@ -100,6 +101,7 @@ export function AboutPage() {
               {copy.about.consultCta}
             </Link>
           </Button>
+          <HelgaCall />
         </div>
       </section>
     </Container>
