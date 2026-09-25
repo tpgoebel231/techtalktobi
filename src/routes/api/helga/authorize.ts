@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { handleHelgaAuthorize } from "@/lib/helga-authorize.server";
+import { handleHelgaAuthorize, handleHelgaPreflight } from "@/lib/helga-authorize.server";
 
 function methodNotAllowed(): Response {
   return new Response(null, {
@@ -13,7 +13,7 @@ export const Route = createFileRoute("/api/helga/authorize")({
     handlers: {
       POST: ({ request }) => handleHelgaAuthorize(request),
       GET: () => methodNotAllowed(),
-      OPTIONS: () => methodNotAllowed(),
+      OPTIONS: ({ request }) => handleHelgaPreflight(request),
       PUT: () => methodNotAllowed(),
       PATCH: () => methodNotAllowed(),
       DELETE: () => methodNotAllowed(),

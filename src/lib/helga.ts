@@ -9,6 +9,25 @@ export const HELGA_AGENT_ID = "40d57636-a89a-47e5-8043-07bc1c16efd8";
 /** Same-origin route that mints a one-time session token. */
 export const HELGA_AUTHORIZE_PATH = "/api/helga/authorize";
 
+/**
+ * Static GitHub Pages cannot run this route. Those two origins call the
+ * Vercel server. No API key belongs in this URL.
+ */
+export const HELGA_VERCEL_AUTHORIZE_URL = "https://techtalktobi.vercel.app/api/helga/authorize";
+
+const PAGES_ORIGINS = new Set(["https://techtalktobi.com", "https://www.techtalktobi.com"]);
+
+function currentOrigin(): string {
+  if (typeof location === "undefined") return "";
+  return location.origin;
+}
+
+/** Absolute on Pages. Relative on Vercel, localhost, and grok-sandbox. */
+export function helgaAuthorizeUrl(pageOrigin = currentOrigin()): string {
+  if (PAGES_ORIGINS.has(pageOrigin)) return HELGA_VERCEL_AUTHORIZE_URL;
+  return HELGA_AUTHORIZE_PATH;
+}
+
 export type MicPermission = "ok" | "denied" | "unavailable";
 
 export async function requestMicrophone(): Promise<MicPermission> {
@@ -36,11 +55,12 @@ export async function requestMicrophone(): Promise<MicPermission> {
 export async function fetchHelgaSession(
   locale: Locale,
 ): Promise<{ token: string; agentId: string }> {
-  const response = await fetch(HELGA_AUTHORIZE_PATH, {
+  const response = await fetch(helgaAuthorizeUrl(), {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ locale }),
     cache: "no-store",
+    credentials: "omit",
   });
 
   if (!response.ok) {

@@ -21,7 +21,7 @@ Create a **new** Vercel project for this repo (do not reuse the project behind t
 - `VERCEL_ORG_ID`
 - `VERCEL_PROJECT_ID`
 
-Vercel’s built-in Git deploys are disabled in `vercel.json` so Actions is the only deployer.
+Vercel Git deploys are enabled in `vercel.json` for the connected Hobby project `techtalktobi` (team T3MC). `.github/workflows/deploy.yml` stays an optional backup and still skips when its secrets are unset.
 
 ## Local
 
@@ -34,8 +34,8 @@ Auth is off (`VITE_AUTH_ENABLED=false`).
 
 ## Helga
 
-The About page button starts a call by `POST /api/helga/authorize`. That route has to run on a server.
+The About page button starts a call through `POST /api/helga/authorize`. GitHub Pages stays the static site. The API host is the existing Vercel project: [https://techtalktobi.vercel.app](https://techtalktobi.vercel.app).
 
-Live [techtalktobi.com](https://techtalktobi.com) is GitHub Pages (`.github/workflows/pages.yml`, `NITRO_PRESET=github_pages`). Pages is static. `POST /api/helga/authorize` there is not this app’s route — the host answers 405. The rest of the site still deploys. Start on that host does not open a conversation.
+On `https://techtalktobi.com` and `https://www.techtalktobi.com`, the browser posts to `https://techtalktobi.vercel.app/api/helga/authorize`. On that Vercel host, localhost, and grok-sandbox, it uses the relative path. The server allows those two Pages origins only when the request host is exactly `techtalktobi.vercel.app`.
 
-To run authorize, deploy the Nitro server build with `.github/workflows/deploy.yml` (Vercel preset) and set **`BLAND_API_KEY`** on the Vercel project’s runtime environment (Production, and Preview if you use it). Do not prefix it with `VITE_`, do not commit it, and do not put it in GitHub Actions. The agent id is fixed in source. Until `https://techtalktobi.com/api/helga/authorize` is served by that Vercel app, do not treat Start on the live site as connected.
+Set **`BLAND_API_KEY`** on the Vercel project’s runtime environment. Do not prefix it with `VITE_`, do not commit it, and do not put it in GitHub Actions. After merge, the Vercel Git integration deploys `main`. Start on techtalktobi.com talks to Vercel; it does not run on Pages itself.
