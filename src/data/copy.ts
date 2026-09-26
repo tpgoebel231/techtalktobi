@@ -103,7 +103,7 @@ export const copy = {
     helga: {
       talk: "Talk to Helga",
       close: "Close",
-      dek: "Helga is Tobias Goebel's assistant. She can talk about what he has published. The microphone is used only while the call is open.",
+      dek: "Helga is Tobias Goebel's assistant. The microphone is used only while the call is open.",
       start: "Start",
       stop: "Stop",
       connecting: "Connecting…",
@@ -258,7 +258,7 @@ export const copy = {
     helga: {
       talk: "Mit Helga sprechen",
       close: "Schließen",
-      dek: "Helga ist die Assistentin von Tobias Goebel. Sie kann über das sprechen, was er veröffentlicht hat. Das Mikrofon wird nur während des Gesprächs verwendet.",
+      dek: "Helga ist die Assistentin von Tobias Goebel. Das Mikrofon wird nur während des Gesprächs verwendet.",
       start: "Start",
       stop: "Beenden",
       connecting: "Verbindung…",
