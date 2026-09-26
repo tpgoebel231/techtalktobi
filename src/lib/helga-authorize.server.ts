@@ -1,4 +1,4 @@
-import { HELGA_AGENT_ID } from "./helga.ts";
+import { helgaAgentIdForLocale } from "./helga.ts";
 import type { Locale } from "./locale.ts";
 
 /**
@@ -17,9 +17,9 @@ const VERCEL_API_HOST = "techtalktobi.vercel.app";
 const NO_STORE = { "cache-control": "no-store" };
 
 /**
- * Opening line the agent prompt speaks via `{{greeting}}`. Kept on the server
- * so the client bundle does not need the copy. The agent itself stays on
- * babel; this request does not set a language.
+ * Greeting copy kept on the server so the client bundle does not need it.
+ * Spoken openers are pinned as first_sentence on the EN/DE Bland agents;
+ * authorize still passes greeting/locale as session vars for the prompt.
  */
 const HELGA_GREETING = {
   en: "Hi, I'm Helga — Tobias Goebel's public assistant. What would you like to know?",
@@ -234,18 +234,20 @@ export async function handleHelgaAuthorize(
     return json({ error: "forbidden" }, 403);
   }
 
+  const locale = await readLocale(request);
+  const agentId = helgaAgentIdForLocale(locale);
   const mint = options?.mint;
   let token = "";
   try {
     if (mint) {
-      token = await mint(await readLocale(request));
+      token = await mint(locale);
     } else {
       const apiKey = blandApiKey();
       if (!apiKey) {
         console.error("[helga] authorize unavailable: server key is not set");
         return json({ error: "not_configured" }, 503, request);
       }
-      token = await mintWithBland(apiKey, await readLocale(request));
+      token = await mintWithBland(apiKey, locale, agentId);
     }
   } catch {
     console.error("[helga] authorize upstream failed");
@@ -257,7 +259,7 @@ export async function handleHelgaAuthorize(
     return json({ error: "authorize_failed" }, 502, request);
   }
 
-  return json({ token, agentId: HELGA_AGENT_ID }, 200, request);
+  return json({ token, agentId }, 200, request);
 }
 
 export type HelgaAuthorizeBody = {
@@ -270,15 +272,9 @@ export type HelgaAuthorizeBody = {
 /**
  * Body for `POST /v1/agents/{id}/authorize` only. Not an agent-settings update.
  *
- * Bland exposes these session variables on the call as `request_data`
- * (`{{locale}}`, `{{greeting}}`). Flat `locale` and `greeting` are the
- * documented session-variable shape. The same pair is repeated under
- * `request_data`, which is what prior calls already delivered, and under
- * `context`, which the Admin SDK sends and which those calls included
- * without dropping `request_data`.
- *
- * No `language` and no `first_sentence`: the stored agent stays babel and
- * speaks `{{greeting}}`.
+ * Bland authorize cannot set `language` per session. DE and EN use separate
+ * agents with language + first_sentence pinned. Session vars still carry
+ * `locale` / `greeting` for the prompt.
  */
 export function helgaAuthorizeBody(locale: Locale | undefined): HelgaAuthorizeBody {
   const variables: HelgaSessionVariables = {
@@ -293,8 +289,12 @@ export function helgaAuthorizeBody(locale: Locale | undefined): HelgaAuthorizeBo
   };
 }
 
-async function mintWithBland(apiKey: string, locale: Locale | undefined): Promise<string> {
-  const upstream = await fetch(`https://api.bland.ai/v1/agents/${HELGA_AGENT_ID}/authorize`, {
+async function mintWithBland(
+  apiKey: string,
+  locale: Locale | undefined,
+  agentId: string,
+): Promise<string> {
+  const upstream = await fetch(`https://api.bland.ai/v1/agents/${agentId}/authorize`, {
     method: "POST",
     headers: {
       Authorization: apiKey,

@@ -1,10 +1,27 @@
 import type { Locale } from "@/lib/locale";
 
 /**
- * Fixed public web-agent id. Not a secret, and not configurable from the browser.
+ * Public web-agent ids. Not secrets, and not configurable from the browser.
+ * Bland authorize cannot override language per session, so DE and EN each use
+ * their own agent (language + first_sentence pinned on the agent).
  * The Bland API key is server-only (`BLAND_API_KEY`) and must never use a `VITE_` name.
  */
-export const HELGA_AGENT_ID = "40d57636-a89a-47e5-8043-07bc1c16efd8";
+export const HELGA_AGENT_ID_EN = "40d57636-a89a-47e5-8043-07bc1c16efd8";
+export const HELGA_AGENT_ID_DE = "99a49d35-4c4a-41f1-96f0-1bc5a0fc13fa";
+
+/** @deprecated Prefer HELGA_AGENT_ID_EN or helgaAgentIdForLocale. */
+export const HELGA_AGENT_ID = HELGA_AGENT_ID_EN;
+
+const HELGA_AGENT_IDS = new Set([HELGA_AGENT_ID_EN, HELGA_AGENT_ID_DE]);
+
+/** Missing or unknown locale uses the English agent. */
+export function helgaAgentIdForLocale(locale: Locale | undefined): string {
+  return locale === "de" ? HELGA_AGENT_ID_DE : HELGA_AGENT_ID_EN;
+}
+
+export function isHelgaAgentId(agentId: string): boolean {
+  return HELGA_AGENT_IDS.has(agentId);
+}
 
 /** Same-origin route that mints a one-time session token. */
 export const HELGA_AUTHORIZE_PATH = "/api/helga/authorize";
@@ -74,7 +91,8 @@ export async function fetchHelgaSession(
 
   const token = "token" in body && typeof body.token === "string" ? body.token : "";
   const agentId = "agentId" in body && typeof body.agentId === "string" ? body.agentId : "";
-  if (!token || agentId !== HELGA_AGENT_ID) {
+  const expected = helgaAgentIdForLocale(locale);
+  if (!token || agentId !== expected || !isHelgaAgentId(agentId)) {
     throw new Error("helga authorize failed");
   }
 

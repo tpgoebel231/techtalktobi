@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { afterEach, describe, it } from "node:test";
-import { HELGA_AGENT_ID, helgaAuthorizeUrl } from "./helga.ts";
+import {
+  HELGA_AGENT_ID_DE,
+  HELGA_AGENT_ID_EN,
+  helgaAuthorizeUrl,
+} from "./helga.ts";
 import {
   handleHelgaAuthorize,
   handleHelgaPreflight,
@@ -255,7 +259,7 @@ describe("helga authorize gate", () => {
     const originalFetch = globalThis.fetch;
     globalThis.fetch = async (input, init) => {
       const url = String(input);
-      assert.equal(url, `https://api.bland.ai/v1/agents/${HELGA_AGENT_ID}/authorize`);
+      assert.match(url, /^https:\/\/api\.bland\.ai\/v1\/agents\/[0-9a-f-]+\/authorize$/);
       assert.equal(init?.method, "POST");
       const headers = new Headers(init?.headers);
       assert.equal(headers.get("authorization"), SERVER_KEY);
@@ -268,21 +272,29 @@ describe("helga authorize gate", () => {
 
     try {
       const cases = [
-        { body: "{}", ip: "203.0.113.80", expected: helgaAuthorizeBody(undefined) },
+        {
+          body: "{}",
+          ip: "203.0.113.80",
+          expected: helgaAuthorizeBody(undefined),
+          agentId: HELGA_AGENT_ID_EN,
+        },
         {
           body: JSON.stringify({ locale: "en" }),
           ip: "203.0.113.81",
           expected: helgaAuthorizeBody("en"),
+          agentId: HELGA_AGENT_ID_EN,
         },
         {
           body: JSON.stringify({ locale: "de" }),
           ip: "203.0.113.82",
           expected: helgaAuthorizeBody("de"),
+          agentId: HELGA_AGENT_ID_DE,
         },
         {
           body: JSON.stringify({ locale: "fr" }),
           ip: "203.0.113.83",
           expected: helgaAuthorizeBody(undefined),
+          agentId: HELGA_AGENT_ID_EN,
         },
       ];
       for (const item of cases) {
@@ -292,7 +304,8 @@ describe("helga authorize gate", () => {
         );
         assert.equal(response.status, 200);
         const payload = await response.json();
-        assert.deepEqual(payload, { token: "session-token", agentId: HELGA_AGENT_ID });
+        assert.deepEqual(payload, { token: "session-token", agentId: item.agentId });
+        assert.equal(sent.at(-1)?.url, `https://api.bland.ai/v1/agents/${item.agentId}/authorize`);
         assert.equal(JSON.stringify(payload).includes(GREETING_EN), false);
         assert.equal(JSON.stringify(payload).includes(GREETING_DE), false);
         assert.equal(JSON.stringify(payload).includes(SERVER_KEY), false);
@@ -340,7 +353,7 @@ describe("helga authorize gate", () => {
       assert.equal(ok.status, 200);
       assert.equal(ok.headers.get("access-control-allow-origin"), "https://www.techtalktobi.com");
       const body = await ok.json();
-      assert.deepEqual(body, { token: "session-token", agentId: HELGA_AGENT_ID });
+      assert.deepEqual(body, { token: "session-token", agentId: HELGA_AGENT_ID_EN });
       assert.deepEqual(Object.keys(body).sort(), ["agentId", "token"]);
 
       globalThis.fetch = async () =>
