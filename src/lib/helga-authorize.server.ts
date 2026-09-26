@@ -16,6 +16,16 @@ const VERCEL_API_HOST = "techtalktobi.vercel.app";
 
 const NO_STORE = { "cache-control": "no-store" };
 
+/**
+ * Spoken opening line only. Kept on the server so the client bundle does not
+ * need the copy. Babel stays the session language so Helga can switch after
+ * this sentence.
+ */
+const HELGA_GREETING = {
+  en: "Hi, I'm Helga — Tobias Goebel's public assistant. What would you like to know?",
+  de: "Hallo, ich bin Helga — die öffentliche Assistentin von Tobias Goebel. Was möchten Sie wissen?",
+} as const;
+
 export function resetHelgaRateLimit(): void {
   hits.clear();
 }
@@ -236,6 +246,31 @@ export async function handleHelgaAuthorize(
   return json({ token, agentId: HELGA_AGENT_ID }, 200, request);
 }
 
+/**
+ * Body for `POST /v1/agents/{id}/authorize`.
+ *
+ * Docs treat the body as session variables. The SDK sends those variables
+ * under `context`. `first_sentence` is Bland's opening-line field.
+ * `request_data` is the documented `{{var}}` bag. `language` stays `babel`
+ * (not `en`/`de`) so later turns can still switch. Missing locale defaults to EN.
+ */
+export function helgaAuthorizeBody(locale: Locale | undefined): Record<string, unknown> {
+  const sessionLocale: Locale = locale === "de" ? "de" : "en";
+  const greeting = HELGA_GREETING[sessionLocale];
+  const variables = { locale: sessionLocale, greeting };
+  return {
+    locale: sessionLocale,
+    language: "babel",
+    first_sentence: greeting,
+    request_data: variables,
+    context: {
+      ...variables,
+      language: "babel",
+      first_sentence: greeting,
+    },
+  };
+}
+
 async function mintWithBland(apiKey: string, locale: Locale | undefined): Promise<string> {
   const upstream = await fetch(`https://api.bland.ai/v1/agents/${HELGA_AGENT_ID}/authorize`, {
     method: "POST",
@@ -243,7 +278,7 @@ async function mintWithBland(apiKey: string, locale: Locale | undefined): Promis
       Authorization: apiKey,
       "content-type": "application/json",
     },
-    body: JSON.stringify(locale ? { locale } : {}),
+    body: JSON.stringify(helgaAuthorizeBody(locale)),
   });
 
   if (!upstream.ok) {

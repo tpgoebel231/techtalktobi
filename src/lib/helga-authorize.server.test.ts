@@ -4,8 +4,14 @@ import { HELGA_AGENT_ID, helgaAuthorizeUrl } from "./helga.ts";
 import {
   handleHelgaAuthorize,
   handleHelgaPreflight,
+  helgaAuthorizeBody,
   resetHelgaRateLimit,
 } from "./helga-authorize.server.ts";
+
+const GREETING_EN =
+  "Hi, I'm Helga — Tobias Goebel's public assistant. What would you like to know?";
+const GREETING_DE =
+  "Hallo, ich bin Helga — die öffentliche Assistentin von Tobias Goebel. Was möchten Sie wissen?";
 
 const WINDOW_MS = 10 * 60 * 1000;
 const SERVER_KEY = "test-server-key";
@@ -18,14 +24,18 @@ function post(url: string, headers: Record<string, string>, body = "{}"): Reques
   });
 }
 
-function sameOrigin(origin: string, ip = "203.0.113.10"): Request {
+function sameOrigin(origin: string, ip = "203.0.113.10", body = "{}"): Request {
   const host = new URL(origin).host;
-  return post(`${origin}/api/helga/authorize`, {
-    origin,
-    "x-forwarded-host": host,
-    "x-real-ip": ip,
-    "sec-fetch-site": "same-origin",
-  });
+  return post(
+    `${origin}/api/helga/authorize`,
+    {
+      origin,
+      "x-forwarded-host": host,
+      "x-real-ip": ip,
+      "sec-fetch-site": "same-origin",
+    },
+    body,
+  );
 }
 
 afterEach(() => {
@@ -202,6 +212,72 @@ describe("helga authorize gate", () => {
     assert.equal(helgaAuthorizeUrl("https://techtalktobi.vercel.app"), "/api/helga/authorize");
     assert.equal(helgaAuthorizeUrl("http://localhost:8080"), "/api/helga/authorize");
     assert.equal(helgaAuthorizeUrl("https://preview.grok-sandbox.com"), "/api/helga/authorize");
+  });
+
+  it("mints the locale greeting and keeps babel for later turns", async () => {
+    for (const greeting of [GREETING_EN, GREETING_DE]) {
+      assert.ok(greeting.length < 200, greeting);
+    }
+
+    assert.deepEqual(helgaAuthorizeBody(undefined), helgaAuthorizeBody("en"));
+    const english = helgaAuthorizeBody("en");
+    const german = helgaAuthorizeBody("de");
+    assert.equal(english.language, "babel");
+    assert.equal(german.language, "babel");
+    assert.equal(english.first_sentence, GREETING_EN);
+    assert.equal(german.first_sentence, GREETING_DE);
+    assert.deepEqual(english.request_data, { locale: "en", greeting: GREETING_EN });
+    assert.deepEqual(german.request_data, { locale: "de", greeting: GREETING_DE });
+    assert.equal(english.locale, "en");
+    assert.equal(german.locale, "de");
+
+    process.env.BLAND_API_KEY = SERVER_KEY;
+    const sent: unknown[] = [];
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = async (input, init) => {
+      assert.equal(String(input), `https://api.bland.ai/v1/agents/${HELGA_AGENT_ID}/authorize`);
+      const headers = new Headers(init?.headers);
+      assert.equal(headers.get("authorization"), SERVER_KEY);
+      sent.push(JSON.parse(String(init?.body)));
+      return new Response(JSON.stringify({ token: "session-token", secret: SERVER_KEY }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      });
+    };
+
+    try {
+      const cases = [
+        { body: "{}", ip: "203.0.113.80", expected: helgaAuthorizeBody(undefined) },
+        {
+          body: JSON.stringify({ locale: "en" }),
+          ip: "203.0.113.81",
+          expected: helgaAuthorizeBody("en"),
+        },
+        {
+          body: JSON.stringify({ locale: "de" }),
+          ip: "203.0.113.82",
+          expected: helgaAuthorizeBody("de"),
+        },
+        {
+          body: JSON.stringify({ locale: "fr" }),
+          ip: "203.0.113.83",
+          expected: helgaAuthorizeBody(undefined),
+        },
+      ];
+      for (const item of cases) {
+        const response = await handleHelgaAuthorize(
+          sameOrigin("https://techtalktobi.com", item.ip, item.body),
+        );
+        assert.equal(response.status, 200);
+        const payload = await response.json();
+        assert.deepEqual(payload, { token: "session-token", agentId: HELGA_AGENT_ID });
+        assert.equal(JSON.stringify(payload).includes(GREETING_EN), false);
+        assert.equal(JSON.stringify(payload).includes(GREETING_DE), false);
+        assert.deepEqual(sent.at(-1), item.expected);
+      }
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
   });
 
   it("fails closed without a server key and does not leak upstream fields", async () => {
