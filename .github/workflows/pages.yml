@@ -1,8 +1,8 @@
-# Pages auto-deploy from main is off because the github-pages environment
-# rejects main. Live static hosting is handled via the gh-pages path /
-# manual dispatch until those rules change.
+# Build-only. The github-pages environment rejects main, so this workflow
+# does not deploy. Manual dispatch builds the static site and uploads the
+# Pages artifact, then exits green. Live static hosting is the gh-pages
+# branch; Vercel ignores that branch (see vercel.json).
 #
-# Publishes the site to GitHub Pages on techtalktobi.com.
 # Does not touch tpgoebel231/techtalktobi-old.
 
 name: Pages
@@ -45,14 +45,3 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist/client
-
-  deploy:
-    name: Deploy GitHub Pages
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
