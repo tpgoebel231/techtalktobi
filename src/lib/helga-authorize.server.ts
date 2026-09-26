@@ -17,14 +17,28 @@ const VERCEL_API_HOST = "techtalktobi.vercel.app";
 const NO_STORE = { "cache-control": "no-store" };
 
 /**
- * Spoken opening line only. Kept on the server so the client bundle does not
- * need the copy. Babel stays the session language so Helga can switch after
- * this sentence.
+ * Opening line the agent prompt speaks via `{{greeting}}`. Kept on the server
+ * so the client bundle does not need the copy. The agent itself stays on
+ * babel; this request does not set a language.
  */
 const HELGA_GREETING = {
   en: "Hi, I'm Helga — Tobias Goebel's public assistant. What would you like to know?",
   de: "Hallo, ich bin Helga — die öffentliche Assistentin von Tobias Goebel. Was möchten Sie wissen?",
 } as const;
+
+/** Missing or unknown locale uses the English session. */
+function helgaSessionLocale(locale: Locale | undefined): Locale {
+  return locale === "de" ? "de" : "en";
+}
+
+export function helgaGreeting(locale: Locale | undefined): string {
+  return HELGA_GREETING[helgaSessionLocale(locale)];
+}
+
+export type HelgaSessionVariables = {
+  locale: Locale;
+  greeting: string;
+};
 
 export function resetHelgaRateLimit(): void {
   hits.clear();
@@ -246,28 +260,36 @@ export async function handleHelgaAuthorize(
   return json({ token, agentId: HELGA_AGENT_ID }, 200, request);
 }
 
+export type HelgaAuthorizeBody = {
+  locale: Locale;
+  greeting: string;
+  request_data: HelgaSessionVariables;
+  context: HelgaSessionVariables;
+};
+
 /**
- * Body for `POST /v1/agents/{id}/authorize`.
+ * Body for `POST /v1/agents/{id}/authorize` only. Not an agent-settings update.
  *
- * Docs treat the body as session variables. The SDK sends those variables
- * under `context`. `first_sentence` is Bland's opening-line field.
- * `request_data` is the documented `{{var}}` bag. `language` stays `babel`
- * (not `en`/`de`) so later turns can still switch. Missing locale defaults to EN.
+ * Bland exposes these session variables on the call as `request_data`
+ * (`{{locale}}`, `{{greeting}}`). Flat `locale` and `greeting` are the
+ * documented session-variable shape. The same pair is repeated under
+ * `request_data`, which is what prior calls already delivered, and under
+ * `context`, which the Admin SDK sends and which those calls included
+ * without dropping `request_data`.
+ *
+ * No `language` and no `first_sentence`: the stored agent stays babel and
+ * speaks `{{greeting}}`.
  */
-export function helgaAuthorizeBody(locale: Locale | undefined): Record<string, unknown> {
-  const sessionLocale: Locale = locale === "de" ? "de" : "en";
-  const greeting = HELGA_GREETING[sessionLocale];
-  const variables = { locale: sessionLocale, greeting };
+export function helgaAuthorizeBody(locale: Locale | undefined): HelgaAuthorizeBody {
+  const variables: HelgaSessionVariables = {
+    locale: helgaSessionLocale(locale),
+    greeting: helgaGreeting(locale),
+  };
   return {
-    locale: sessionLocale,
-    language: "babel",
-    first_sentence: greeting,
-    request_data: variables,
-    context: {
-      ...variables,
-      language: "babel",
-      first_sentence: greeting,
-    },
+    locale: variables.locale,
+    greeting: variables.greeting,
+    request_data: { ...variables },
+    context: { ...variables },
   };
 }
 

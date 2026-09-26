@@ -5,6 +5,7 @@ import {
   handleHelgaAuthorize,
   handleHelgaPreflight,
   helgaAuthorizeBody,
+  helgaGreeting,
   resetHelgaRateLimit,
 } from "./helga-authorize.server.ts";
 
@@ -214,31 +215,51 @@ describe("helga authorize gate", () => {
     assert.equal(helgaAuthorizeUrl("https://preview.grok-sandbox.com"), "/api/helga/authorize");
   });
 
-  it("mints the locale greeting and keeps babel for later turns", async () => {
+  it("sends locale and greeting as authorize session variables", async () => {
     for (const greeting of [GREETING_EN, GREETING_DE]) {
       assert.ok(greeting.length < 200, greeting);
     }
 
+    assert.equal(helgaGreeting("en"), GREETING_EN);
+    assert.equal(helgaGreeting("de"), GREETING_DE);
+    assert.equal(helgaGreeting(undefined), GREETING_EN);
     assert.deepEqual(helgaAuthorizeBody(undefined), helgaAuthorizeBody("en"));
+
     const english = helgaAuthorizeBody("en");
     const german = helgaAuthorizeBody("de");
-    assert.equal(english.language, "babel");
-    assert.equal(german.language, "babel");
-    assert.equal(english.first_sentence, GREETING_EN);
-    assert.equal(german.first_sentence, GREETING_DE);
-    assert.deepEqual(english.request_data, { locale: "en", greeting: GREETING_EN });
-    assert.deepEqual(german.request_data, { locale: "de", greeting: GREETING_DE });
-    assert.equal(english.locale, "en");
-    assert.equal(german.locale, "de");
+    const session = {
+      en: { locale: "en" as const, greeting: GREETING_EN },
+      de: { locale: "de" as const, greeting: GREETING_DE },
+    };
+    assert.deepEqual(english, {
+      ...session.en,
+      request_data: session.en,
+      context: session.en,
+    });
+    assert.deepEqual(german, {
+      ...session.de,
+      request_data: session.de,
+      context: session.de,
+    });
+    for (const body of [english, german]) {
+      assert.equal("language" in body, false);
+      assert.equal("first_sentence" in body, false);
+      assert.equal("language" in body.request_data, false);
+      assert.equal("language" in body.context, false);
+      assert.equal(JSON.stringify(body).includes("English"), false);
+      assert.equal(JSON.stringify(body).toLowerCase().includes('"language"'), false);
+    }
 
     process.env.BLAND_API_KEY = SERVER_KEY;
-    const sent: unknown[] = [];
+    const sent: { url: string; body: unknown }[] = [];
     const originalFetch = globalThis.fetch;
     globalThis.fetch = async (input, init) => {
-      assert.equal(String(input), `https://api.bland.ai/v1/agents/${HELGA_AGENT_ID}/authorize`);
+      const url = String(input);
+      assert.equal(url, `https://api.bland.ai/v1/agents/${HELGA_AGENT_ID}/authorize`);
+      assert.equal(init?.method, "POST");
       const headers = new Headers(init?.headers);
       assert.equal(headers.get("authorization"), SERVER_KEY);
-      sent.push(JSON.parse(String(init?.body)));
+      sent.push({ url, body: JSON.parse(String(init?.body)) });
       return new Response(JSON.stringify({ token: "session-token", secret: SERVER_KEY }), {
         status: 200,
         headers: { "content-type": "application/json" },
@@ -265,6 +286,7 @@ describe("helga authorize gate", () => {
         },
       ];
       for (const item of cases) {
+        const before = sent.length;
         const response = await handleHelgaAuthorize(
           sameOrigin("https://techtalktobi.com", item.ip, item.body),
         );
@@ -273,7 +295,9 @@ describe("helga authorize gate", () => {
         assert.deepEqual(payload, { token: "session-token", agentId: HELGA_AGENT_ID });
         assert.equal(JSON.stringify(payload).includes(GREETING_EN), false);
         assert.equal(JSON.stringify(payload).includes(GREETING_DE), false);
-        assert.deepEqual(sent.at(-1), item.expected);
+        assert.equal(JSON.stringify(payload).includes(SERVER_KEY), false);
+        assert.equal(sent.length, before + 1);
+        assert.deepEqual(sent.at(-1)?.body, item.expected);
       }
     } finally {
       globalThis.fetch = originalFetch;
