@@ -87,7 +87,7 @@ export const copy = {
     about: {
       eyebrow: "About",
       title: "Tobias P. Goebel",
-      dek: "Media and advisory on autonomous systems. From Boston. In English and German. Online: tpgoebel.",
+      dek: "Content and advisory on autonomous driving systems (robotaxis, driver assistance), AI, and robotics.",
       body: [
         "My journey started at the intersection of language and code. After earning degrees in computational linguistics, computer science, and general linguistics in Bonn and Edinburgh back in 2003, I spent the next two decades in the enterprise software trenches—relocating from Germany to the US in 2010.",
         "Over the years, I transitioned from engineering and consulting into technical product marketing, carving out a niche in conversational AI and the contact center world through keynotes, industry panels, and thought leadership. A highlight along the way: picking up a CogX Award for “Best Consumer Chatbot” after building an AI wine sommelier for Lidl in the UK.",
@@ -243,7 +243,7 @@ export const copy = {
     about: {
       eyebrow: "Über mich",
       title: "Tobias P. Goebel",
-      dek: "Medien und Beratung zu autonomen Systemen. Aus Boston. Auf Deutsch und Englisch. Online: tpgoebel.",
+      dek: "Content und Beratung zu autonomen Fahrsystemen (Robotaxis, Fahrerassistenz), KI und Robotik.",
       body: [
         "Nach meinem Studium der Computerlinguistik, Informatik und Allgemeinen Sprachwissenschaft in Bonn und Edinburgh (Abschluss 2003) begann meine über 20-jährige Laufbahn im Enterprise-Software-Bereich, die mich 2010 von Deutschland in die USA führte.",
         "Über Stationen in Softwareentwicklung und Consulting spezialisierte ich mich zunehmend auf technisches Product Marketing. Durch zahlreiche Vorträge auf internationalen Konferenzen und Fachpublikationen habe ich mich insbesondere in der Contact-Center-Branche rund um Conversational AI, Interactive Voice Response (IVR) und Chatbots etabliert – ausgezeichnet unter anderem mit dem renommierten CogX Award („Best Consumer Chatbot“) für die Konzeption eines Sommelier-Bots für Lidl UK.",
