@@ -3,7 +3,7 @@ import { useWebchat } from "bland-client-js-sdk/react";
 import { Button } from "@/components/ui/button";
 import {
   fetchHelgaSession,
-  HELGA_AGENT_ID,
+  helgaAgentIdForLocale,
   requestMicrophone,
   type MicPermission,
 } from "@/lib/helga";
@@ -27,8 +27,9 @@ export function HelgaCall() {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<CallError>(null);
   const [remainingMs, setRemainingMs] = useState<number | null>(null);
+  const agentId = helgaAgentIdForLocale(locale);
   const { state, start, stop, webchat } = useWebchat({
-    agentId: HELGA_AGENT_ID,
+    agentId,
     getToken: async () => {
       const session = await fetchHelgaSession(locale);
       return { token: session.token };
