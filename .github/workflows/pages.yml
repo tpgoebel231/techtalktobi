@@ -1,11 +1,13 @@
+# Pages auto-deploy from main is off because the github-pages environment
+# rejects main. Live static hosting is handled via the gh-pages path /
+# manual dispatch until those rules change.
+#
 # Publishes the site to GitHub Pages on techtalktobi.com.
 # Does not touch tpgoebel231/techtalktobi-old.
 
 name: Pages
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 concurrency:
