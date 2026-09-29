@@ -1,4 +1,4 @@
-import { helgaAgentIdForLocale } from "./helga.ts";
+import { helgaAgentIdForLocale, isHelgaUuid } from "./helga.ts";
 import type { Locale } from "./locale.ts";
 
 /**
@@ -38,6 +38,8 @@ export function helgaGreeting(locale: Locale | undefined): string {
 export type HelgaSessionVariables = {
   locale: Locale;
   greeting: string;
+  /** Browser upload id echoed by Bland so the post-call webhook can join audio. */
+  client_upload_id?: string;
 };
 
 export function resetHelgaRateLimit(): void {
@@ -158,15 +160,22 @@ export function helgaAllowedOrigin(request: Request): string | null {
   return origin ? origin.origin : null;
 }
 
-async function readLocale(request: Request): Promise<Locale | undefined> {
+type AuthorizeInput = {
+  locale: Locale | undefined;
+  clientUploadId?: string;
+};
+
+async function readAuthorizeInput(request: Request): Promise<AuthorizeInput> {
   try {
     const body: unknown = await request.json();
-    if (!body || typeof body !== "object" || !("locale" in body)) return undefined;
-    if (body.locale === "de") return "de";
-    if (body.locale === "en") return "en";
-    return undefined;
+    if (!body || typeof body !== "object") return { locale: undefined };
+    const record = body as Record<string, unknown>;
+    const locale = record.locale === "de" ? "de" : record.locale === "en" ? "en" : undefined;
+    const rawId = typeof record.client_upload_id === "string" ? record.client_upload_id.trim() : "";
+    const clientUploadId = rawId && isHelgaUuid(rawId) ? rawId.toLowerCase() : undefined;
+    return { locale, clientUploadId };
   } catch {
-    return undefined;
+    return { locale: undefined };
   }
 }
 
@@ -191,7 +200,10 @@ function json(
 }
 
 /** Browser preflight for the Pages → Vercel POST. Same-origin calls do not need it. */
-export function handleHelgaPreflight(request: Request): Response {
+export function handleHelgaPreflight(
+  request: Request,
+  options?: { allowHeaders?: string },
+): Response {
   if (request.method !== "OPTIONS") {
     return new Response(null, { status: 405, headers: { ...NO_STORE, allow: "POST" } });
   }
@@ -204,7 +216,7 @@ export function handleHelgaPreflight(request: Request): Response {
     headers: {
       "access-control-allow-origin": origin,
       "access-control-allow-methods": "POST",
-      "access-control-allow-headers": "content-type",
+      "access-control-allow-headers": options?.allowHeaders ?? "content-type",
       vary: "Origin",
       "cache-control": "no-store",
     },
@@ -234,7 +246,7 @@ export async function handleHelgaAuthorize(
     return json({ error: "forbidden" }, 403);
   }
 
-  const locale = await readLocale(request);
+  const { locale, clientUploadId } = await readAuthorizeInput(request);
   const agentId = helgaAgentIdForLocale(locale);
   const mint = options?.mint;
   let token = "";
@@ -247,7 +259,7 @@ export async function handleHelgaAuthorize(
         console.error("[helga] authorize unavailable: server key is not set");
         return json({ error: "not_configured" }, 503, request);
       }
-      token = await mintWithBland(apiKey, locale, agentId);
+      token = await mintWithBland(apiKey, locale, agentId, clientUploadId);
     }
   } catch {
     console.error("[helga] authorize upstream failed");
@@ -274,18 +286,28 @@ export type HelgaAuthorizeBody = {
  *
  * Bland authorize cannot set `language` per session. DE and EN use separate
  * agents with language + first_sentence pinned. Session vars still carry
- * `locale` / `greeting` for the prompt.
+ * `locale` / `greeting` for the prompt. An optional `client_upload_id` is a
+ * correlation id for our own recording upload — not a Bland `record` flag and
+ * not a `recording_url`.
  */
-export function helgaAuthorizeBody(locale: Locale | undefined): HelgaAuthorizeBody {
+export function helgaAuthorizeBody(
+  locale: Locale | undefined,
+  clientUploadId?: string,
+): HelgaAuthorizeBody {
   const variables: HelgaSessionVariables = {
     locale: helgaSessionLocale(locale),
     greeting: helgaGreeting(locale),
   };
+  const uploadId =
+    clientUploadId && isHelgaUuid(clientUploadId) ? clientUploadId.toLowerCase() : "";
+  const session: HelgaSessionVariables = uploadId
+    ? { ...variables, client_upload_id: uploadId }
+    : variables;
   return {
     locale: variables.locale,
     greeting: variables.greeting,
-    request_data: { ...variables },
-    context: { ...variables },
+    request_data: { ...session },
+    context: { ...session },
   };
 }
 
@@ -293,6 +315,7 @@ async function mintWithBland(
   apiKey: string,
   locale: Locale | undefined,
   agentId: string,
+  clientUploadId?: string,
 ): Promise<string> {
   const upstream = await fetch(`https://api.bland.ai/v1/agents/${agentId}/authorize`, {
     method: "POST",
@@ -300,7 +323,7 @@ async function mintWithBland(
       Authorization: apiKey,
       "content-type": "application/json",
     },
-    body: JSON.stringify(helgaAuthorizeBody(locale)),
+    body: JSON.stringify(helgaAuthorizeBody(locale, clientUploadId)),
   });
 
   if (!upstream.ok) {
