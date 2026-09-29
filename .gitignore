@@ -15,5 +15,6 @@ artifacts
 .env
 .env.*
 !.env.example
+.data/
 .grok/**
 !.grok/app-env.json

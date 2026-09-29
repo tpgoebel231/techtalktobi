@@ -114,6 +114,7 @@ export const copy = {
         "Microphone blocked. Allow the microphone for this site in your browser settings, then try again.",
       micUnavailable: "This browser has no microphone available.",
       error: "The call could not start. Try again in a moment.",
+      recording: "This conversation may be recorded for operations review.",
     },
     consulting: {
       eyebrow: "Advisory",
@@ -270,6 +271,7 @@ export const copy = {
         "Mikrofon blockiert. Erlauben Sie das Mikrofon für diese Website in den Browser-Einstellungen und versuchen Sie es erneut.",
       micUnavailable: "In diesem Browser ist kein Mikrofon verfügbar.",
       error: "Das Gespräch konnte nicht starten. Bitte versuchen Sie es gleich noch einmal.",
+      recording: "Dieses Gespräch kann für die betriebliche Prüfung aufgezeichnet werden.",
     },
     consulting: {
       eyebrow: "Beratung",

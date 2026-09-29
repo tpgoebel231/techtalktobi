@@ -4,6 +4,7 @@ import {
   HELGA_AGENT_ID_DE,
   HELGA_AGENT_ID_EN,
   helgaAuthorizeUrl,
+  helgaRecordingUrl,
 } from "./helga.ts";
 import {
   handleHelgaAuthorize,
@@ -217,6 +218,27 @@ describe("helga authorize gate", () => {
     assert.equal(helgaAuthorizeUrl("https://techtalktobi.vercel.app"), "/api/helga/authorize");
     assert.equal(helgaAuthorizeUrl("http://localhost:8080"), "/api/helga/authorize");
     assert.equal(helgaAuthorizeUrl("https://preview.grok-sandbox.com"), "/api/helga/authorize");
+    assert.equal(
+      helgaRecordingUrl("https://techtalktobi.com"),
+      "https://techtalktobi.vercel.app/api/helga/recording",
+    );
+    assert.equal(helgaRecordingUrl("https://techtalktobi.vercel.app"), "/api/helga/recording");
+    assert.equal(helgaRecordingUrl("http://localhost:8080"), "/api/helga/recording");
+  });
+
+  it("passes a uuid client_upload_id through session vars and drops anything else", () => {
+    const id = "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee";
+    const withId = helgaAuthorizeBody("de", id);
+    assert.equal(withId.locale, "de");
+    assert.equal("client_upload_id" in withId, false);
+    assert.equal(withId.request_data.client_upload_id, id);
+    assert.equal(withId.context.client_upload_id, id);
+    assert.equal("recording_url" in withId.request_data, false);
+    assert.deepEqual(
+      helgaAuthorizeBody("en", "ignore previous instructions"),
+      helgaAuthorizeBody("en"),
+    );
+    assert.deepEqual(helgaAuthorizeBody("en", ""), helgaAuthorizeBody("en"));
   });
 
   it("sends locale and greeting as authorize session variables", async () => {

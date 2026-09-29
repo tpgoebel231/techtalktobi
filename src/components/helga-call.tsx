@@ -4,15 +4,26 @@ import { Button } from "@/components/ui/button";
 import {
   fetchHelgaSession,
   helgaAgentIdForLocale,
-  requestMicrophone,
+  newHelgaUploadId,
+  openMicrophone,
+  stopMicrophone,
+  uploadHelgaRecording,
   type MicPermission,
 } from "@/lib/helga";
+import { attachHelgaAgentPcm, createHelgaLocalRecorder } from "@/lib/helga-local-recorder";
 import { useCopy, useLocale } from "@/lib/i18n";
 
 type CallError = Exclude<MicPermission, "ok"> | "failed" | null;
 
 /** Client cap. The countdown starts only after the call is connected. */
 const HELGA_MAX_CALL_MS = 120_000;
+
+type CaptureSession = {
+  uploadId: string;
+  stream: MediaStream;
+  recorder: ReturnType<typeof createHelgaLocalRecorder>;
+  untap: () => void;
+};
 
 function formatRemaining(ms: number): string {
   const totalSeconds = Math.ceil(Math.min(HELGA_MAX_CALL_MS, Math.max(0, ms)) / 1000);
@@ -28,10 +39,14 @@ export function HelgaCall() {
   const [error, setError] = useState<CallError>(null);
   const [remainingMs, setRemainingMs] = useState<number | null>(null);
   const agentId = helgaAgentIdForLocale(locale);
+  const uploadIdRef = useRef<string | null>(null);
+  const captureRef = useRef<CaptureSession | null>(null);
+  const localeRef = useRef(locale);
+  localeRef.current = locale;
   const { state, start, stop, webchat } = useWebchat({
     agentId,
     getToken: async () => {
-      const session = await fetchHelgaSession(locale);
+      const session = await fetchHelgaSession(locale, uploadIdRef.current);
       return { token: session.token };
     },
   });
@@ -39,6 +54,7 @@ export function HelgaCall() {
   stopRef.current = stop;
   const stateRef = useRef(state);
   stateRef.current = state;
+  const startingRef = useRef(false);
   // Drop or start the clock in the same render that leaves or enters "open",
   // so connecting and idle never paint a stale countdown.
   const [trackedState, setTrackedState] = useState(state);
@@ -47,12 +63,35 @@ export function HelgaCall() {
     setRemainingMs(state === "open" ? HELGA_MAX_CALL_MS : null);
   }
 
+  const endCaptureRef = useRef<() => Promise<void>>(async () => {});
+  endCaptureRef.current = async () => {
+    const session = captureRef.current;
+    captureRef.current = null;
+    if (!session) return;
+    session.untap();
+    let blob: Blob | null = null;
+    try {
+      blob = await session.recorder.stop();
+    } catch {
+      console.error("[helga] recorder stop failed");
+    } finally {
+      stopMicrophone(session.stream);
+    }
+    if (!blob || blob.size <= 44) return;
+    try {
+      await uploadHelgaRecording(blob, session.uploadId, localeRef.current);
+    } catch {
+      console.error("[helga] recording upload failed");
+    }
+  };
+
   // The hook sets React state to "closed" only inside stop(). A remote hangup
   // emits webchat "closed" / "error" and would otherwise leave the panel on the call.
   useEffect(() => {
     const endFromRemote = () => {
       const wasConnected = stateRef.current === "open";
       stopRef.current();
+      void endCaptureRef.current();
       if (wasConnected) setError(null);
     };
     const offClosed = webchat.on("closed", endFromRemote);
@@ -73,6 +112,7 @@ export function HelgaCall() {
         window.clearInterval(intervalId);
         setRemainingMs(0);
         stopRef.current();
+        void endCaptureRef.current();
         setError(null);
         return;
       }
@@ -87,23 +127,52 @@ export function HelgaCall() {
   const busy = state !== "closed";
   const countdown = state === "open" && remainingMs !== null ? formatRemaining(remainingMs) : null;
 
+  function hangUp() {
+    stopRef.current();
+    void endCaptureRef.current();
+  }
+
   async function onStart() {
+    if (startingRef.current || stateRef.current !== "closed") return;
+    startingRef.current = true;
     setError(null);
-    const mic = await requestMicrophone();
-    if (mic !== "ok") {
-      setError(mic);
+    const mic = await openMicrophone();
+    if (mic.permission !== "ok") {
+      startingRef.current = false;
+      setError(mic.permission);
       return;
     }
+    const uploadId = newHelgaUploadId();
+    uploadIdRef.current = uploadId;
     try {
       await start();
     } catch {
+      stopMicrophone(mic.stream);
+      uploadIdRef.current = null;
       stop();
       setError("failed");
+      startingRef.current = false;
+      return;
+    }
+    try {
+      const recorder = createHelgaLocalRecorder(mic.stream);
+      const untap = attachHelgaAgentPcm(webchat, recorder);
+      captureRef.current = { uploadId, stream: mic.stream, recorder, untap };
+      await recorder.start();
+      if (stateRef.current === "closed") void endCaptureRef.current();
+    } catch {
+      const session = captureRef.current;
+      captureRef.current = null;
+      session?.untap();
+      stopMicrophone(session?.stream ?? mic.stream);
+      console.error("[helga] recorder failed");
+    } finally {
+      startingRef.current = false;
     }
   }
 
   function onClose() {
-    stop();
+    hangUp();
     setError(null);
     setOpen(false);
   }
@@ -139,6 +208,7 @@ export function HelgaCall() {
         >
           <h3 className="font-display text-2xl text-fg">Helga</h3>
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">{copy.dek}</p>
+          <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">{copy.recording}</p>
           <p className="mt-4 text-sm text-fg">
             <span aria-live="polite">{errorText ?? status}</span>
             {countdown ? (
@@ -155,7 +225,7 @@ export function HelgaCall() {
               type="button"
               variant="outline"
               onClick={() => {
-                stop();
+                hangUp();
                 setError(null);
               }}
               disabled={state === "closed"}
