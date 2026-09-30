@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   attachHelgaAgentPcm,
+  chooseAgentPlaybackRate,
   createHelgaLocalRecorder,
   encodeWav,
   estimateAgentSampleRate,
@@ -18,6 +19,26 @@ function pcm16(samples: number[]): Uint8Array {
   return bytes;
 }
 
+function sinePcm(sampleCount: number, sampleRate: number, freqHz: number): Uint8Array {
+  const bytes = new Uint8Array(sampleCount * 2);
+  const view = new DataView(bytes.buffer);
+  for (let i = 0; i < sampleCount; i += 1) {
+    const value = Math.round(Math.sin((2 * Math.PI * freqHz * i) / sampleRate) * 12000);
+    view.setInt16(i * 2, value, true);
+  }
+  return bytes;
+}
+
+function crossingsAround(samples: Float32Array, center: number): number {
+  let count = 0;
+  for (let i = 1; i < samples.length; i += 1) {
+    const previous = samples[i - 1] - center;
+    const next = samples[i] - center;
+    if ((previous < 0 && next >= 0) || (previous >= 0 && next < 0)) count += 1;
+  }
+  return count;
+}
+
 function decodeWav(wav: Uint8Array): { sampleRate: number; samples: Float32Array } {
   assert.equal(Buffer.from(wav.subarray(0, 4)).toString("ascii"), "RIFF");
   assert.equal(Buffer.from(wav.subarray(8, 12)).toString("ascii"), "WAVE");
@@ -32,6 +53,84 @@ function decodeWav(wav: Uint8Array): { sampleRate: number; samples: Float32Array
 }
 
 describe("helga local mix", () => {
+  it("rejects a 16 kHz pin that is about 3× off the device or burst clock", () => {
+    assert.deepEqual(
+      chooseAgentPlaybackRate({
+        downstream: 16000,
+        context: 48000,
+        estimated: 48000,
+        json: 16000,
+      }),
+      { rate: 48000, source: "context" },
+    );
+    assert.deepEqual(
+      chooseAgentPlaybackRate({
+        downstream: 16000,
+        context: null,
+        estimated: 48000,
+        json: 16000,
+      }),
+      { rate: 48000, source: "estimate" },
+    );
+    assert.deepEqual(
+      chooseAgentPlaybackRate({
+        downstream: 16000,
+        context: 44100,
+        estimated: null,
+        json: 16000,
+      }),
+      { rate: 44100, source: "context" },
+    );
+    assert.deepEqual(
+      chooseAgentPlaybackRate({
+        downstream: null,
+        context: null,
+        estimated: 24000,
+        json: 16000,
+      }),
+      { rate: 24000, source: "estimate" },
+    );
+  });
+
+  it("keeps an honest 16 kHz pin and a real 24 kHz playPcm rate", () => {
+    assert.deepEqual(
+      chooseAgentPlaybackRate({
+        downstream: 16000,
+        context: 48000,
+        estimated: 16000,
+        json: 16000,
+      }),
+      { rate: 16000, source: "downstream" },
+    );
+    assert.deepEqual(
+      chooseAgentPlaybackRate({
+        downstream: 24000,
+        context: 48000,
+        estimated: null,
+        json: null,
+      }),
+      { rate: 24000, source: "downstream" },
+    );
+    assert.deepEqual(
+      chooseAgentPlaybackRate({
+        downstream: 24000,
+        context: 44100,
+        estimated: null,
+        json: null,
+      }),
+      { rate: 24000, source: "downstream" },
+    );
+    assert.equal(
+      chooseAgentPlaybackRate({
+        downstream: null,
+        context: null,
+        estimated: null,
+        json: null,
+      }),
+      null,
+    );
+  });
+
   it("encodes mono 16-bit wav and mixes mic with agent pcm", () => {
     const mic = new Float32Array(8).fill(0.25);
     const agent = pcm16(new Array(8).fill(8192));
@@ -423,22 +522,221 @@ describe("helga local mix", () => {
     }
   });
 
-  it("keeps a confirmed rate when the sample clock would estimate another", async () => {
+  it("does not let a lying 16 kHz downstream pin beat a 48 kHz burst clock", async () => {
     const realNow = Date.now;
     let now = 1_700_000_000_000;
     Date.now = () => now;
+    const debug = console.debug;
+    const logs: unknown[][] = [];
+    console.debug = (...args: unknown[]) => {
+      logs.push(args);
+    };
     try {
       const webchat = { downstreamSampleRate: 16000 as number | null };
       const recorder = createHelgaLocalRecorder({} as MediaStream, { webchat });
       await recorder.start();
+      recorder.setAgentSampleRate(16000);
       recorder.pushAgentPcm(pcm16(new Array(48_000).fill(4000)));
       now += 1000;
       const blob = await recorder.stop();
       const decoded = decodeWav(new Uint8Array(await blob.arrayBuffer()));
       assert.equal(decoded.sampleRate, 16000);
-      assert.equal(decoded.samples.length, 48_000);
+      // 48_000 samples across one second are device-rate PCM. Keeping the
+      // 16 kHz pin writes three seconds and is the slow voice.
+      assert.equal(decoded.samples.length, 16_000);
+      assert.ok(
+        logs.some(
+          (entry) =>
+            entry[0] === "[helga] agentRate" && entry[1] === 48000 && entry[2] === "estimate",
+        ),
+      );
     } finally {
       Date.now = realNow;
+      console.debug = debug;
+    }
+  });
+
+  it("does not let a 16 kHz downstream or JSON pin freeze device-rate frames", async () => {
+    const realNow = Date.now;
+    const now = 1_700_000_000_000;
+    Date.now = () => now;
+    const debug = console.debug;
+    const logs: unknown[][] = [];
+    console.debug = (...args: unknown[]) => {
+      logs.push(args);
+    };
+    try {
+      const webchat: {
+        downstreamSampleRate: number | null;
+        audioContext: { sampleRate: number } | null;
+      } = { downstreamSampleRate: 16000, audioContext: { sampleRate: 48000 } };
+      const recorder = createHelgaLocalRecorder({} as MediaStream, { webchat });
+      await recorder.start();
+      recorder.setAgentSampleRate(16000);
+      recorder.pushAgentPcm(pcm16(new Array(48_000).fill(1000)));
+      // `webchat.stop()` tears the context down before the mix.
+      webchat.audioContext = null;
+      const blob = await recorder.stop();
+      const decoded = decodeWav(new Uint8Array(await blob.arrayBuffer()));
+      assert.equal(decoded.sampleRate, 16000);
+      assert.equal(decoded.samples.length, 16_000);
+      assert.ok(
+        logs.some(
+          (entry) =>
+            entry[0] === "[helga] agentRate" && entry[1] === 48000 && entry[2] === "context",
+        ),
+      );
+    } finally {
+      Date.now = realNow;
+      console.debug = debug;
+    }
+  });
+
+  it("keeps honest 16 kHz agent pcm when the device clock is 48 kHz", async () => {
+    const realNow = Date.now;
+    let now = 1_700_000_000_000;
+    Date.now = () => now;
+    const debug = console.debug;
+    const logs: unknown[][] = [];
+    console.debug = (...args: unknown[]) => {
+      logs.push(args);
+    };
+    try {
+      const webchat: {
+        downstreamSampleRate: number | null;
+        audioContext: { sampleRate: number } | null;
+      } = { downstreamSampleRate: 16000, audioContext: { sampleRate: 48000 } };
+      const recorder = createHelgaLocalRecorder({} as MediaStream, { webchat });
+      await recorder.start();
+      recorder.setAgentSampleRate(16000);
+      recorder.pushAgentPcm(pcm16(new Array(16_000).fill(4000)));
+      now += 1000;
+      webchat.audioContext = null;
+      const blob = await recorder.stop();
+      const decoded = decodeWav(new Uint8Array(await blob.arrayBuffer()));
+      assert.equal(decoded.sampleRate, 16000);
+      // Labeling these bytes at the 48 kHz device clock would shrink one
+      // second of telephony audio to about a third of a second.
+      assert.equal(decoded.samples.length, 16_000);
+      assert.ok(
+        logs.some(
+          (entry) =>
+            entry[0] === "[helga] agentRate" && entry[1] === 16000 && entry[2] === "downstream",
+        ),
+      );
+    } finally {
+      Date.now = realNow;
+      console.debug = debug;
+    }
+  });
+
+  it("mixes 48 kHz agent and 48 kHz mic to one intelligible second at 16 kHz", async () => {
+    const realNow = Date.now;
+    let now = 1_700_000_000_000;
+    Date.now = () => now;
+    const debug = console.debug;
+    const logs: unknown[][] = [];
+    console.debug = (...args: unknown[]) => {
+      logs.push(args);
+    };
+
+    const worklets: Array<{ port: { onmessage: ((event: { data: unknown }) => void) | null } }> =
+      [];
+    class FakeNode {
+      label: string;
+      constructor(label: string) {
+        this.label = label;
+      }
+      connect() {}
+      disconnect() {}
+    }
+    class FakeWorklet extends FakeNode {
+      port: { onmessage: ((event: { data: unknown }) => void) | null } = { onmessage: null };
+      constructor() {
+        super("worklet");
+        worklets.push(this);
+      }
+    }
+    class FakeContext {
+      sampleRate = 48000;
+      destination = { label: "destination" };
+      audioWorklet = { async addModule() {} };
+      constructor(options?: AudioContextOptions) {
+        if (options?.sampleRate) this.sampleRate = options.sampleRate;
+      }
+      createMediaStreamSource() {
+        return new FakeNode("source");
+      }
+      createMediaStreamDestination() {
+        return new FakeNode("media-stream-destination");
+      }
+      async resume() {}
+      async close() {}
+    }
+    const prior = globalThis as {
+      AudioContext?: unknown;
+      AudioWorkletNode?: unknown;
+      webkitAudioContext?: unknown;
+    };
+    const previous = {
+      AudioContext: prior.AudioContext,
+      AudioWorkletNode: prior.AudioWorkletNode,
+      webkitAudioContext: prior.webkitAudioContext,
+    };
+    prior.AudioContext = FakeContext;
+    prior.AudioWorkletNode = FakeWorklet;
+    prior.webkitAudioContext = undefined;
+
+    try {
+      const webchat: {
+        downstreamSampleRate: number | null;
+        audioContext: { sampleRate: number } | null;
+      } = { downstreamSampleRate: 16000, audioContext: { sampleRate: 48000 } };
+      const mic = { getAudioTracks: () => [] } as unknown as MediaStream;
+      const recorder = createHelgaLocalRecorder(mic, { webchat });
+      await recorder.start();
+      recorder.setAgentSampleRate(16000);
+      assert.equal(worklets.length, 1);
+      const micFrame = new Float32Array(48_000).fill(0.25);
+      worklets[0].port.onmessage?.({ data: micFrame.buffer });
+      recorder.pushAgentPcm(sinePcm(48_000, 48_000, 480));
+      now += 1000;
+      webchat.audioContext = null;
+      const blob = await recorder.stop();
+      const decoded = decodeWav(new Uint8Array(await blob.arrayBuffer()));
+      assert.equal(decoded.sampleRate, 16000);
+      // Both clocks are 48 kHz, so one second of each side is 16_000 samples.
+      // A 16 kHz agent label stretches Helga to 48_000 and drops a 480 Hz tone to 160 Hz.
+      assert.equal(decoded.samples.length, 16_000);
+      let sum = 0;
+      for (const sample of decoded.samples) sum += sample;
+      assert.ok(Math.abs(sum / decoded.samples.length - 0.25) < 0.05);
+      const tone = crossingsAround(decoded.samples, 0.25);
+      assert.ok(tone > 900 && tone < 1020, `expected a 480 Hz tone, counted ${tone}`);
+      assert.ok(
+        logs.some(
+          (entry) =>
+            entry[0] === "[helga] agentRate" && entry[1] === 48000 && entry[2] === "context",
+        ),
+      );
+
+      // Bland's context is already gone and the burst is too short to estimate.
+      // The recorder's own 48 kHz device clock still has to beat the 16 kHz pin.
+      const pinned = createHelgaLocalRecorder(mic, {
+        webchat: { downstreamSampleRate: 16000 },
+      });
+      await pinned.start();
+      pinned.setAgentSampleRate(16000);
+      pinned.pushAgentPcm(pcm16(new Array(48_000).fill(1000)));
+      const pinnedWav = decodeWav(new Uint8Array(await (await pinned.stop()).arrayBuffer()));
+      assert.equal(pinnedWav.sampleRate, 16000);
+      assert.equal(pinnedWav.samples.length, 16_000);
+    } finally {
+      Date.now = realNow;
+      console.debug = debug;
+      prior.AudioContext = previous.AudioContext;
+      prior.AudioWorkletNode = previous.AudioWorkletNode;
+      prior.webkitAudioContext = previous.webkitAudioContext;
     }
   });
 
