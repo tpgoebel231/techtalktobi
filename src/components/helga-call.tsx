@@ -43,6 +43,8 @@ export function HelgaCall() {
   const captureRef = useRef<CaptureSession | null>(null);
   const localeRef = useRef(locale);
   localeRef.current = locale;
+  // Leave sampleRate unset. Bland sizes playback from the device rate;
+  // forcing 16 kHz stretches agent PCM in `playPcm`.
   const { state, start, stop, webchat } = useWebchat({
     agentId,
     getToken: async () => {
@@ -155,7 +157,7 @@ export function HelgaCall() {
       return;
     }
     try {
-      const recorder = createHelgaLocalRecorder(mic.stream);
+      const recorder = createHelgaLocalRecorder(mic.stream, { webchat });
       const untap = attachHelgaAgentPcm(webchat, recorder);
       captureRef.current = { uploadId, stream: mic.stream, recorder, untap };
       await recorder.start();
