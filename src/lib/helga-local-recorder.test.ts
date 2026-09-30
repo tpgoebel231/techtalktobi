@@ -155,7 +155,7 @@ describe("helga local mix", () => {
     assert.equal(frames.length, 1);
   });
 
-  it("reads downstreamSampleRate on attach and open, until JSON pins it", () => {
+  it("reads downstreamSampleRate on attach and open, and a JSON rate does not freeze it", () => {
     const listeners = new Set<(event: { data: unknown }) => void>();
     const socket = {
       addEventListener(_type: string, listener: (event: { data: unknown }) => void) {
@@ -199,7 +199,7 @@ describe("helga local mix", () => {
     webchat.downstreamSampleRate = 48000;
     for (const listener of listeners) listener({ data: pcm16([1, 2]).buffer });
     for (const handler of handlers.get("open") ?? []) handler(undefined);
-    assert.equal(rate, 24000);
+    assert.equal(rate, 48000);
   });
 
   it("labels agent pcm from downstreamSampleRate and still exports 16 kHz", async () => {
@@ -306,12 +306,27 @@ describe("helga local mix", () => {
     }
   });
 
-  it("snaps the rate heuristic to the speech span", () => {
-    const slices = [
-      { atMs: 0, pcm: pcm16(new Array(22_050).fill(1)) },
-      { atMs: 1000, pcm: pcm16(new Array(22_050).fill(1)) },
-    ];
-    assert.equal(estimateAgentSampleRate(slices, 8_000), 44100);
+  it("estimates from in-burst gaps and does not snap a gappy 48 kHz stream to 16 kHz", () => {
+    const continuous: { atMs: number; pcm: Uint8Array }[] = [];
+    for (let i = 0; i < 50; i += 1) {
+      continuous.push({ atMs: i * 20, pcm: pcm16(new Array(882).fill(1)) });
+    }
+    // 44.1 kHz packets over 1 s of a call that lasts 8 s. The pause after the
+    // burst is not part of the clock.
+    assert.equal(estimateAgentSampleRate(continuous, 8_000), 44100);
+
+    const gappy: { atMs: number; pcm: Uint8Array }[] = [];
+    let atMs = 0;
+    for (let burst = 0; burst < 2; burst += 1) {
+      for (let i = 0; i < 30; i += 1) {
+        gappy.push({ atMs, pcm: pcm16(new Array(960).fill(1)) });
+        atMs += 20;
+      }
+      atMs += 2_000;
+    }
+    // Wall clock across the pause is ~3.2 s for 57_600 samples (~18 kHz) and
+    // would snap to 16 kHz. In-burst gaps stay at 48 kHz.
+    assert.equal(estimateAgentSampleRate(gappy, atMs), 48000);
     assert.equal(estimateAgentSampleRate([], 1_000), null);
   });
 
@@ -333,6 +348,76 @@ describe("helga local mix", () => {
       const decoded = decodeWav(new Uint8Array(await blob.arrayBuffer()));
       assert.equal(decoded.sampleRate, 16000);
       assert.equal(decoded.samples.length, 16_000);
+    } finally {
+      Date.now = realNow;
+    }
+  });
+
+  it("relabels every slice when a 16 kHz JSON pin disagrees with the AudioContext", async () => {
+    const realNow = Date.now;
+    let now = 1_700_000_000_000;
+    Date.now = () => now;
+    const debug = console.debug;
+    const logs: unknown[][] = [];
+    console.debug = (...args: unknown[]) => {
+      logs.push(args);
+    };
+    try {
+      const webchat: {
+        downstreamSampleRate: number | null;
+        audioContext: { sampleRate: number } | null;
+      } = { downstreamSampleRate: null, audioContext: null };
+      const recorder = createHelgaLocalRecorder({} as MediaStream, { webchat });
+      await recorder.start();
+      recorder.setAgentSampleRate(16000);
+      recorder.pushAgentPcm(pcm16(new Array(48_000).fill(1000)));
+      now += 1250;
+      webchat.audioContext = { sampleRate: 48000 };
+      recorder.pushAgentPcm(pcm16(new Array(48_000).fill(1000)));
+      // `webchat.stop()` tears the context down before the mix.
+      webchat.audioContext = null;
+      const blob = await recorder.stop();
+      const decoded = decodeWav(new Uint8Array(await blob.arrayBuffer()));
+      assert.equal(decoded.sampleRate, 16000);
+      // Both slices at 48 kHz: 1s + a slice placed at 1.25s → 36_000 samples.
+      // Leaving the first slice at 16 kHz would run to 48_000.
+      assert.equal(decoded.samples.length, 36_000);
+      assert.ok(
+        logs.some(
+          (entry) =>
+            entry[0] === "[helga] agentRate" && entry[1] === 48000 && entry[2] === "context",
+        ),
+      );
+    } finally {
+      Date.now = realNow;
+      console.debug = debug;
+    }
+  });
+
+  it("labels a gappy 48 kHz stream at 48 kHz even after a 16 kHz JSON pin", async () => {
+    const realNow = Date.now;
+    let now = 1_700_000_000_000;
+    Date.now = () => now;
+    try {
+      const recorder = createHelgaLocalRecorder({} as MediaStream, {
+        webchat: { downstreamSampleRate: null },
+      });
+      await recorder.start();
+      recorder.setAgentSampleRate(16000);
+      for (let burst = 0; burst < 2; burst += 1) {
+        for (let i = 0; i < 30; i += 1) {
+          recorder.pushAgentPcm(pcm16(new Array(960).fill(1000)));
+          now += 20;
+        }
+        now += 2_000;
+      }
+      const blob = await recorder.stop();
+      const decoded = decodeWav(new Uint8Array(await blob.arrayBuffer()));
+      assert.equal(decoded.sampleRate, 16000);
+      // Last packet is 960 samples at 3.18 s. At 48 kHz that packet is 20 ms,
+      // so the mix ends at 51_200 samples. A stuck 16 kHz label makes the same
+      // packet 60 ms and the mix ends at 51_840 — the slow voice.
+      assert.equal(decoded.samples.length, 51_200);
     } finally {
       Date.now = realNow;
     }
