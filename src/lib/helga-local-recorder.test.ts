@@ -7,6 +7,7 @@ import {
   encodeWav,
   estimateAgentSampleRate,
   mixCallToWav,
+  placeAgentSegments,
   pcm16ToFloat32,
   resampleLinear,
 } from "./helga-local-recorder.ts";
@@ -37,6 +38,78 @@ function crossingsAround(samples: Float32Array, center: number): number {
     if ((previous < 0 && next >= 0) || (previous >= 0 && next < 0)) count += 1;
   }
   return count;
+}
+
+function agentSineSlices(input: {
+  packetSamples: number;
+  sampleRate: number;
+  packetCount: number;
+  firstAtMs: number;
+  wallGapMs: number;
+  freqHz: number;
+}): { atMs: number; pcm: Uint8Array; sampleRate: number }[] {
+  const slices = [];
+  for (let packet = 0; packet < input.packetCount; packet += 1) {
+    const pcm = new Uint8Array(input.packetSamples * 2);
+    const view = new DataView(pcm.buffer);
+    const origin = packet * input.packetSamples;
+    for (let i = 0; i < input.packetSamples; i += 1) {
+      const n = origin + i;
+      const value = Math.round(
+        Math.sin((2 * Math.PI * input.freqHz * n) / input.sampleRate) * 12000,
+      );
+      view.setInt16(i * 2, value, true);
+    }
+    slices.push({
+      atMs: input.firstAtMs + packet * input.wallGapMs,
+      pcm,
+      sampleRate: input.sampleRate,
+    });
+  }
+  return slices;
+}
+
+/** 10 ms windows. A chopped 20 ms frame on a 60 ms clock leaves ~40 ms holes. */
+function speechCoverage(
+  samples: Float32Array,
+  sampleRate: number,
+): {
+  duty: number;
+  maxSilentGapSamples: number;
+  runs: { start: number; end: number }[];
+} {
+  const windowSize = Math.max(1, Math.round(sampleRate * 0.01));
+  const runs: { start: number; end: number }[] = [];
+  let runStart = -1;
+  let windows = 0;
+  let audibleWindows = 0;
+  let silentRun = 0;
+  let maxSilentGapSamples = 0;
+  const last = samples.length - (samples.length % windowSize);
+  for (let start = 0; start < last; start += windowSize) {
+    let energy = 0;
+    for (let i = 0; i < windowSize; i += 1) energy += Math.abs(samples[start + i]);
+    const audible = energy / windowSize >= 0.02;
+    windows += 1;
+    if (audible) {
+      audibleWindows += 1;
+      silentRun = 0;
+      if (runStart < 0) runStart = start;
+    } else {
+      silentRun += windowSize;
+      if (silentRun > maxSilentGapSamples) maxSilentGapSamples = silentRun;
+      if (runStart >= 0) {
+        runs.push({ start: runStart, end: start });
+        runStart = -1;
+      }
+    }
+  }
+  if (runStart >= 0) runs.push({ start: runStart, end: last });
+  return {
+    duty: windows === 0 ? 0 : audibleWindows / windows,
+    maxSilentGapSamples,
+    runs,
+  };
 }
 
 function decodeWav(wav: Uint8Array): { sampleRate: number; samples: Float32Array } {
@@ -163,6 +236,84 @@ describe("helga local mix", () => {
     const decoded = decodeWav(wav);
     assert.equal(decoded.samples[0], 0);
     assert.ok(Math.abs(decoded.samples[16000]) > 0.4);
+  });
+
+  it("packs 3× wall-clock gaps into one contiguous second", () => {
+    // 20 ms of 48 kHz audio (960 samples) arriving every 60 ms. Labeled at the
+    // true rate, receive-time placement is 20 ms of tone and 40 ms of silence.
+    // That is the chopped voice after the rate fix. playPcm queues the frames.
+    const packetSamples = 960;
+    const packets = 50;
+    const slices = agentSineSlices({
+      packetSamples,
+      sampleRate: 48_000,
+      packetCount: packets,
+      firstAtMs: 0,
+      wallGapMs: 60,
+      freqHz: 480,
+    });
+    const segments = placeAgentSegments(slices, 16_000);
+    assert.equal(segments.length, packets);
+    assert.equal(segments[0].startSample, 0);
+    for (let i = 1; i < segments.length; i += 1) {
+      assert.equal(
+        segments[i].startSample,
+        segments[i - 1].startSample + segments[i - 1].samples.length,
+      );
+    }
+
+    const wav = mixCallToWav({
+      mic: new Float32Array(0),
+      micSampleRate: 16_000,
+      agent: slices,
+    });
+    const decoded = decodeWav(wav);
+    assert.equal(decoded.sampleRate, 16_000);
+    // 50 × 20 ms at 48 kHz is one second at 16 kHz. Wall-clock placement runs
+    // to the last arrival (2.94 s) plus the frame, about three seconds.
+    assert.equal(decoded.samples.length, 16_000);
+    const coverage = speechCoverage(decoded.samples, 16_000);
+    assert.ok(coverage.duty > 0.95, `duty ${coverage.duty}`);
+    assert.ok(
+      coverage.maxSilentGapSamples < 320,
+      `silent gap ${coverage.maxSilentGapSamples} samples`,
+    );
+    const tone = crossingsAround(decoded.samples, 0);
+    assert.ok(tone > 900 && tone < 1020, `expected a 480 Hz tone, counted ${tone}`);
+  });
+
+  it("keeps a multi-hundred-ms wall gap as silence between turns", () => {
+    const burst = (firstAtMs: number) =>
+      agentSineSlices({
+        packetSamples: 960,
+        sampleRate: 48_000,
+        packetCount: 10,
+        firstAtMs,
+        wallGapMs: 60,
+        freqHz: 480,
+      });
+    // 10 frames, last arrival at 540 ms, then 400 ms of wall clock before the
+    // next turn. Inside each turn the 60 ms receive spacing is still packed.
+    const slices = [...burst(0), ...burst(540 + 400)];
+    const segments = placeAgentSegments(slices, 16_000);
+    assert.equal(segments[10].startSample, Math.round(0.94 * 16_000));
+    assert.equal(
+      segments[9].startSample + segments[9].samples.length,
+      segments[0].startSample + 10 * segments[0].samples.length,
+    );
+
+    const wav = mixCallToWav({
+      mic: new Float32Array(0),
+      micSampleRate: 16_000,
+      agent: slices,
+    });
+    const decoded = decodeWav(wav);
+    const coverage = speechCoverage(decoded.samples, 16_000);
+    assert.equal(coverage.runs.length, 2);
+    assert.equal(coverage.runs[0].start, 0);
+    const pauseSamples = coverage.runs[1].start - coverage.runs[0].end;
+    assert.ok(pauseSamples >= 16_000 * 0.3, `pause ${pauseSamples} samples`);
+    assert.ok(Math.abs(coverage.runs[1].start - Math.round(0.94 * 16_000)) <= 160);
   });
 
   it("mixes 48 kHz and 24 kHz agent PCM down to one second at 16 kHz", () => {
