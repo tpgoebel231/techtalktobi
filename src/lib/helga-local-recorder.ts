@@ -42,6 +42,12 @@
  * pause cannot snap 48 kHz PCM down to 16 kHz. On stop, each side is
  * resampled to 16 kHz on its own rate and encoded as WAV.
  *
+ * Placement is a playback cursor, not wall-clock receive time. `playPcm`
+ * queues each frame on `nextPlaybackTime` and only snaps when that cursor
+ * has fallen behind. Receive-time placement left a silence hole in every
+ * gap once packets stopped being stretched ~3× (the slow voice). See
+ * `placeAgentSegments`.
+ *
  * Bland web `recording_url` is not used. The listen-adapter spike failed.
  */
 
@@ -272,6 +278,54 @@ export function chooseAgentPlaybackRate(input: {
   return null;
 }
 
+/**
+ * Silence longer than this, measured past the wall-clock end of audio already
+ * queued, is a turn. Anything shorter is receive skew against the `playPcm`
+ * queue and is closed.
+ *
+ * 120 ms sits in the 80–150 ms band. A 20 ms frame that arrives on a 60 ms
+ * wall clock (about 3× the true duration — the hole left after the rate fix)
+ * leaves a 40 ms gap, so one turn stays contiguous. A multi-hundred-ms gap
+ * between turns still jumps the cursor. `playPcm`'s queue lead is 150 ms;
+ * this threshold does not add that lead back onto a real pause.
+ */
+export const AGENT_PAUSE_THRESHOLD_MS = 120;
+
+/**
+ * Place agent PCM the way `playPcm` queues it.
+ *
+ * Slices stay in arrival order (`atMs`, then the order they were passed).
+ * Each one is resampled to `mixRate` and written at `cursor`, then `cursor`
+ * advances by that length. Frames inside a turn are back-to-back.
+ *
+ * The pause check is not `wallPos > cursor + threshold`. After a run of short
+ * frames the packed cursor lags the receive clock by the sum of the holes, so
+ * that test would reopen a gap every time the lag crossed 120 ms and the
+ * chop would come back. The check uses the wall-clock end of audio already
+ * queued (`wallEnd`): the gap that receive-time placement would have
+ * inserted. A same-millisecond burst accumulates into `wallEnd`, so those
+ * frames queue instead of stacking on one sample.
+ */
+export function placeAgentSegments(
+  slices: readonly AgentPcmSlice[],
+  mixRate: number,
+): PcmSegment[] {
+  const ordered = slices.slice().sort((left, right) => left.atMs - right.atMs);
+  const pauseThresholdSamples = Math.round((AGENT_PAUSE_THRESHOLD_MS / 1000) * mixRate);
+  const segments: PcmSegment[] = [];
+  let cursor = 0;
+  let wallEnd = 0;
+  for (const slice of ordered) {
+    const samples = resampleLinear(pcm16ToFloat32(slice.pcm), slice.sampleRate, mixRate);
+    const wallPos = Math.max(0, Math.round((slice.atMs / 1000) * mixRate));
+    if (wallPos > wallEnd + pauseThresholdSamples) cursor = wallPos;
+    segments.push({ startSample: cursor, samples });
+    cursor += samples.length;
+    wallEnd = Math.max(wallEnd, wallPos) + samples.length;
+  }
+  return segments;
+}
+
 export function mixCallToWav(input: {
   mic: Float32Array;
   micSampleRate: number;
@@ -280,10 +334,7 @@ export function mixCallToWav(input: {
 }): Uint8Array {
   const mixRate = input.mixRate ?? HELGA_MIX_RATE;
   const mic = resampleLinear(input.mic, input.micSampleRate, mixRate);
-  const segments: PcmSegment[] = input.agent.map((slice) => ({
-    startSample: Math.max(0, Math.round((slice.atMs / 1000) * mixRate)),
-    samples: resampleLinear(pcm16ToFloat32(slice.pcm), slice.sampleRate, mixRate),
-  }));
+  const segments = placeAgentSegments(input.agent, mixRate);
   const mixed = mixSegments(mic, segments);
   const cap = mixRate * MAX_SECONDS;
   return encodeWav(mixed.length > cap ? mixed.subarray(0, cap) : mixed, mixRate);
