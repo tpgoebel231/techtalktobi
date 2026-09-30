@@ -24,17 +24,23 @@
  * `teardownAudio` before this recorder mixes, so the device rate is sampled
  * while frames are still arriving.
  *
- * The recorded agent rate is the rate `playPcm` passed to `createBuffer`:
- * `downstreamSampleRate` when it is set, otherwise the device
- * `audioContext.sampleRate`. Both are sampled on every agent frame and kept
- * as numbers, because `webchat.stop()` / `teardownAudio` runs before
- * `recorder.stop()` and clears the context. A JSON rate (`readPcmSampleRate`,
- * including keys the SDK does not copy onto `downstreamSampleRate`) is only a
- * hint: a later playback rate rewrites every slice, and a burst estimate that
- * disagrees with that hint by more than 20% does too. `estimateAgentSampleRate`
- * sums in-burst gaps only, so a pause cannot snap 48 kHz PCM down to 16 kHz.
- * On stop, both sides are resampled to 16 kHz and encoded as WAV. v1 favors a
- * working mix over studio quality.
+ * The recorded agent rate is the clock `playPcm` actually passed to
+ * `createBuffer`: `downstreamSampleRate || audioContext.sampleRate`. Both are
+ * sampled on every agent frame and kept as numbers, because `webchat.stop()` /
+ * `teardownAudio` runs before `recorder.stop()` and clears Bland's context.
+ * The recorder's own device `AudioContext` is that same clock when Bland's
+ * context was already torn down. Mic samples use the recorder clock only.
+ *
+ * A 16 kHz downstream or JSON pin is not that clock when the device rate or
+ * the in-burst sample clock is about 3× faster. Bland can publish 16000 while
+ * the binary frames are still device-rate PCM, which is why a saved call was
+ * slow and deep while live playback stayed normal. The pin still wins when the
+ * burst clock agrees with it, so a real 16 kHz stream on a 48 kHz device is
+ * not sped up. Slices stay unlabeled until a playback clock or the burst
+ * estimate exists; 16 kHz is only the last resort when the call ends with
+ * no clock at all. `estimateAgentSampleRate` sums in-burst gaps only, so a
+ * pause cannot snap 48 kHz PCM down to 16 kHz. On stop, each side is
+ * resampled to 16 kHz on its own rate and encoded as WAV.
  *
  * Bland web `recording_url` is not used. The listen-adapter spike failed.
  */
@@ -217,6 +223,55 @@ function ratesDisagree(left: number, right: number): boolean {
   return low > 0 && (high - low) / low > RATE_DISAGREE_RATIO;
 }
 
+/**
+ * 16 kHz against 44.1 or 48 kHz is about 3×. 24 kHz against 48 kHz is only 2×
+ * and can be the rate `playPcm` passed to `createBuffer`, so it is kept.
+ */
+const PIN_VERSUS_CLOCK_RATIO = 2.5;
+
+function clockIsAboutThreeTimes(clock: number, pin: number): boolean {
+  return pin > 0 && clock / pin >= PIN_VERSUS_CLOCK_RATIO;
+}
+
+export type AgentRateSource = "downstream" | "context" | "estimate" | "json";
+
+/**
+ * Label for agent PCM, matching the rate `playPcm` used for those frames.
+ *
+ * Downstream wins when it agrees with the bytes. It loses when the burst
+ * clock, or the device clock if the burst cannot be measured yet, is about
+ * 3× faster — a 16 kHz pin on device-rate PCM. An honest 16 kHz stream stays
+ * at 16 kHz when the burst clock agrees with the pin, even if the device
+ * `AudioContext` is 48 kHz.
+ */
+export function chooseAgentPlaybackRate(input: {
+  downstream: number | null;
+  context: number | null;
+  estimated: number | null;
+  json: number | null;
+}): { rate: number; source: AgentRateSource } | null {
+  const { downstream, context, estimated, json } = input;
+  const pinIsLie = (pin: number): boolean => {
+    if (estimated != null) return clockIsAboutThreeTimes(estimated, pin);
+    return context != null && clockIsAboutThreeTimes(context, pin);
+  };
+
+  if (downstream != null && !pinIsLie(downstream)) {
+    return { rate: downstream, source: "downstream" };
+  }
+  if (context != null && !pinIsLie(context)) {
+    return { rate: context, source: "context" };
+  }
+  if (estimated != null && (json == null || ratesDisagree(json, estimated))) {
+    return { rate: estimated, source: "estimate" };
+  }
+  if (json != null && !pinIsLie(json)) {
+    return { rate: json, source: "json" };
+  }
+  if (estimated != null) return { rate: estimated, source: "estimate" };
+  return null;
+}
+
 export function mixCallToWav(input: {
   mic: Float32Array;
   micSampleRate: number;
@@ -282,13 +337,16 @@ export function createHelgaLocalRecorder(
   let running = false;
   let stopped = false;
   let startedAt = 0;
-  let agentRate = HELGA_MIX_RATE;
-  // Last rates seen while the call was open. `webchat.stop()` nulls the
+  // Unset until a playback clock or the burst estimate exists. 16 kHz here
+  // would freeze device-rate PCM when no later clock got a chance to rewrite.
+  let agentRate: number | null = null;
+  // Last rates seen while the call was open. `webchat.stop()` nulls Bland's
   // context before `recorder.stop()`, so these numbers outlive teardown.
   let seenDownstream: number | null = null;
   let seenContext: number | null = null;
+  let observedDeviceRate: number | null = null;
   let jsonRate: number | null = null;
-  let agentRateSource: "downstream" | "context" | "estimate" | "json" | null = null;
+  let agentRateSource: AgentRateSource | null = null;
   let micRate = HELGA_MIX_RATE;
   let context: AudioContext | null = null;
   let source: MediaStreamAudioSourceNode | null = null;
@@ -307,42 +365,25 @@ export function createHelgaLocalRecorder(
   };
 
   /**
-   * Label every slice at the rate `playPcm` is using right now.
-   *
-   * `downstreamSampleRate` wins when set — that is the buffer rate. Otherwise
-   * the sampled `audioContext.sampleRate` wins, including over a JSON pin.
-   * The burst estimate is last, and it replaces a JSON pin only when the two
-   * disagree by more than ~20%. A higher-confidence rate rewrites slices that
-   * were already stored.
+   * Label every slice at the rate `playPcm` is using for these frames.
+   * Mic capture is not touched. A later clock rewrites slices already stored,
+   * including ones that arrived before any rate was known.
    */
   const reconcileAgentRate = () => {
     rememberPlaybackRates();
-    const estimated =
-      seenDownstream == null && seenContext == null
-        ? estimateAgentSampleRate(agent, Math.max(0, Date.now() - startedAt))
-        : null;
-
-    let nextRate: number | null = null;
-    let nextSource: "downstream" | "context" | "estimate" | "json" | null = null;
-    if (seenDownstream != null) {
-      nextRate = seenDownstream;
-      nextSource = "downstream";
-    } else if (seenContext != null) {
-      nextRate = seenContext;
-      nextSource = "context";
-    } else if (estimated != null && (jsonRate == null || ratesDisagree(jsonRate, estimated))) {
-      nextRate = estimated;
-      nextSource = "estimate";
-    } else if (jsonRate != null) {
-      nextRate = jsonRate;
-      nextSource = "json";
-    }
-
-    if (nextRate == null || nextSource == null) return;
-    if (agentRate === nextRate && agentRateSource === nextSource) return;
-    for (const slice of agent) slice.sampleRate = nextRate;
-    agentRate = nextRate;
-    agentRateSource = nextSource;
+    const estimated = estimateAgentSampleRate(agent, Math.max(0, Date.now() - startedAt));
+    const chosen = chooseAgentPlaybackRate({
+      downstream: seenDownstream,
+      context: seenContext ?? observedDeviceRate,
+      estimated,
+      json: jsonRate,
+    });
+    if (!chosen) return;
+    const unlabeled = agent.some((slice) => slice.sampleRate !== chosen.rate);
+    if (agentRate === chosen.rate && agentRateSource === chosen.source && !unlabeled) return;
+    for (const slice of agent) slice.sampleRate = chosen.rate;
+    agentRate = chosen.rate;
+    agentRateSource = chosen.source;
   };
 
   const onMic = (event: MessageEvent) => {
@@ -372,7 +413,14 @@ export function createHelgaLocalRecorder(
         } catch {
           context = new Ctor();
         }
-        micRate = context.sampleRate || HELGA_MIX_RATE;
+        const device = context.sampleRate;
+        if (typeof device === "number" && device > 0) micRate = device;
+        // Only a rate `playPcm` can schedule. A missing context must not
+        // become a fake 16 kHz device clock.
+        if (typeof device === "number" && device >= 8000 && device <= 48000) {
+          observedDeviceRate = device;
+        }
+        reconcileAgentRate();
         const url = URL.createObjectURL(
           new Blob([MIC_WORKLET], { type: "application/javascript" }),
         );
@@ -402,13 +450,17 @@ export function createHelgaLocalRecorder(
       // Cap at the highest playPcm rate. A wrong early 16 kHz pin must not
       // cut a device-rate call off at a third of its budget.
       const capRate = Math.max(
-        agentRate,
+        agentRate ?? 0,
         HELGA_AGENT_RATE_CANDIDATES[HELGA_AGENT_RATE_CANDIDATES.length - 1],
       );
       if (used >= capRate * MAX_SECONDS) return;
       const copy = new Uint8Array(frame.byteLength);
       copy.set(frame);
-      agent.push({ atMs: Math.max(0, Date.now() - startedAt), pcm: copy, sampleRate: agentRate });
+      agent.push({
+        atMs: Math.max(0, Date.now() - startedAt),
+        pcm: copy,
+        sampleRate: agentRate ?? 0,
+      });
     },
     setAgentSampleRate(rate: number) {
       if (rate < 8000 || rate > 48000) return;
@@ -420,7 +472,17 @@ export function createHelgaLocalRecorder(
       running = false;
       stopped = true;
       reconcileAgentRate();
-      console.debug("[helga] agentRate", agentRate, agentRateSource ?? "unset");
+      if (agentRate == null) {
+        agentRate = HELGA_MIX_RATE;
+        for (const slice of agent) slice.sampleRate = agentRate;
+      }
+      console.debug(
+        "[helga] agentRate",
+        agentRate,
+        agentRateSource ?? "unset",
+        seenDownstream,
+        seenContext ?? observedDeviceRate,
+      );
       if (worklet) worklet.port.onmessage = null;
       try {
         source?.disconnect();
