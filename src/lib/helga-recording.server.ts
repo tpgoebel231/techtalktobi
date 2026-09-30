@@ -1,9 +1,12 @@
 import { helgaAllowedOrigin, helgaClientIp, helgaOriginAllowed } from "./helga-authorize.server.ts";
-import { isHelgaUuid } from "./helga.ts";
+import { HELGA_LISTEN_PATH, HELGA_VERCEL_ORIGIN, isHelgaUuid } from "./helga.ts";
 import {
   blandWebhookSignatureValid,
   extractWebhookJoin,
+  helgaListenSignature,
+  helgaListenSignatureValid,
   readHelgaLocale,
+  type HelgaListenIdKind,
 } from "./helga-recording-join.ts";
 import {
   helgaRecordingStoreFromEnv,
@@ -12,6 +15,10 @@ import {
 
 const NO_STORE = { "cache-control": "no-store" };
 export const HELGA_RECORDING_RATE_LIMIT_MAX = 6;
+/** Default life of a Tobias listen link. */
+export const HELGA_LISTEN_LINK_TTL_DEFAULT_SECONDS = 3600;
+export const HELGA_LISTEN_LINK_TTL_MIN_SECONDS = 60;
+export const HELGA_LISTEN_LINK_TTL_MAX_SECONDS = 86_400;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 /** 16 kHz 16-bit mono for the 2 minute cap, plus a little headroom. */
 const MAX_AUDIO_BYTES = 6 * 1024 * 1024;
@@ -272,9 +279,68 @@ function audioExtension(contentType: string): string {
   return "wav";
 }
 
+function listenSecret(options?: HandlerOptions): string {
+  return envSecret(
+    "HELGA_OPS_LISTEN_SECRET",
+    options?.secret,
+    Boolean(options && "secret" in options),
+  );
+}
+
+/**
+ * Production API origin for a minted listen URL.
+ * Uses the request origin only when it is already `HELGA_VERCEL_ORIGIN`.
+ * Pages, preview, and localhost requests still get the Vercel API host.
+ */
+function helgaListenLinkOrigin(requestUrl: string): string {
+  try {
+    const origin = new URL(requestUrl).origin;
+    if (origin === HELGA_VERCEL_ORIGIN) return origin;
+  } catch {
+    /* fall through to the production API host */
+  }
+  return HELGA_VERCEL_ORIGIN;
+}
+
+function signedListenTarget(url: URL): { kind: HelgaListenIdKind; id: string } | null {
+  const callId = url.searchParams.get("call_id")?.trim().toLowerCase() ?? "";
+  const uploadId = url.searchParams.get("client_upload_id")?.trim().toLowerCase() ?? "";
+  // Playback prefers call_id, so a signature must cover that id when it is present.
+  if (callId) return isHelgaUuid(callId) ? { kind: "call_id", id: callId } : null;
+  if (uploadId) return isHelgaUuid(uploadId) ? { kind: "client_upload_id", id: uploadId } : null;
+  return null;
+}
+
+function readListenExp(url: URL): number | null {
+  const raw = url.searchParams.get("exp");
+  if (raw === null) return null;
+  const trimmed = raw.trim();
+  if (!/^[0-9]+$/.test(trimmed)) return null;
+  const exp = Number(trimmed);
+  if (!Number.isSafeInteger(exp)) return null;
+  return exp;
+}
+
+/** True when `exp` + `sig` authorize this listen query. Missing or bad material is false. */
+async function helgaSignedListenOk(secret: string, url: URL, nowMs: number): Promise<boolean> {
+  const target = signedListenTarget(url);
+  const exp = readListenExp(url);
+  if (!target || exp === null) return false;
+  const nowSec = Math.floor(nowMs / 1000);
+  if (nowSec > exp) return false;
+  return helgaListenSignatureValid(
+    secret,
+    target.kind,
+    target.id,
+    exp,
+    url.searchParams.get("sig"),
+  );
+}
+
 /**
  * GET `/api/helga/listen?call_id=` or `?client_upload_id=`.
- * Ops only: `Authorization: Bearer $HELGA_OPS_LISTEN_SECRET`.
+ * Ops bearer: `Authorization: Bearer $HELGA_OPS_LISTEN_SECRET`.
+ * Or a short-lived HMAC query (`exp` + `sig`) from POST `/api/helga/listen-link`.
  * Streams our stored bytes. Not a public blob URL.
  */
 export async function handleHelgaListen(
@@ -285,16 +351,15 @@ export async function handleHelgaListen(
     return new Response(null, { status: 405, headers: { ...NO_STORE, allow: "GET" } });
   }
 
-  const secret = envSecret(
-    "HELGA_OPS_LISTEN_SECRET",
-    options?.secret,
-    Boolean(options && "secret" in options),
-  );
+  const secret = listenSecret(options);
   if (!secret) {
     console.error("[helga] listen unavailable: ops secret is not set");
     return Response.json({ error: "not_configured" }, { status: 503, headers: NO_STORE });
   }
-  if (!(await secretMatches(secret, bearerSecret(request)))) {
+
+  const url = new URL(request.url);
+  const bearerOk = await secretMatches(secret, bearerSecret(request));
+  if (!bearerOk && !(await helgaSignedListenOk(secret, url, options?.now ?? Date.now()))) {
     return Response.json({ error: "unauthorized" }, { status: 401, headers: NO_STORE });
   }
 
@@ -304,7 +369,6 @@ export async function handleHelgaListen(
     return Response.json({ error: "not_configured" }, { status: 503, headers: NO_STORE });
   }
 
-  const url = new URL(request.url);
   const callId = url.searchParams.get("call_id")?.trim() ?? "";
   const uploadId = url.searchParams.get("client_upload_id")?.trim() ?? "";
   if (!callId && !uploadId) {
@@ -331,6 +395,105 @@ export async function handleHelgaListen(
     return new Response(bytes, { status: 200, headers });
   } catch {
     console.error("[helga] listen failed");
+    return Response.json({ error: "store_failed" }, { status: 500, headers: NO_STORE });
+  }
+}
+
+type ListenLinkBody =
+  | { ok: true; kind: HelgaListenIdKind; id: string; ttl: number }
+  | { ok: false; error: "invalid_json" | "invalid_body" | "invalid_id" | "invalid_ttl" };
+
+function clampListenTtl(value: unknown): number | null {
+  if (value === undefined) return HELGA_LISTEN_LINK_TTL_DEFAULT_SECONDS;
+  if (typeof value !== "number" || !Number.isFinite(value)) return null;
+  const seconds = Math.floor(value);
+  if (seconds < HELGA_LISTEN_LINK_TTL_MIN_SECONDS) return HELGA_LISTEN_LINK_TTL_MIN_SECONDS;
+  if (seconds > HELGA_LISTEN_LINK_TTL_MAX_SECONDS) return HELGA_LISTEN_LINK_TTL_MAX_SECONDS;
+  return seconds;
+}
+
+async function readListenLinkBody(request: Request): Promise<ListenLinkBody> {
+  let payload: unknown;
+  try {
+    payload = await request.json();
+  } catch {
+    return { ok: false, error: "invalid_json" };
+  }
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    return { ok: false, error: "invalid_body" };
+  }
+  const body = payload as Record<string, unknown>;
+  const hasCall = "call_id" in body;
+  const hasUpload = "client_upload_id" in body;
+  if (hasCall === hasUpload) return { ok: false, error: "invalid_body" };
+  const kind: HelgaListenIdKind = hasCall ? "call_id" : "client_upload_id";
+  const raw = body[kind];
+  if (typeof raw !== "string" || !isHelgaUuid(raw)) return { ok: false, error: "invalid_id" };
+  const ttl = clampListenTtl(body.ttl_seconds);
+  if (ttl === null) return { ok: false, error: "invalid_ttl" };
+  return { ok: true, kind, id: raw.trim().toLowerCase(), ttl };
+}
+
+/**
+ * POST `/api/helga/listen-link`.
+ * Ops only: `Authorization: Bearer $HELGA_OPS_LISTEN_SECRET`.
+ * Body is exactly one of `call_id` or `client_upload_id`, plus optional `ttl_seconds`.
+ * Returns an absolute Vercel listen URL. Never a blob URL or a Pages origin.
+ */
+export async function handleHelgaListenLink(
+  request: Request,
+  options?: HandlerOptions,
+): Promise<Response> {
+  if (request.method !== "POST") {
+    return new Response(null, { status: 405, headers: { ...NO_STORE, allow: "POST" } });
+  }
+
+  const secret = listenSecret(options);
+  if (!secret) {
+    console.error("[helga] listen-link unavailable: ops secret is not set");
+    return Response.json({ error: "not_configured" }, { status: 503, headers: NO_STORE });
+  }
+  if (!(await secretMatches(secret, bearerSecret(request)))) {
+    return Response.json({ error: "unauthorized" }, { status: 401, headers: NO_STORE });
+  }
+
+  const store = resolveStore(options);
+  if (!store) {
+    console.error("[helga] listen-link unavailable: blob token is not set");
+    return Response.json({ error: "not_configured" }, { status: 503, headers: NO_STORE });
+  }
+
+  const parsed = await readListenLinkBody(request);
+  if (!parsed.ok) {
+    return Response.json({ error: parsed.error }, { status: 400, headers: NO_STORE });
+  }
+
+  try {
+    const found =
+      parsed.kind === "call_id"
+        ? await store.getByCallId(parsed.id)
+        : await store.getByUploadId(parsed.id);
+    if (!found) {
+      return Response.json({ error: "not_found" }, { status: 404, headers: NO_STORE });
+    }
+    const nowSec = Math.floor((options?.now ?? Date.now()) / 1000);
+    const exp = nowSec + parsed.ttl;
+    const sig = await helgaListenSignature(secret, parsed.kind, parsed.id, exp);
+    const params = new URLSearchParams();
+    params.set(parsed.kind, parsed.id);
+    params.set("exp", String(exp));
+    params.set("sig", sig);
+    const url = `${helgaListenLinkOrigin(request.url)}${HELGA_LISTEN_PATH}?${params.toString()}`;
+    return Response.json(
+      {
+        url,
+        expires_at: new Date(exp * 1000).toISOString(),
+        expires_in_seconds: parsed.ttl,
+      },
+      { status: 200, headers: NO_STORE },
+    );
+  } catch {
+    console.error("[helga] listen-link failed");
     return Response.json({ error: "store_failed" }, { status: 500, headers: NO_STORE });
   }
 }
