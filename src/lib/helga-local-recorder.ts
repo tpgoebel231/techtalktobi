@@ -8,10 +8,14 @@
  *
  * This module keeps our own live `MediaStream` (the SDK opens a second mic
  * for uplink) and taps those binary frames after `start()` assigns the
- * runtime `websocket` field. Mic floats and agent PCM16 are mixed on a 16 kHz
- * timeline and encoded as WAV. Default agent rate is 16 kHz unless a JSON
- * frame advertises `playbackSampleRate` / `sample_rate` / `sampleRate` /
- * `pcm_sample_rate`. v1 favors a working mix over studio quality.
+ * runtime `websocket` field. The live tap uses the device sample rate and a
+ * silent `MediaStreamDestination` — it does not force 16 kHz and does not
+ * connect to `AudioContext.destination`, which would contend with Bland's
+ * playback clock and stretch `playPcm`. Agent PCM is labeled from
+ * `downstreamSampleRate` or a JSON rate (`playbackSampleRate` /
+ * `sample_rate` / `sampleRate` / `pcm_sample_rate`). On stop, both sides are
+ * resampled to 16 kHz and encoded as WAV. v1 favors a working mix over studio
+ * quality.
  *
  * Bland web `recording_url` is not used. The listen-adapter spike failed.
  */
@@ -156,19 +160,48 @@ export type HelgaLocalRecorder = HelgaPcmSink & {
   stop(): Promise<Blob>;
 };
 
-export function createHelgaLocalRecorder(mic: MediaStream): HelgaLocalRecorder {
+export type HelgaLocalRecorderOptions = {
+  /**
+   * Bland webchat. `downstreamSampleRate` labels agent PCM in the mix only.
+   * It is never copied onto a live playback `AudioContext`.
+   */
+  webchat?: object;
+};
+
+export function createHelgaLocalRecorder(
+  mic: MediaStream,
+  options?: HelgaLocalRecorderOptions,
+): HelgaLocalRecorder {
   let running = false;
   let stopped = false;
   let startedAt = 0;
   let agentRate = HELGA_MIX_RATE;
+  let agentRateKnown = false;
   let micRate = HELGA_MIX_RATE;
   let context: AudioContext | null = null;
   let source: MediaStreamAudioSourceNode | null = null;
   let worklet: AudioWorkletNode | null = null;
-  let sink: GainNode | null = null;
+  let silent: MediaStreamAudioDestinationNode | null = null;
   const micChunks: Float32Array[] = [];
   const agent: AgentPcmSlice[] = [];
   let lastBlob: Blob | null = null;
+
+  const applyAgentRate = (rate: number) => {
+    if (rate < 8000 || rate > 48000) return;
+    if (!agentRateKnown) {
+      for (const slice of agent) {
+        if (slice.sampleRate === agentRate) slice.sampleRate = rate;
+      }
+    }
+    agentRate = rate;
+    agentRateKnown = true;
+  };
+
+  const pullDownstream = () => {
+    if (agentRateKnown || !options?.webchat) return;
+    const rate = readDownstreamRate(options.webchat);
+    if (rate) applyAgentRate(rate);
+  };
 
   const onMic = (event: MessageEvent) => {
     if (!running) return;
@@ -188,13 +221,14 @@ export function createHelgaLocalRecorder(mic: MediaStream): HelgaLocalRecorder {
       if (running || stopped) return;
       startedAt = Date.now();
       running = true;
+      pullDownstream();
       const Ctor = audioContextCtor();
       if (!Ctor || typeof mic.getAudioTracks !== "function") return;
       try {
         try {
-          context = new Ctor({ sampleRate: HELGA_MIX_RATE, latencyHint: "interactive" });
-        } catch {
           context = new Ctor({ latencyHint: "interactive" });
+        } catch {
+          context = new Ctor();
         }
         micRate = context.sampleRate || HELGA_MIX_RATE;
         const url = URL.createObjectURL(
@@ -208,11 +242,11 @@ export function createHelgaLocalRecorder(mic: MediaStream): HelgaLocalRecorder {
         worklet = new AudioWorkletNode(context, "helga-mic");
         worklet.port.onmessage = onMic;
         source = context.createMediaStreamSource(mic);
-        sink = context.createGain();
-        sink.gain.value = 0;
+        // A media-stream sink keeps the worklet pulling without opening the
+        // speakers. Gain 0 into `destination` still shares the device clock.
+        silent = context.createMediaStreamDestination();
         source.connect(worklet);
-        worklet.connect(sink);
-        sink.connect(context.destination);
+        worklet.connect(silent);
         await context.resume();
       } catch {
         console.error("[helga] mic tap failed");
@@ -220,6 +254,7 @@ export function createHelgaLocalRecorder(mic: MediaStream): HelgaLocalRecorder {
     },
     pushAgentPcm(frame: Uint8Array) {
       if (!running || frame.byteLength < 2) return;
+      pullDownstream();
       let used = 0;
       for (const slice of agent) used += slice.pcm.byteLength / 2;
       if (used >= agentRate * MAX_SECONDS) return;
@@ -228,12 +263,13 @@ export function createHelgaLocalRecorder(mic: MediaStream): HelgaLocalRecorder {
       agent.push({ atMs: Math.max(0, Date.now() - startedAt), pcm: copy, sampleRate: agentRate });
     },
     setAgentSampleRate(rate: number) {
-      if (rate >= 8000 && rate <= 48000) agentRate = rate;
+      applyAgentRate(rate);
     },
     async stop() {
       if (lastBlob) return lastBlob;
       running = false;
       stopped = true;
+      pullDownstream();
       if (worklet) worklet.port.onmessage = null;
       try {
         source?.disconnect();
@@ -246,7 +282,7 @@ export function createHelgaLocalRecorder(mic: MediaStream): HelgaLocalRecorder {
         /* already stopped */
       }
       try {
-        sink?.disconnect();
+        silent?.disconnect();
       } catch {
         /* already stopped */
       }
@@ -330,6 +366,19 @@ function readDownstreamRate(webchat: object): number | null {
 export function attachHelgaAgentPcm(webchat: HelgaWebchatLike, sink: HelgaPcmSink): () => void {
   let socket: SocketLike | null = null;
   let listener: ((event: { data: unknown }) => void) | null = null;
+  let jsonPinned = false;
+
+  const publishRate = (message: unknown) => {
+    const fromJson = readPcmSampleRate(message);
+    if (fromJson) {
+      jsonPinned = true;
+      sink.setAgentSampleRate(fromJson);
+      return;
+    }
+    if (jsonPinned) return;
+    const downstream = readDownstreamRate(webchat);
+    if (downstream) sink.setAgentSampleRate(downstream);
+  };
 
   const bind = () => {
     if (listener) return;
@@ -338,22 +387,20 @@ export function attachHelgaAgentPcm(webchat: HelgaWebchatLike, sink: HelgaPcmSin
     socket = next;
     listener = (event) => {
       const frame = copyPcmFrame(event.data);
-      if (frame) sink.pushAgentPcm(frame);
+      if (!frame) return;
+      publishRate(null);
+      sink.pushAgentPcm(frame);
     };
     socket.addEventListener("message", listener);
   };
 
-  const takeRate = (message: unknown) => {
-    const rate = readPcmSampleRate(message) ?? readDownstreamRate(webchat);
-    if (rate) sink.setAgentSampleRate(rate);
-  };
-
   bind();
+  publishRate(null);
   const offOpen = webchat.on("open", () => {
     bind();
-    takeRate(null);
+    publishRate(null);
   });
-  const offMessage = webchat.on("message", takeRate);
+  const offMessage = webchat.on("message", publishRate);
 
   return () => {
     offOpen();
