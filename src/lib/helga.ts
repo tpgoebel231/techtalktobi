@@ -3,7 +3,7 @@ import type { Locale } from "@/lib/locale";
 /**
  * Public web-agent ids. Not secrets, and not configurable from the browser.
  * Bland authorize cannot override language per session, so DE and EN each use
- * their own agent (language + first_sentence pinned on the agent).
+ * their own agent. Each agent's first_sentence is the `{{greeting}}` session variable.
  * The Bland API key is server-only (`BLAND_API_KEY`) and must never use a `VITE_` name.
  */
 export const HELGA_AGENT_ID_EN = "40d57636-a89a-47e5-8043-07bc1c16efd8";

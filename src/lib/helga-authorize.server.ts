@@ -18,21 +18,67 @@ const NO_STORE = { "cache-control": "no-store" };
 
 /**
  * Greeting copy kept on the server so the client bundle does not need it.
- * Spoken openers are pinned as first_sentence on the EN/DE Bland agents;
- * authorize still passes greeting/locale as session vars for the prompt.
+ * Chosen when the session is minted. EN uses America/Chicago; DE uses Europe/Berlin.
+ * Bland agents speak `{{greeting}}`. Authorize must not send `first_sentence`.
  */
-const HELGA_GREETING = {
-  en: "Hi, I'm Helga — Tobias Goebel's public assistant. What would you like to know?",
-  de: "Hallo, ich bin Helga — die öffentliche Assistentin von Tobias Goebel. Was möchten Sie wissen?",
+const HELGA_ZONE = {
+  en: "America/Chicago",
+  de: "Europe/Berlin",
 } as const;
+
+const HELGA_GREETING = {
+  en: {
+    morning: "Good morning, this is Tobias Goebel's office, Helga speaking. How can I help you?",
+    afternoon: "Hello, this is Tobias Goebel's office, Helga speaking. How can I help you?",
+    evening: "Good evening, this is Tobias Goebel's office, Helga speaking. How can I help you?",
+  },
+  de: {
+    morning: "Schönen guten Morgen, Assistenz der Geschäftsführung, Helga am Apparat.",
+    afternoon: "Schönen guten Tag, Assistenz der Geschäftsführung, Helga am Apparat.",
+    evening: "Schönen guten Abend, Assistenz der Geschäftsführung, Helga am Apparat.",
+  },
+} as const;
+
+type HelgaDayPart = keyof (typeof HELGA_GREETING)["en"];
 
 /** Missing or unknown locale uses the English session. */
 function helgaSessionLocale(locale: Locale | undefined): Locale {
   return locale === "de" ? "de" : "en";
 }
 
-export function helgaGreeting(locale: Locale | undefined): string {
-  return HELGA_GREETING[helgaSessionLocale(locale)];
+function helgaClock(now?: Date | number): Date {
+  if (now instanceof Date) return now;
+  if (typeof now === "number") return new Date(now);
+  return new Date();
+}
+
+/** Local hour 0–23. `24` from some ICU builds is midnight. */
+function localHour(instant: Date, timeZone: string): number {
+  const part = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    hour: "numeric",
+    hourCycle: "h23",
+  })
+    .formatToParts(instant)
+    .find((item) => item.type === "hour");
+  const hour = Number(part?.value);
+  if (hour === 24) return 0;
+  if (!Number.isInteger(hour) || hour < 0 || hour > 23) {
+    throw new RangeError("helga local hour");
+  }
+  return hour;
+}
+
+function helgaDayPart(hour: number): HelgaDayPart {
+  if (hour < 12) return "morning";
+  if (hour < 17) return "afternoon";
+  return "evening";
+}
+
+export function helgaGreeting(locale: Locale | undefined, now?: Date | number): string {
+  const sessionLocale = helgaSessionLocale(locale);
+  const hour = localHour(helgaClock(now), HELGA_ZONE[sessionLocale]);
+  return HELGA_GREETING[sessionLocale][helgaDayPart(hour)];
 }
 
 export type HelgaSessionVariables = {
@@ -237,8 +283,9 @@ export async function handleHelgaAuthorize(
     return new Response(null, { status: 405, headers: { ...NO_STORE, allow: "POST" } });
   }
 
+  const now = options?.now ?? Date.now();
   const ip = helgaClientIp(request);
-  if (!takeHelgaRateLimit(ip, options?.now ?? Date.now())) {
+  if (!takeHelgaRateLimit(ip, now)) {
     return json({ error: "rate_limited" }, 429, request, { "retry-after": "600" });
   }
 
@@ -259,7 +306,7 @@ export async function handleHelgaAuthorize(
         console.error("[helga] authorize unavailable: server key is not set");
         return json({ error: "not_configured" }, 503, request);
       }
-      token = await mintWithBland(apiKey, locale, agentId, clientUploadId);
+      token = await mintWithBland(apiKey, locale, agentId, clientUploadId, now);
     }
   } catch {
     console.error("[helga] authorize upstream failed");
@@ -285,18 +332,20 @@ export type HelgaAuthorizeBody = {
  * Body for `POST /v1/agents/{id}/authorize` only. Not an agent-settings update.
  *
  * Bland authorize cannot set `language` per session. DE and EN use separate
- * agents with language + first_sentence pinned. Session vars still carry
- * `locale` / `greeting` for the prompt. An optional `client_upload_id` is a
+ * agents whose first_sentence is `{{greeting}}`. The spoken opener is only the
+ * `greeting` session variable, also copied onto `request_data` and `context`.
+ * Do not send `first_sentence`. An optional `client_upload_id` is a
  * correlation id for our own recording upload — not a Bland `record` flag and
  * not a `recording_url`.
  */
 export function helgaAuthorizeBody(
   locale: Locale | undefined,
   clientUploadId?: string,
+  now?: Date | number,
 ): HelgaAuthorizeBody {
   const variables: HelgaSessionVariables = {
     locale: helgaSessionLocale(locale),
-    greeting: helgaGreeting(locale),
+    greeting: helgaGreeting(locale, now),
   };
   const uploadId =
     clientUploadId && isHelgaUuid(clientUploadId) ? clientUploadId.toLowerCase() : "";
@@ -315,7 +364,8 @@ async function mintWithBland(
   apiKey: string,
   locale: Locale | undefined,
   agentId: string,
-  clientUploadId?: string,
+  clientUploadId: string | undefined,
+  now: number,
 ): Promise<string> {
   const upstream = await fetch(`https://api.bland.ai/v1/agents/${agentId}/authorize`, {
     method: "POST",
@@ -323,7 +373,7 @@ async function mintWithBland(
       Authorization: apiKey,
       "content-type": "application/json",
     },
-    body: JSON.stringify(helgaAuthorizeBody(locale, clientUploadId)),
+    body: JSON.stringify(helgaAuthorizeBody(locale, clientUploadId, now)),
   });
 
   if (!upstream.ok) {
