@@ -6,7 +6,6 @@ import { afterEach, describe, it } from "node:test";
 import { handleHelgaPreflight } from "./helga-authorize.server.ts";
 import { encodeWav } from "./helga-local-recorder.ts";
 import {
-  HELGA_LISTEN_LINK_TTL_DEFAULT_SECONDS,
   HELGA_LISTEN_LINK_TTL_MAX_SECONDS,
   HELGA_LISTEN_LINK_TTL_MIN_SECONDS,
   HELGA_RECORDING_ALLOW_HEADERS,
@@ -471,7 +470,7 @@ describe("helga recording join", () => {
 });
 
 describe("helga listen links", () => {
-  it("mints a vercel URL and plays it without a bearer", async () => {
+  it("mints a permanent vercel URL and plays it without a bearer", async () => {
     const store = createMemoryRecordingStore();
     const audio = await storeJoinedClip(store);
     const minted = await handleHelgaListenLink(listenLink({ call_id: CALL_A.toUpperCase() }), {
@@ -482,23 +481,26 @@ describe("helga listen links", () => {
     assert.equal(minted.status, 200);
     assert.equal(minted.headers.get("cache-control"), "no-store");
     const body = await minted.json();
-    const exp = NOW_SEC + HELGA_LISTEN_LINK_TTL_DEFAULT_SECONDS;
-    assert.equal(body.expires_in_seconds, HELGA_LISTEN_LINK_TTL_DEFAULT_SECONDS);
-    assert.equal(body.expires_at, new Date(exp * 1000).toISOString());
+    assert.equal(body.expires_in_seconds, null);
+    assert.equal(body.expires_at, null);
+    assert.deepEqual(Object.keys(body).sort(), ["expires_at", "expires_in_seconds", "url"]);
     assert.equal(typeof body.url, "string");
     const parsed = new URL(body.url);
     assert.equal(parsed.origin, "https://techtalktobi.vercel.app");
     assert.equal(parsed.pathname, "/api/helga/listen");
     assert.equal(parsed.searchParams.get("call_id"), CALL_A);
-    assert.equal(parsed.searchParams.get("exp"), String(exp));
+    assert.equal(parsed.searchParams.has("exp"), false);
     const sig = parsed.searchParams.get("sig") ?? "";
     assert.equal(
       sig,
       createHmac("sha256", LISTEN_SECRET)
-        .update(helgaListenCanonical("call_id", CALL_A, exp))
+        .update(helgaListenCanonical("call_id", CALL_A, "permanent"))
         .digest("hex"),
     );
-    assert.equal(helgaListenCanonical("call_id", CALL_A, exp), `v1\ncall_id\n${CALL_A}\n${exp}`);
+    assert.equal(
+      helgaListenCanonical("call_id", CALL_A, "permanent"),
+      `v1\ncall_id\n${CALL_A}\npermanent`,
+    );
     assert.equal(JSON.stringify(body).includes(LISTEN_SECRET), false);
     assert.equal(JSON.stringify(body).includes("blob"), false);
     assert.equal(body.url.includes("techtalktobi.com"), false);
@@ -513,12 +515,21 @@ describe("helga listen links", () => {
     assert.equal(played.headers.get("x-helga-call-id"), CALL_A);
     assert.deepEqual(new Uint8Array(await played.arrayBuffer()), audio);
 
-    const atExpiry = await handleHelgaListen(new Request(body.url), {
+    const yearsLater = await handleHelgaListen(new Request(body.url), {
       store,
       secret: LISTEN_SECRET,
-      now: exp * 1000,
+      now: NOW_MS + 10 * 365 * 24 * 60 * 60 * 1000,
     });
-    assert.equal(atExpiry.status, 200);
+    assert.equal(yearsLater.status, 200);
+
+    const explicitNull = await handleHelgaListenLink(
+      listenLink({ call_id: CALL_A, ttl_seconds: null }),
+      { store, secret: LISTEN_SECRET, now: NOW_MS },
+    );
+    const nullBody = await explicitNull.json();
+    assert.equal(explicitNull.status, 200);
+    assert.equal(nullBody.expires_at, null);
+    assert.equal(new URL(nullBody.url).searchParams.has("exp"), false);
 
     const bearer = await handleHelgaListen(listen(`call_id=${CALL_A}`), {
       store,
@@ -529,7 +540,7 @@ describe("helga listen links", () => {
     assert.deepEqual(new Uint8Array(await bearer.arrayBuffer()), audio);
   });
 
-  it("rejects expired and forged signatures and still allows the bearer", async () => {
+  it("rejects a forged permanent signature", async () => {
     const store = createMemoryRecordingStore();
     await storeJoinedClip(store);
     const minted = await handleHelgaListenLink(listenLink({ call_id: CALL_A }), {
@@ -537,46 +548,112 @@ describe("helga listen links", () => {
       secret: LISTEN_SECRET,
       now: NOW_MS,
     });
-    const body = await minted.json();
-    const url = new URL(body.url);
-    const exp = Number(url.searchParams.get("exp"));
+    const url = new URL((await minted.json()).url);
 
-    const expired = await handleHelgaListen(new Request(url), {
+    const forged = new URL(url);
+    const sig = forged.searchParams.get("sig") ?? "";
+    forged.searchParams.set("sig", sig.slice(0, -1) + (sig.endsWith("0") ? "1" : "0"));
+    assert.equal(
+      (
+        await handleHelgaListen(new Request(forged), {
+          store,
+          secret: LISTEN_SECRET,
+          now: NOW_MS,
+        })
+      ).status,
+      401,
+    );
+
+    const swapped = new URL(url);
+    swapped.searchParams.set("call_id", CALL_B);
+    assert.equal(
+      (
+        await handleHelgaListen(new Request(swapped), {
+          store,
+          secret: LISTEN_SECRET,
+          now: NOW_MS,
+        })
+      ).status,
+      401,
+    );
+
+    const withExp = new URL(url);
+    withExp.searchParams.set("exp", String(NOW_SEC + 3600));
+    assert.equal(
+      (
+        await handleHelgaListen(new Request(withExp), {
+          store,
+          secret: LISTEN_SECRET,
+          now: NOW_MS,
+        })
+      ).status,
+      401,
+    );
+  });
+
+  it("still plays legacy exp and sig links and optional ttl links", async () => {
+    const store = createMemoryRecordingStore();
+    const audio = await storeJoinedClip(store);
+    const exp = NOW_SEC + 3600;
+    const legacy = new URL("https://techtalktobi.vercel.app/api/helga/listen");
+    legacy.searchParams.set("call_id", CALL_A);
+    legacy.searchParams.set("exp", String(exp));
+    legacy.searchParams.set(
+      "sig",
+      createHmac("sha256", LISTEN_SECRET).update(`v1\ncall_id\n${CALL_A}\n${exp}`).digest("hex"),
+    );
+    assert.equal(helgaListenCanonical("call_id", CALL_A, exp), `v1\ncall_id\n${CALL_A}\n${exp}`);
+
+    const played = await handleHelgaListen(new Request(legacy), {
+      store,
+      secret: LISTEN_SECRET,
+      now: NOW_MS,
+    });
+    assert.equal(played.status, 200);
+    assert.deepEqual(new Uint8Array(await played.arrayBuffer()), audio);
+
+    const atExpiry = await handleHelgaListen(new Request(legacy), {
+      store,
+      secret: LISTEN_SECRET,
+      now: exp * 1000,
+    });
+    assert.equal(atExpiry.status, 200);
+
+    const expired = await handleHelgaListen(new Request(legacy), {
       store,
       secret: LISTEN_SECRET,
       now: (exp + 1) * 1000,
     });
     assert.equal(expired.status, 401);
 
-    const forged = new URL(url);
+    const forged = new URL(legacy);
     const sig = forged.searchParams.get("sig") ?? "";
     forged.searchParams.set("sig", sig.slice(0, -1) + (sig.endsWith("0") ? "1" : "0"));
-    const badSig = await handleHelgaListen(new Request(forged), {
-      store,
-      secret: LISTEN_SECRET,
-      now: NOW_MS,
-    });
-    assert.equal(badSig.status, 401);
+    assert.equal(
+      (
+        await handleHelgaListen(new Request(forged), {
+          store,
+          secret: LISTEN_SECRET,
+          now: NOW_MS,
+        })
+      ).status,
+      401,
+    );
 
-    const bumped = new URL(url);
+    const bumped = new URL(legacy);
     bumped.searchParams.set("exp", String(exp + 86_400));
-    const badExp = await handleHelgaListen(new Request(bumped), {
-      store,
-      secret: LISTEN_SECRET,
-      now: NOW_MS,
-    });
-    assert.equal(badExp.status, 401);
+    assert.equal(
+      (
+        await handleHelgaListen(new Request(bumped), {
+          store,
+          secret: LISTEN_SECRET,
+          now: NOW_MS,
+        })
+      ).status,
+      401,
+    );
 
-    const swapped = new URL(url);
-    swapped.searchParams.set("call_id", CALL_B);
-    const badId = await handleHelgaListen(new Request(swapped), {
-      store,
-      secret: LISTEN_SECRET,
-      now: NOW_MS,
-    });
-    assert.equal(badId.status, 401);
-
-    const missingExp = new URL(url);
+    const missingExp = new URL(legacy);
     missingExp.searchParams.delete("exp");
     assert.equal(
       (
@@ -588,7 +665,8 @@ describe("helga listen links", () => {
       ).status,
       401,
     );
-    const nonsense = new URL(url);
+
+    const nonsense = new URL(legacy);
     nonsense.searchParams.set("exp", "soon");
     assert.equal(
       (
@@ -602,10 +680,30 @@ describe("helga listen links", () => {
     );
 
     const bearerDespiteExpiry = await handleHelgaListen(
-      new Request(url, { headers: { authorization: `Bearer ${LISTEN_SECRET}` } }),
+      new Request(legacy, { headers: { authorization: `Bearer ${LISTEN_SECRET}` } }),
       { store, secret: LISTEN_SECRET, now: (exp + 5) * 1000 },
     );
     assert.equal(bearerDespiteExpiry.status, 200);
+
+    const minted = await handleHelgaListenLink(listenLink({ call_id: CALL_A, ttl_seconds: 3600 }), {
+      store,
+      secret: LISTEN_SECRET,
+      now: NOW_MS,
+    });
+    assert.equal(minted.status, 200);
+    const body = await minted.json();
+    assert.equal(body.expires_in_seconds, 3600);
+    assert.equal(body.expires_at, new Date(exp * 1000).toISOString());
+    const mintedUrl = new URL(body.url);
+    assert.equal(mintedUrl.searchParams.get("exp"), String(exp));
+    assert.equal(mintedUrl.searchParams.get("call_id"), CALL_A);
+    const optional = await handleHelgaListen(new Request(body.url), {
+      store,
+      secret: LISTEN_SECRET,
+      now: NOW_MS,
+    });
+    assert.equal(optional.status, 200);
+    assert.deepEqual(new Uint8Array(await optional.arrayBuffer()), audio);
   });
 
   it("404s when the recording is missing and keeps mint ops-only", async () => {
@@ -642,6 +740,9 @@ describe("helga listen links", () => {
     assert.equal(uploadUrl.origin, "https://techtalktobi.vercel.app");
     assert.equal(uploadUrl.searchParams.get("client_upload_id"), UPLOAD_B);
     assert.equal(uploadUrl.searchParams.get("call_id"), null);
+    assert.equal(uploadUrl.searchParams.has("exp"), false);
+    assert.equal(uploadBody.expires_at, null);
+    assert.equal(uploadBody.expires_in_seconds, null);
     const played = await handleHelgaListen(new Request(uploadBody.url), {
       store,
       secret: LISTEN_SECRET,
@@ -691,17 +792,44 @@ describe("helga listen links", () => {
 
     const joined = createMemoryRecordingStore();
     await storeJoinedClip(joined);
+    const badTtl = await handleHelgaListenLink(
+      listenLink({ call_id: CALL_A, ttl_seconds: "3600" }),
+      { store: joined, secret: LISTEN_SECRET, now: NOW_MS },
+    );
+    assert.equal(badTtl.status, 400);
+    assert.deepEqual(await badTtl.json(), { error: "invalid_ttl" });
+
     const clamped = await handleHelgaListenLink(listenLink({ call_id: CALL_A, ttl_seconds: 10 }), {
       store: joined,
       secret: LISTEN_SECRET,
       now: NOW_MS,
     });
-    assert.equal((await clamped.json()).expires_in_seconds, HELGA_LISTEN_LINK_TTL_MIN_SECONDS);
+    const clampedBody = await clamped.json();
+    assert.equal(clampedBody.expires_in_seconds, HELGA_LISTEN_LINK_TTL_MIN_SECONDS);
+    assert.equal(
+      new URL(clampedBody.url).searchParams.get("exp"),
+      String(NOW_SEC + HELGA_LISTEN_LINK_TTL_MIN_SECONDS),
+    );
+    assert.equal(
+      (
+        await handleHelgaListen(new Request(clampedBody.url), {
+          store: joined,
+          secret: LISTEN_SECRET,
+          now: NOW_MS,
+        })
+      ).status,
+      200,
+    );
     const long = await handleHelgaListenLink(
       listenLink({ call_id: CALL_A, ttl_seconds: 999_999 }),
       { store: joined, secret: LISTEN_SECRET, now: NOW_MS },
     );
-    assert.equal((await long.json()).expires_in_seconds, HELGA_LISTEN_LINK_TTL_MAX_SECONDS);
+    const longBody = await long.json();
+    assert.equal(longBody.expires_in_seconds, HELGA_LISTEN_LINK_TTL_MAX_SECONDS);
+    assert.equal(
+      new URL(longBody.url).searchParams.get("exp"),
+      String(NOW_SEC + HELGA_LISTEN_LINK_TTL_MAX_SECONDS),
+    );
 
     const ridden = new URL(uploadBody.url);
     ridden.searchParams.set("call_id", CALL_A);

@@ -139,11 +139,22 @@ export async function blandWebhookSignature(secret: string, rawBody: string): Pr
 
 export type HelgaListenIdKind = "call_id" | "client_upload_id";
 
+/** Canonical tail for a listen link that does not expire. */
+export const HELGA_LISTEN_PERMANENT = "permanent";
+
+/** Unix expiry seconds, or {@link HELGA_LISTEN_PERMANENT} when the link does not expire. */
+export type HelgaListenExpiry = number | typeof HELGA_LISTEN_PERMANENT;
+
 /**
  * Stable string signed for a Tobias listen link.
- * `v1\n{call_id|client_upload_id}\n{lowercase uuid}\n{exp unix seconds}`.
+ * Permanent: `v1\n{call_id|client_upload_id}\n{lowercase uuid}\npermanent`.
+ * Time-limited: `v1\n{call_id|client_upload_id}\n{lowercase uuid}\n{exp unix seconds}`.
  */
-export function helgaListenCanonical(kind: HelgaListenIdKind, id: string, exp: number): string {
+export function helgaListenCanonical(
+  kind: HelgaListenIdKind,
+  id: string,
+  exp: HelgaListenExpiry,
+): string {
   return `v1\n${kind}\n${id.trim().toLowerCase()}\n${exp}`;
 }
 
@@ -152,7 +163,7 @@ export async function helgaListenSignature(
   secret: string,
   kind: HelgaListenIdKind,
   id: string,
-  exp: number,
+  exp: HelgaListenExpiry,
 ): Promise<string> {
   return hmacSha256Hex(secret, helgaListenCanonical(kind, id, exp));
 }
@@ -186,7 +197,7 @@ export async function helgaListenSignatureValid(
   secret: string,
   kind: HelgaListenIdKind,
   id: string,
-  exp: number,
+  exp: HelgaListenExpiry,
   providedSig: string | null,
 ): Promise<boolean> {
   if (!providedSig) return false;
