@@ -24,13 +24,17 @@
  * `teardownAudio` before this recorder mixes, so the device rate is sampled
  * while frames are still arriving.
  *
- * Agent slices are labeled from live `downstreamSampleRate` or a JSON rate
- * (`readPcmSampleRate`). The first confirmed rate backfills slices buffered
- * at the 16 kHz placeholder. If neither source appears, stop uses the sampled
- * `audioContext.sampleRate` — the rate `playPcm` actually used. If that was
- * never seen either, `estimateAgentSampleRate` snaps sample-count / wall-clock
- * to 16, 24, 44.1, or 48 kHz. On stop, both sides are resampled to 16 kHz and
- * encoded as WAV. v1 favors a working mix over studio quality.
+ * The recorded agent rate is the rate `playPcm` passed to `createBuffer`:
+ * `downstreamSampleRate` when it is set, otherwise the device
+ * `audioContext.sampleRate`. Both are sampled on every agent frame and kept
+ * as numbers, because `webchat.stop()` / `teardownAudio` runs before
+ * `recorder.stop()` and clears the context. A JSON rate (`readPcmSampleRate`,
+ * including keys the SDK does not copy onto `downstreamSampleRate`) is only a
+ * hint: a later playback rate rewrites every slice, and a burst estimate that
+ * disagrees with that hint by more than 20% does too. `estimateAgentSampleRate`
+ * sums in-burst gaps only, so a pause cannot snap 48 kHz PCM down to 16 kHz.
+ * On stop, both sides are resampled to 16 kHz and encoded as WAV. v1 favors a
+ * working mix over studio quality.
  *
  * Bland web `recording_url` is not used. The listen-adapter spike failed.
  */
@@ -50,6 +54,18 @@ export const HELGA_AGENT_RATE_CANDIDATES = [16_000, 24_000, 44_100, 48_000] as c
  * than this are not a clock.
  */
 const MIN_AGENT_RATE_SPAN_MS = 200;
+
+/**
+ * Inter-arrival times longer than this are silence between turns, not the PCM
+ * clock. Counting them stretches the span and snaps a 48 kHz stream to 16 kHz.
+ */
+const MAX_BURST_GAP_MS = 150;
+
+/**
+ * A JSON hint this far from the burst estimate is not the playback clock.
+ * 16 kHz versus 48 kHz is 200%; 44.1 kHz versus 48 kHz stays inside the band.
+ */
+const RATE_DISAGREE_RATIO = 0.2;
 
 const MAX_SECONDS = 150;
 
@@ -144,16 +160,16 @@ export type AgentPcmSlice = {
  *
  * Placeholder slices are 16 kHz, so a 24 or 48 kHz stream mixed that way is
  * written too long and sounds deep and slow. Sample count divided by the
- * wall-clock span recovers the rate those bytes were produced at:
+ * in-burst span recovers the rate those bytes were produced at:
  *
- * - Two or more slices at least 200 ms apart use `last.atMs - first.atMs`.
- *   That is the speech-packet span: silence before the first packet and after
- *   the last one is excluded. The last packet's own duration (about 20 ms) is
- *   left out; snapping absorbs it. A long pause between turns stretches this
- *   span and biases the estimate down, which is why a sampled
- *   `audioContext.sampleRate` wins when we have one.
- * - Otherwise the span is the call duration (`stop` minus `start`), so a
- *   single burst with no inter-arrival gap still has a clock.
+ * - Gaps of at most {@link MAX_BURST_GAP_MS} are summed. That is the speech
+ *   clock: a pause between turns is left out, so it cannot pull 48 kHz down
+ *   to 16 kHz. The last packet of each burst (about 20 ms) is omitted;
+ *   snapping absorbs it.
+ * - When every gap is inside a burst and that sum is under 200 ms, the span
+ *   is the call duration (`stop` minus `start`). A single packet still has a
+ *   clock. A call that already discarded a long pause does not fall back to
+ *   wall clock — that span is the biased one.
  *
  * The ratio snaps to the nearest of 16000, 24000, 44100, and 48000. Returns
  * null when there is no PCM or the span is under 200 ms.
@@ -166,12 +182,23 @@ export function estimateAgentSampleRate(
   for (const slice of slices) totalSamples += Math.floor(slice.pcm.byteLength / 2);
   if (totalSamples <= 0) return null;
 
-  let spanMs = 0;
-  if (slices.length >= 2) spanMs = slices[slices.length - 1].atMs - slices[0].atMs;
-  if (spanMs < MIN_AGENT_RATE_SPAN_MS) spanMs = callDurationMs;
+  let burstSpanMs = 0;
+  let discardedPause = false;
+  for (let i = 1; i < slices.length; i += 1) {
+    const gap = slices[i].atMs - slices[i - 1].atMs;
+    if (gap <= 0) continue;
+    if (gap <= MAX_BURST_GAP_MS) burstSpanMs += gap;
+    else discardedPause = true;
+  }
+
+  let spanMs = burstSpanMs;
+  if (spanMs < MIN_AGENT_RATE_SPAN_MS && !discardedPause) spanMs = callDurationMs;
   if (!(spanMs >= MIN_AGENT_RATE_SPAN_MS)) return null;
 
-  const estimated = totalSamples / (spanMs / 1000);
+  return snapAgentSampleRate(totalSamples / (spanMs / 1000));
+}
+
+function snapAgentSampleRate(estimated: number): number {
   let best: number = HELGA_AGENT_RATE_CANDIDATES[0];
   let bestDistance = Infinity;
   for (const candidate of HELGA_AGENT_RATE_CANDIDATES) {
@@ -182,6 +209,12 @@ export function estimateAgentSampleRate(
     }
   }
   return best;
+}
+
+function ratesDisagree(left: number, right: number): boolean {
+  const low = Math.min(left, right);
+  const high = Math.max(left, right);
+  return low > 0 && (high - low) / low > RATE_DISAGREE_RATIO;
 }
 
 export function mixCallToWav(input: {
@@ -250,10 +283,12 @@ export function createHelgaLocalRecorder(
   let stopped = false;
   let startedAt = 0;
   let agentRate = HELGA_MIX_RATE;
-  let agentRateKnown = false;
-  // `playPcm` falls back to this when `downstreamSampleRate` stays null.
-  // Sampled while the call is open; `webchat.stop()` clears the context first.
-  let playbackFallbackRate: number | null = null;
+  // Last rates seen while the call was open. `webchat.stop()` nulls the
+  // context before `recorder.stop()`, so these numbers outlive teardown.
+  let seenDownstream: number | null = null;
+  let seenContext: number | null = null;
+  let jsonRate: number | null = null;
+  let agentRateSource: "downstream" | "context" | "estimate" | "json" | null = null;
   let micRate = HELGA_MIX_RATE;
   let context: AudioContext | null = null;
   let source: MediaStreamAudioSourceNode | null = null;
@@ -263,38 +298,51 @@ export function createHelgaLocalRecorder(
   const agent: AgentPcmSlice[] = [];
   let lastBlob: Blob | null = null;
 
-  const applyAgentRate = (rate: number) => {
-    if (rate < 8000 || rate > 48000) return;
-    if (!agentRateKnown) {
-      // Every slice so far was stored before the rate was known.
-      for (const slice of agent) slice.sampleRate = rate;
-    }
-    agentRate = rate;
-    agentRateKnown = true;
-  };
-
-  const pullDownstream = () => {
-    if (agentRateKnown || !options?.webchat) return;
-    const rate = readDownstreamRate(options.webchat);
-    if (rate) applyAgentRate(rate);
-  };
-
-  const notePlaybackFallback = () => {
+  const rememberPlaybackRates = () => {
     if (!options?.webchat) return;
-    const rate = readAudioContextRate(options.webchat);
-    if (rate) playbackFallbackRate = rate;
+    const downstream = readDownstreamRate(options.webchat);
+    if (downstream) seenDownstream = downstream;
+    const contextRate = readAudioContextRate(options.webchat);
+    if (contextRate) seenContext = contextRate;
   };
 
-  const resolveUnconfirmedRate = () => {
-    pullDownstream();
-    notePlaybackFallback();
-    if (agentRateKnown) return;
-    if (playbackFallbackRate) {
-      applyAgentRate(playbackFallbackRate);
-      return;
+  /**
+   * Label every slice at the rate `playPcm` is using right now.
+   *
+   * `downstreamSampleRate` wins when set — that is the buffer rate. Otherwise
+   * the sampled `audioContext.sampleRate` wins, including over a JSON pin.
+   * The burst estimate is last, and it replaces a JSON pin only when the two
+   * disagree by more than ~20%. A higher-confidence rate rewrites slices that
+   * were already stored.
+   */
+  const reconcileAgentRate = () => {
+    rememberPlaybackRates();
+    const estimated =
+      seenDownstream == null && seenContext == null
+        ? estimateAgentSampleRate(agent, Math.max(0, Date.now() - startedAt))
+        : null;
+
+    let nextRate: number | null = null;
+    let nextSource: "downstream" | "context" | "estimate" | "json" | null = null;
+    if (seenDownstream != null) {
+      nextRate = seenDownstream;
+      nextSource = "downstream";
+    } else if (seenContext != null) {
+      nextRate = seenContext;
+      nextSource = "context";
+    } else if (estimated != null && (jsonRate == null || ratesDisagree(jsonRate, estimated))) {
+      nextRate = estimated;
+      nextSource = "estimate";
+    } else if (jsonRate != null) {
+      nextRate = jsonRate;
+      nextSource = "json";
     }
-    const estimated = estimateAgentSampleRate(agent, Math.max(0, Date.now() - startedAt));
-    if (estimated) applyAgentRate(estimated);
+
+    if (nextRate == null || nextSource == null) return;
+    if (agentRate === nextRate && agentRateSource === nextSource) return;
+    for (const slice of agent) slice.sampleRate = nextRate;
+    agentRate = nextRate;
+    agentRateSource = nextSource;
   };
 
   const onMic = (event: MessageEvent) => {
@@ -315,8 +363,7 @@ export function createHelgaLocalRecorder(
       if (running || stopped) return;
       startedAt = Date.now();
       running = true;
-      pullDownstream();
-      notePlaybackFallback();
+      reconcileAgentRate();
       const Ctor = audioContextCtor();
       if (!Ctor || typeof mic.getAudioTracks !== "function") return;
       try {
@@ -349,28 +396,31 @@ export function createHelgaLocalRecorder(
     },
     pushAgentPcm(frame: Uint8Array) {
       if (!running || frame.byteLength < 2) return;
-      pullDownstream();
-      notePlaybackFallback();
+      reconcileAgentRate();
       let used = 0;
       for (const slice of agent) used += slice.pcm.byteLength / 2;
-      // Unknown streams are capped at the highest playPcm rate (48 kHz) so a
-      // device-rate call can use the full 150 s budget.
-      const capRate = agentRateKnown
-        ? agentRate
-        : HELGA_AGENT_RATE_CANDIDATES[HELGA_AGENT_RATE_CANDIDATES.length - 1];
+      // Cap at the highest playPcm rate. A wrong early 16 kHz pin must not
+      // cut a device-rate call off at a third of its budget.
+      const capRate = Math.max(
+        agentRate,
+        HELGA_AGENT_RATE_CANDIDATES[HELGA_AGENT_RATE_CANDIDATES.length - 1],
+      );
       if (used >= capRate * MAX_SECONDS) return;
       const copy = new Uint8Array(frame.byteLength);
       copy.set(frame);
       agent.push({ atMs: Math.max(0, Date.now() - startedAt), pcm: copy, sampleRate: agentRate });
     },
     setAgentSampleRate(rate: number) {
-      applyAgentRate(rate);
+      if (rate < 8000 || rate > 48000) return;
+      jsonRate = rate;
+      reconcileAgentRate();
     },
     async stop() {
       if (lastBlob) return lastBlob;
       running = false;
       stopped = true;
-      resolveUnconfirmedRate();
+      reconcileAgentRate();
+      console.debug("[helga] agentRate", agentRate, agentRateSource ?? "unset");
       if (worklet) worklet.port.onmessage = null;
       try {
         source?.disconnect();
@@ -476,16 +526,16 @@ function readAudioContextRate(webchat: object): number | null {
 export function attachHelgaAgentPcm(webchat: HelgaWebchatLike, sink: HelgaPcmSink): () => void {
   let socket: SocketLike | null = null;
   let listener: ((event: { data: unknown }) => void) | null = null;
-  let jsonPinned = false;
 
   const publishRate = (message: unknown) => {
     const fromJson = readPcmSampleRate(message);
     if (fromJson) {
-      jsonPinned = true;
+      // The SDK copies this onto `downstreamSampleRate` before `message` when
+      // the key is one it understands. A later downstream or device rate must
+      // still be published — a 16 kHz JSON hint is not final.
       sink.setAgentSampleRate(fromJson);
       return;
     }
-    if (jsonPinned) return;
     const downstream = readDownstreamRate(webchat);
     if (downstream) sink.setAgentSampleRate(downstream);
   };
