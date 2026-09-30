@@ -1,6 +1,7 @@
 import { helgaAllowedOrigin, helgaClientIp, helgaOriginAllowed } from "./helga-authorize.server.ts";
 import { HELGA_LISTEN_PATH, HELGA_VERCEL_ORIGIN, isHelgaUuid } from "./helga.ts";
 import {
+  HELGA_LISTEN_PERMANENT,
   blandWebhookSignatureValid,
   extractWebhookJoin,
   helgaListenSignature,
@@ -15,8 +16,7 @@ import {
 
 const NO_STORE = { "cache-control": "no-store" };
 export const HELGA_RECORDING_RATE_LIMIT_MAX = 6;
-/** Default life of a Tobias listen link. */
-export const HELGA_LISTEN_LINK_TTL_DEFAULT_SECONDS = 3600;
+/** Optional time-limited listen links clamp to this range. Omitted TTL is permanent. */
 export const HELGA_LISTEN_LINK_TTL_MIN_SECONDS = 60;
 export const HELGA_LISTEN_LINK_TTL_MAX_SECONDS = 86_400;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
@@ -321,26 +321,28 @@ function readListenExp(url: URL): number | null {
   return exp;
 }
 
-/** True when `exp` + `sig` authorize this listen query. Missing or bad material is false. */
+/**
+ * True when a permanent `sig` (no `exp`) or a legacy `exp` + `sig` authorizes this query.
+ * A present but unusable `exp` does not fall through to the permanent check.
+ */
 async function helgaSignedListenOk(secret: string, url: URL, nowMs: number): Promise<boolean> {
   const target = signedListenTarget(url);
+  if (!target) return false;
+  const sig = url.searchParams.get("sig");
+  if (url.searchParams.get("exp") === null) {
+    return helgaListenSignatureValid(secret, target.kind, target.id, HELGA_LISTEN_PERMANENT, sig);
+  }
   const exp = readListenExp(url);
-  if (!target || exp === null) return false;
+  if (exp === null) return false;
   const nowSec = Math.floor(nowMs / 1000);
   if (nowSec > exp) return false;
-  return helgaListenSignatureValid(
-    secret,
-    target.kind,
-    target.id,
-    exp,
-    url.searchParams.get("sig"),
-  );
+  return helgaListenSignatureValid(secret, target.kind, target.id, exp, sig);
 }
 
 /**
  * GET `/api/helga/listen?call_id=` or `?client_upload_id=`.
  * Ops bearer: `Authorization: Bearer $HELGA_OPS_LISTEN_SECRET`.
- * Or a short-lived HMAC query (`exp` + `sig`) from POST `/api/helga/listen-link`.
+ * Or an HMAC `sig` from POST `/api/helga/listen-link` (permanent, or legacy `exp` + `sig`).
  * Streams our stored bytes. Not a public blob URL.
  */
 export async function handleHelgaListen(
@@ -400,12 +402,13 @@ export async function handleHelgaListen(
 }
 
 type ListenLinkBody =
-  | { ok: true; kind: HelgaListenIdKind; id: string; ttl: number }
+  | { ok: true; kind: HelgaListenIdKind; id: string; ttl: number | null }
   | { ok: false; error: "invalid_json" | "invalid_body" | "invalid_id" | "invalid_ttl" };
 
-function clampListenTtl(value: unknown): number | null {
-  if (value === undefined) return HELGA_LISTEN_LINK_TTL_DEFAULT_SECONDS;
-  if (typeof value !== "number" || !Number.isFinite(value)) return null;
+/** `null` mints a permanent link. `"invalid"` is a 400. Numbers clamp to 60..86400. */
+function parseListenTtl(value: unknown): number | null | "invalid" {
+  if (value === undefined || value === null) return null;
+  if (typeof value !== "number" || !Number.isFinite(value)) return "invalid";
   const seconds = Math.floor(value);
   if (seconds < HELGA_LISTEN_LINK_TTL_MIN_SECONDS) return HELGA_LISTEN_LINK_TTL_MIN_SECONDS;
   if (seconds > HELGA_LISTEN_LINK_TTL_MAX_SECONDS) return HELGA_LISTEN_LINK_TTL_MAX_SECONDS;
@@ -429,15 +432,16 @@ async function readListenLinkBody(request: Request): Promise<ListenLinkBody> {
   const kind: HelgaListenIdKind = hasCall ? "call_id" : "client_upload_id";
   const raw = body[kind];
   if (typeof raw !== "string" || !isHelgaUuid(raw)) return { ok: false, error: "invalid_id" };
-  const ttl = clampListenTtl(body.ttl_seconds);
-  if (ttl === null) return { ok: false, error: "invalid_ttl" };
+  const ttl = parseListenTtl(body.ttl_seconds);
+  if (ttl === "invalid") return { ok: false, error: "invalid_ttl" };
   return { ok: true, kind, id: raw.trim().toLowerCase(), ttl };
 }
 
 /**
  * POST `/api/helga/listen-link`.
  * Ops only: `Authorization: Bearer $HELGA_OPS_LISTEN_SECRET`.
- * Body is exactly one of `call_id` or `client_upload_id`, plus optional `ttl_seconds`.
+ * Body is exactly one of `call_id` or `client_upload_id`.
+ * Omit `ttl_seconds` (or send null) for a permanent link. A number mints `exp` + `sig`.
  * Returns an absolute Vercel listen URL. Never a blob URL or a Pages origin.
  */
 export async function handleHelgaListenLink(
@@ -476,19 +480,29 @@ export async function handleHelgaListenLink(
     if (!found) {
       return Response.json({ error: "not_found" }, { status: 404, headers: NO_STORE });
     }
-    const nowSec = Math.floor((options?.now ?? Date.now()) / 1000);
-    const exp = nowSec + parsed.ttl;
-    const sig = await helgaListenSignature(secret, parsed.kind, parsed.id, exp);
     const params = new URLSearchParams();
     params.set(parsed.kind, parsed.id);
-    params.set("exp", String(exp));
-    params.set("sig", sig);
+    let expiresAt: string | null = null;
+    let expiresIn: number | null = null;
+    if (parsed.ttl === null) {
+      params.set(
+        "sig",
+        await helgaListenSignature(secret, parsed.kind, parsed.id, HELGA_LISTEN_PERMANENT),
+      );
+    } else {
+      const nowSec = Math.floor((options?.now ?? Date.now()) / 1000);
+      const exp = nowSec + parsed.ttl;
+      params.set("exp", String(exp));
+      params.set("sig", await helgaListenSignature(secret, parsed.kind, parsed.id, exp));
+      expiresAt = new Date(exp * 1000).toISOString();
+      expiresIn = parsed.ttl;
+    }
     const url = `${helgaListenLinkOrigin(request.url)}${HELGA_LISTEN_PATH}?${params.toString()}`;
     return Response.json(
       {
         url,
-        expires_at: new Date(exp * 1000).toISOString(),
-        expires_in_seconds: parsed.ttl,
+        expires_at: expiresAt,
+        expires_in_seconds: expiresIn,
       },
       { status: 200, headers: NO_STORE },
     );
