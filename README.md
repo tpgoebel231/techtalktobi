@@ -45,7 +45,7 @@ Set these on the Vercel project’s runtime environment. Do not prefix them with
 | `BLAND_API_KEY`           | Mints the web-agent session token.                                                             |
 | `BLOB_READ_WRITE_TOKEN`   | Vercel Blob read/write token. Audio is stored with **private** access. Required in production. |
 | `BLAND_WEBHOOK_SECRET`    | HMAC secret from Bland → Account → Keys. Verifies `X-Webhook-Signature` on the raw body.       |
-| `HELGA_OPS_LISTEN_SECRET` | Ops playback password. Send `Authorization: Bearer …`.                                         |
+| `HELGA_OPS_LISTEN_SECRET` | Ops bearer for listen and listen-link. HMAC key for short-lived listen URLs.                   |
 | `HELGA_RECORDING_DIR`     | Optional local directory for smoke tests when Blob is unset. Not a public web root.            |
 
 After merge, the Vercel Git integration deploys `main`. Start on techtalktobi.com talks to Vercel; it does not run on Pages itself.
@@ -76,4 +76,21 @@ curl -fsS \
 
 `client_upload_id` works the same way: `/api/helga/listen?client_upload_id=UPLOAD_ID`.
 
-Manual smoke: open `/de/about` or `/en/about`, Start, talk, end the call. The WAV upload lands, Bland’s webhook joins `call_id`, then the curl above plays the mix.
+### Tobias listen link
+
+Helga mints a link with the ops bearer and pastes the returned `url` into the call log. Tobias opens that URL in a browser. It streams the same audio and does not send `Authorization`. The link stops working at `expires_at` (default one hour). The URL is always on `https://techtalktobi.vercel.app` — never a GitHub Pages origin, and never a Vercel Blob URL.
+
+```bash
+curl -fsS \
+  -X POST \
+  -H "Authorization: Bearer $HELGA_OPS_LISTEN_SECRET" \
+  -H "content-type: application/json" \
+  -d '{"call_id":"CALL_ID"}' \
+  "https://techtalktobi.vercel.app/api/helga/listen-link"
+```
+
+Response: `{ "url", "expires_at", "expires_in_seconds" }`. Optional `ttl_seconds` is clamped to 60..86400 (default 3600). Send `client_upload_id` instead of `call_id` when the webhook has not joined yet — exactly one of the two ids. `call_id` is available after the webhook join.
+
+The bearer listen curl above still works.
+
+Manual smoke: open `/de/about` or `/en/about`, Start, talk, end the call. The WAV upload lands, Bland’s webhook joins `call_id`, then the curl above plays the mix. The listen-link curl is what Helga pastes for Tobias.

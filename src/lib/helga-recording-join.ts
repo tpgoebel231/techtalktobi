@@ -120,8 +120,7 @@ function toHex(bytes: Uint8Array): string {
   return hex;
 }
 
-/** HMAC-SHA256 hex of the raw webhook body. Matches Bland's signing scheme. */
-export async function blandWebhookSignature(secret: string, rawBody: string): Promise<string> {
+async function hmacSha256Hex(secret: string, message: string): Promise<string> {
   const key = await crypto.subtle.importKey(
     "raw",
     new TextEncoder().encode(secret),
@@ -129,8 +128,33 @@ export async function blandWebhookSignature(secret: string, rawBody: string): Pr
     false,
     ["sign"],
   );
-  const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(rawBody));
+  const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(message));
   return toHex(new Uint8Array(signature));
+}
+
+/** HMAC-SHA256 hex of the raw webhook body. Matches Bland's signing scheme. */
+export async function blandWebhookSignature(secret: string, rawBody: string): Promise<string> {
+  return hmacSha256Hex(secret, rawBody);
+}
+
+export type HelgaListenIdKind = "call_id" | "client_upload_id";
+
+/**
+ * Stable string signed for a Tobias listen link.
+ * `v1\n{call_id|client_upload_id}\n{lowercase uuid}\n{exp unix seconds}`.
+ */
+export function helgaListenCanonical(kind: HelgaListenIdKind, id: string, exp: number): string {
+  return `v1\n${kind}\n${id.trim().toLowerCase()}\n${exp}`;
+}
+
+/** HMAC-SHA256 hex of {@link helgaListenCanonical}, keyed with `HELGA_OPS_LISTEN_SECRET`. */
+export async function helgaListenSignature(
+  secret: string,
+  kind: HelgaListenIdKind,
+  id: string,
+  exp: number,
+): Promise<string> {
+  return hmacSha256Hex(secret, helgaListenCanonical(kind, id, exp));
 }
 
 function signaturesEqual(expectedHex: string, providedHex: string): boolean {
@@ -154,6 +178,21 @@ export async function blandWebhookSignatureValid(
     .replace(/^sha256=/, "");
   if (!/^[0-9a-f]+$/.test(provided)) return false;
   const expected = await blandWebhookSignature(secret, rawBody);
+  return signaturesEqual(expected, provided);
+}
+
+/** Constant-time check of a listen-link `sig` query value. */
+export async function helgaListenSignatureValid(
+  secret: string,
+  kind: HelgaListenIdKind,
+  id: string,
+  exp: number,
+  providedSig: string | null,
+): Promise<boolean> {
+  if (!providedSig) return false;
+  const provided = providedSig.trim().toLowerCase();
+  if (!/^[0-9a-f]+$/.test(provided)) return false;
+  const expected = await helgaListenSignature(secret, kind, id, exp);
   return signaturesEqual(expected, provided);
 }
 

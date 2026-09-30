@@ -21,6 +21,7 @@ import { Route as LocaleResearchIndexRouteImport } from './routes/$locale/resear
 import { Route as LocaleResearchSlugRouteImport } from './routes/$locale/research/$slug'
 import { Route as ApiHelgaAuthorizeRouteImport } from './routes/api/helga/authorize'
 import { Route as ApiHelgaListenRouteImport } from './routes/api/helga/listen'
+import { Route as ApiHelgaListenLinkRouteImport } from './routes/api/helga/listen-link'
 import { Route as ApiHelgaRecordingRouteImport } from './routes/api/helga/recording'
 import { Route as ApiHelgaWebhookRouteImport } from './routes/api/helga/webhook'
 
@@ -84,6 +85,11 @@ const ApiHelgaListenRoute = ApiHelgaListenRouteImport.update({
   path: '/api/helga/listen',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiHelgaListenLinkRoute = ApiHelgaListenLinkRouteImport.update({
+  id: '/api/helga/listen-link',
+  path: '/api/helga/listen-link',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiHelgaRecordingRoute = ApiHelgaRecordingRouteImport.update({
   id: '/api/helga/recording',
   path: '/api/helga/recording',
@@ -106,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/$locale/research/$slug': typeof LocaleResearchSlugRoute
   '/api/helga/authorize': typeof ApiHelgaAuthorizeRoute
   '/api/helga/listen': typeof ApiHelgaListenRoute
+  '/api/helga/listen-link': typeof ApiHelgaListenLinkRoute
   '/api/helga/recording': typeof ApiHelgaRecordingRoute
   '/api/helga/webhook': typeof ApiHelgaWebhookRoute
   '/$locale/media/': typeof LocaleMediaIndexRoute
@@ -121,6 +128,7 @@ export interface FileRoutesByTo {
   '/$locale/research/$slug': typeof LocaleResearchSlugRoute
   '/api/helga/authorize': typeof ApiHelgaAuthorizeRoute
   '/api/helga/listen': typeof ApiHelgaListenRoute
+  '/api/helga/listen-link': typeof ApiHelgaListenLinkRoute
   '/api/helga/recording': typeof ApiHelgaRecordingRoute
   '/api/helga/webhook': typeof ApiHelgaWebhookRoute
   '/$locale/media': typeof LocaleMediaIndexRoute
@@ -138,6 +146,7 @@ export interface FileRoutesById {
   '/$locale/research/$slug': typeof LocaleResearchSlugRoute
   '/api/helga/authorize': typeof ApiHelgaAuthorizeRoute
   '/api/helga/listen': typeof ApiHelgaListenRoute
+  '/api/helga/listen-link': typeof ApiHelgaListenLinkRoute
   '/api/helga/recording': typeof ApiHelgaRecordingRoute
   '/api/helga/webhook': typeof ApiHelgaWebhookRoute
   '/$locale/media/': typeof LocaleMediaIndexRoute
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
     | '/$locale/research/$slug'
     | '/api/helga/authorize'
     | '/api/helga/listen'
+    | '/api/helga/listen-link'
     | '/api/helga/recording'
     | '/api/helga/webhook'
     | '/$locale/media/'
@@ -171,6 +181,7 @@ export interface FileRouteTypes {
     | '/$locale/research/$slug'
     | '/api/helga/authorize'
     | '/api/helga/listen'
+    | '/api/helga/listen-link'
     | '/api/helga/recording'
     | '/api/helga/webhook'
     | '/$locale/media'
@@ -187,6 +198,7 @@ export interface FileRouteTypes {
     | '/$locale/research/$slug'
     | '/api/helga/authorize'
     | '/api/helga/listen'
+    | '/api/helga/listen-link'
     | '/api/helga/recording'
     | '/api/helga/webhook'
     | '/$locale/media/'
@@ -198,6 +210,7 @@ export interface RootRouteChildren {
   LocaleRouteRoute: typeof LocaleRouteRouteWithChildren
   ApiHelgaAuthorizeRoute: typeof ApiHelgaAuthorizeRoute
   ApiHelgaListenRoute: typeof ApiHelgaListenRoute
+  ApiHelgaListenLinkRoute: typeof ApiHelgaListenLinkRoute
   ApiHelgaRecordingRoute: typeof ApiHelgaRecordingRoute
   ApiHelgaWebhookRoute: typeof ApiHelgaWebhookRoute
 }
@@ -288,6 +301,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHelgaListenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/helga/listen-link': {
+      id: '/api/helga/listen-link'
+      path: '/api/helga/listen-link'
+      fullPath: '/api/helga/listen-link'
+      preLoaderRoute: typeof ApiHelgaListenLinkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/helga/recording': {
       id: '/api/helga/recording'
       path: '/api/helga/recording'
@@ -336,6 +356,7 @@ const rootRouteChildren: RootRouteChildren = {
   LocaleRouteRoute: LocaleRouteRouteWithChildren,
   ApiHelgaAuthorizeRoute: ApiHelgaAuthorizeRoute,
   ApiHelgaListenRoute: ApiHelgaListenRoute,
+  ApiHelgaListenLinkRoute: ApiHelgaListenLinkRoute,
   ApiHelgaRecordingRoute: ApiHelgaRecordingRoute,
   ApiHelgaWebhookRoute: ApiHelgaWebhookRoute,
 }
