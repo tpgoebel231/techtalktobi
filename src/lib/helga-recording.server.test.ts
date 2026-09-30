@@ -17,6 +17,7 @@ import {
   resetHelgaRecordingRateLimit,
 } from "./helga-recording.server.ts";
 import {
+  HELGA_JOIN_WINDOW_MS,
   blandWebhookSignature,
   extractWebhookJoin,
   helgaListenCanonical,
@@ -24,6 +25,7 @@ import {
 } from "./helga-recording-join.ts";
 import {
   createFsRecordingStore,
+  createHelgaRecordingStore,
   createMemoryRecordingStore,
   type HelgaRecordingStore,
 } from "./helga-recording-store.server.ts";
@@ -466,6 +468,234 @@ describe("helga recording join", () => {
     } finally {
       await rm(dir, { recursive: true, force: true });
     }
+  });
+});
+
+function gate(): { promise: Promise<void>; open: () => void } {
+  let open: () => void = () => {};
+  const promise = new Promise<void>((resolve) => {
+    open = () => resolve();
+  });
+  return { promise, open };
+}
+
+function memoryKv(afterPut?: (key: string, bytes: Uint8Array) => Promise<void> | void) {
+  const objects = new Map<string, Uint8Array>();
+  const store = createHelgaRecordingStore({
+    async getBytes(key) {
+      const found = objects.get(key);
+      return found ? new Uint8Array(found) : null;
+    },
+    async putBytes(key, bytes) {
+      const copy = new Uint8Array(bytes);
+      objects.set(key, copy);
+      await afterPut?.(key, copy);
+    },
+    async delete(key) {
+      objects.delete(key);
+    },
+    async listKeys(prefix) {
+      return [...objects.keys()].filter((key) => key.startsWith(prefix));
+    },
+  });
+  return { objects, store };
+}
+
+function plantPending(objects: Map<string, Uint8Array>, uploadId: string, callId: string) {
+  objects.set(
+    `pending/${uploadId}.json`,
+    new TextEncoder().encode(
+      JSON.stringify({
+        callId,
+        locale: "de",
+        receivedAt: new Date(NOW_MS).toISOString(),
+      }),
+    ),
+  );
+}
+
+describe("helga dual-capture join race", () => {
+  const clip = {
+    locale: "de" as const,
+    contentType: "audio/wav",
+    bytes: wav(),
+    now: NOW_MS,
+  };
+
+  it("joins when the webhook parks a pending call before the upload", async () => {
+    const store = createMemoryRecordingStore();
+    const parked = await store.attachCall({
+      callId: CALL_A,
+      clientUploadId: UPLOAD_A,
+      locale: "de",
+      now: NOW_MS,
+    });
+    assert.deepEqual(parked, { joined: false, clientUploadId: UPLOAD_A });
+
+    const saved = await store.putRecording({ clientUploadId: UPLOAD_A, ...clip });
+    assert.equal(saved.alreadyExisted, false);
+    assert.equal(saved.meta.callId, CALL_A);
+    const found = await store.getByCallId(CALL_A);
+    assert.equal(found?.meta.clientUploadId, UPLOAD_A);
+    assert.equal(found?.meta.callId, CALL_A);
+    assert.deepEqual(found?.bytes, clip.bytes);
+  });
+
+  it("joins when the upload lands before the webhook that carries the upload id", async () => {
+    const store = createMemoryRecordingStore();
+    const saved = await store.putRecording({ clientUploadId: UPLOAD_A, ...clip });
+    assert.equal(saved.meta.callId, null);
+
+    const linked = await store.attachCall({
+      callId: CALL_A,
+      clientUploadId: UPLOAD_A,
+      locale: "de",
+      now: NOW_MS + 1_000,
+    });
+    assert.deepEqual(linked, { joined: true, clientUploadId: UPLOAD_A });
+    const found = await store.getByCallId(CALL_A);
+    assert.equal(found?.meta.callId, CALL_A);
+    assert.equal(found?.meta.locale, "de");
+  });
+
+  it("links the call when pending is written after putRecording chose a null callId", async () => {
+    const audioReady = gate();
+    const resumeUpload = gate();
+    let heldAudio = false;
+    let wroteNullCallId = false;
+    const { objects, store } = memoryKv(async (key, bytes) => {
+      if (key === `meta/${UPLOAD_A}.json`) {
+        const meta = JSON.parse(new TextDecoder().decode(bytes)) as { callId: string | null };
+        if (meta.callId == null) wroteNullCallId = true;
+      }
+      if (!heldAudio && key === `audio/${UPLOAD_A}`) {
+        heldAudio = true;
+        audioReady.open();
+        await resumeUpload.promise;
+      }
+    });
+
+    const saving = store.putRecording({ clientUploadId: UPLOAD_A, ...clip });
+    await audioReady.promise;
+    const parked = await store.attachCall({
+      callId: CALL_A,
+      clientUploadId: UPLOAD_A,
+      locale: "de",
+      now: NOW_MS,
+    });
+    assert.deepEqual(parked, { joined: false, clientUploadId: UPLOAD_A });
+    assert.equal(objects.has(`pending/${UPLOAD_A}.json`), true);
+    assert.equal(objects.has(`meta/${UPLOAD_A}.json`), false);
+
+    resumeUpload.open();
+    const saved = await saving;
+    assert.equal(wroteNullCallId, true);
+    assert.equal(saved.alreadyExisted, false);
+    assert.equal(saved.meta.callId, CALL_A);
+    assert.equal(objects.has(`pending/${UPLOAD_A}.json`), false);
+    const found = await store.getByCallId(CALL_A);
+    assert.equal(found?.meta.clientUploadId, UPLOAD_A);
+    assert.equal(found?.meta.callId, CALL_A);
+    assert.deepEqual(found?.bytes, clip.bytes);
+  });
+
+  it("joins on an idempotent upload retry when pending arrived after the first save", async () => {
+    const { objects, store } = memoryKv();
+    const first = await store.putRecording({ clientUploadId: UPLOAD_A, ...clip });
+    assert.equal(first.alreadyExisted, false);
+    assert.equal(first.meta.callId, null);
+    plantPending(objects, UPLOAD_A, CALL_A);
+
+    const retry = await store.putRecording({
+      clientUploadId: UPLOAD_A,
+      ...clip,
+      bytes: new Uint8Array(clip.bytes.byteLength + 8),
+    });
+    assert.equal(retry.alreadyExisted, true);
+    assert.equal(retry.meta.callId, CALL_A);
+    assert.equal(retry.meta.byteLength, clip.bytes.byteLength);
+    assert.equal(objects.has(`pending/${UPLOAD_A}.json`), false);
+    const found = await store.getByCallId(CALL_A);
+    assert.equal(found?.meta.clientUploadId, UPLOAD_A);
+    assert.deepEqual(found?.bytes, clip.bytes);
+  });
+
+  it("joins when meta appears after attachCall has written pending", async () => {
+    const pendingReady = gate();
+    const resumeAttach = gate();
+    let heldPending = false;
+    const audio = wav();
+    const { objects, store } = memoryKv(async (key) => {
+      if (!heldPending && key === `pending/${UPLOAD_A}.json`) {
+        heldPending = true;
+        pendingReady.open();
+        await resumeAttach.promise;
+      }
+    });
+
+    const attaching = store.attachCall({
+      callId: CALL_A,
+      clientUploadId: UPLOAD_A,
+      locale: "de",
+      now: NOW_MS,
+    });
+    await pendingReady.promise;
+    objects.set(`audio/${UPLOAD_A}`, audio);
+    objects.set(
+      `meta/${UPLOAD_A}.json`,
+      new TextEncoder().encode(
+        JSON.stringify({
+          clientUploadId: UPLOAD_A,
+          callId: null,
+          locale: "de",
+          contentType: "audio/wav",
+          byteLength: audio.byteLength,
+          createdAt: new Date(NOW_MS).toISOString(),
+        }),
+      ),
+    );
+    resumeAttach.open();
+
+    const result = await attaching;
+    assert.deepEqual(result, { joined: true, clientUploadId: UPLOAD_A });
+    assert.equal(objects.has(`pending/${UPLOAD_A}.json`), false);
+    const found = await store.getByCallId(CALL_A);
+    assert.equal(found?.meta.callId, CALL_A);
+    assert.equal(found?.meta.clientUploadId, UPLOAD_A);
+    assert.deepEqual(found?.bytes, audio);
+  });
+
+  it("still joins one orphan webhook inside the window and ignores one outside it", async () => {
+    const store = createMemoryRecordingStore();
+    const early = await store.attachCall({
+      callId: CALL_A,
+      clientUploadId: null,
+      locale: "de",
+      now: NOW_MS,
+    });
+    assert.deepEqual(early, { joined: false, clientUploadId: null });
+    const saved = await store.putRecording({
+      clientUploadId: UPLOAD_A,
+      ...clip,
+      now: NOW_MS + 1_000,
+    });
+    assert.equal(saved.meta.callId, CALL_A);
+    assert.equal((await store.getByCallId(CALL_A))?.meta.clientUploadId, UPLOAD_A);
+
+    const stale = createMemoryRecordingStore();
+    await stale.attachCall({
+      callId: CALL_B,
+      clientUploadId: null,
+      locale: "de",
+      now: NOW_MS,
+    });
+    const late = await stale.putRecording({
+      clientUploadId: UPLOAD_B,
+      ...clip,
+      now: NOW_MS + HELGA_JOIN_WINDOW_MS + 1,
+    });
+    assert.equal(late.meta.callId, null);
+    assert.equal(await stale.getByCallId(CALL_B), null);
   });
 });
 

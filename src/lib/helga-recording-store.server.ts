@@ -136,6 +136,39 @@ async function linkCall(
   return { joined: true, clientUploadId: meta.clientUploadId };
 }
 
+function pendingCallId(bytes: Uint8Array): string | null {
+  try {
+    const body = decodeJson(bytes) as Record<string, unknown>;
+    if (typeof body.callId === "string" && isHelgaUuid(body.callId)) {
+      return body.callId.toLowerCase();
+    }
+  } catch {
+    /* corrupt pending is dropped by the caller */
+  }
+  return null;
+}
+
+/**
+ * A webhook may park `pending/{upload}` after `putRecording` already read
+ * that key as empty (production call 56dcf267). Link it the same way as a
+ * pending record that was visible on the first read, then drop pending.
+ */
+async function linkPendingCall(
+  kv: RecordingKv,
+  meta: HelgaRecordingMeta,
+): Promise<HelgaRecordingMeta> {
+  const raw = await kv.getBytes(pendingKey(meta.clientUploadId));
+  if (!raw) return meta;
+  const callId = pendingCallId(raw);
+  if (!callId) {
+    await kv.delete(pendingKey(meta.clientUploadId));
+    return meta;
+  }
+  const linked = await linkCall(kv, meta, callId);
+  if (!linked.joined) return meta;
+  return meta.callId === callId ? meta : { ...meta, callId };
+}
+
 async function listUnmatched(kv: RecordingKv, sinceMs: number): Promise<HelgaRecordingMeta[]> {
   const keys = await kv.listKeys("meta/");
   const pending: HelgaRecordingMeta[] = [];
@@ -179,19 +212,15 @@ export function createHelgaRecordingStore(kv: RecordingKv): HelgaRecordingStore 
     async putRecording(input) {
       const id = requireUuid(input.clientUploadId);
       const existing = await readMeta(kv, id);
-      if (existing) return { meta: existing, alreadyExisted: true };
+      if (existing) {
+        const meta = await linkPendingCall(kv, existing);
+        return { meta, alreadyExisted: true };
+      }
 
       let callId: string | null = null;
       const pendingRaw = await kv.getBytes(pendingKey(id));
       if (pendingRaw) {
-        try {
-          const body = decodeJson(pendingRaw) as Record<string, unknown>;
-          if (typeof body.callId === "string" && isHelgaUuid(body.callId)) {
-            callId = body.callId.toLowerCase();
-          }
-        } catch {
-          callId = null;
-        }
+        callId = pendingCallId(pendingRaw);
         await kv.delete(pendingKey(id));
       }
       if (!callId) {
@@ -218,7 +247,8 @@ export function createHelgaRecordingStore(kv: RecordingKv): HelgaRecordingStore 
       if (callId) {
         await kv.putBytes(callKey(callId), encodeJson({ clientUploadId: id }), "application/json");
       }
-      return { meta, alreadyExisted: false };
+      const linked = await linkPendingCall(kv, meta);
+      return { meta: linked, alreadyExisted: false };
     },
 
     async getByUploadId(clientUploadId) {
@@ -245,7 +275,7 @@ export function createHelgaRecordingStore(kv: RecordingKv): HelgaRecordingStore 
       const callId = requireUuid(input.callId);
       if (input.clientUploadId) {
         const id = requireUuid(input.clientUploadId);
-        const meta = await readMeta(kv, id);
+        let meta = await readMeta(kv, id);
         if (!meta) {
           await kv.putBytes(
             pendingKey(id),
@@ -256,7 +286,9 @@ export function createHelgaRecordingStore(kv: RecordingKv): HelgaRecordingStore 
             }),
             "application/json",
           );
-          return { joined: false, clientUploadId: id };
+          // Inverse of the upload re-read: meta can land after the miss above.
+          meta = await readMeta(kv, id);
+          if (!meta) return { joined: false, clientUploadId: id };
         }
         return linkCall(kv, meta, callId);
       }
