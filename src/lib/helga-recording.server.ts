@@ -1,5 +1,10 @@
 import { helgaAllowedOrigin, helgaClientIp, helgaOriginAllowed } from "./helga-authorize.server.ts";
-import { HELGA_LISTEN_PATH, HELGA_VERCEL_ORIGIN, isHelgaUuid } from "./helga.ts";
+import {
+  HELGA_LISTEN_PATH,
+  HELGA_VERCEL_ORIGIN,
+  helgaDualCaptureEnabled,
+  isHelgaUuid,
+} from "./helga.ts";
 import {
   HELGA_LISTEN_PERMANENT,
   blandWebhookSignatureValid,
@@ -108,6 +113,8 @@ type HandlerOptions = {
   now?: number;
   store?: HelgaRecordingStore | null;
   secret?: string | null;
+  /** Test override. Production uses `HELGA_DUAL_CAPTURE=1` only. */
+  dualCapture?: boolean;
 };
 
 function resolveStore(options?: HandlerOptions): HelgaRecordingStore | null {
@@ -130,6 +137,15 @@ export async function handleHelgaRecording(
 ): Promise<Response> {
   if (request.method !== "POST") {
     return new Response(null, { status: 405, headers: { ...NO_STORE, allow: "POST" } });
+  }
+
+  const dualCapture =
+    options && "dualCapture" in options
+      ? Boolean(options.dualCapture)
+      : helgaDualCaptureEnabled();
+  if (!dualCapture) {
+    // Dead path: Bland web audio is still unreadable; stop writing bad Blob WAVs.
+    return corsJson(request, { error: "dual_capture_disabled" }, 410);
   }
 
   const now = options?.now ?? Date.now();

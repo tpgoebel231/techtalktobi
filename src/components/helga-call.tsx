@@ -2,10 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { useWebchat } from "bland-client-js-sdk/react";
 import { Button } from "@/components/ui/button";
 import {
+  HELGA_DUAL_CAPTURE_ENABLED,
   fetchHelgaSession,
   helgaAgentIdForLocale,
   newHelgaUploadId,
   openMicrophone,
+  requestMicrophone,
   stopMicrophone,
   uploadHelgaRecording,
   type MicPermission,
@@ -138,6 +140,29 @@ export function HelgaCall() {
     if (startingRef.current || stateRef.current !== "closed") return;
     startingRef.current = true;
     setError(null);
+
+    // Dual-capture is dead: Bland web listen still broken (2026-09-30). Do not
+    // open a second mic / PCM tap / Blob upload. Bland's SDK still needs mic
+    // permission for the live call.
+    if (!HELGA_DUAL_CAPTURE_ENABLED) {
+      const permission = await requestMicrophone();
+      if (permission !== "ok") {
+        startingRef.current = false;
+        setError(permission);
+        return;
+      }
+      uploadIdRef.current = null;
+      try {
+        await start();
+      } catch {
+        stop();
+        setError("failed");
+      } finally {
+        startingRef.current = false;
+      }
+      return;
+    }
+
     const mic = await openMicrophone();
     if (mic.permission !== "ok") {
       startingRef.current = false;

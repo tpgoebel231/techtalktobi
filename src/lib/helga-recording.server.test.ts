@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { createHmac } from "node:crypto";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { afterEach, describe, it } from "node:test";
+import { after, afterEach, before, describe, it } from "node:test";
 import { handleHelgaPreflight } from "./helga-authorize.server.ts";
 import { encodeWav } from "./helga-local-recorder.ts";
 import {
@@ -141,6 +141,51 @@ afterEach(() => {
   delete process.env.HELGA_RECORDING_DIR;
   delete process.env.BLAND_WEBHOOK_SECRET;
   delete process.env.HELGA_OPS_LISTEN_SECRET;
+});
+
+const PREV_HELGA_DUAL_CAPTURE = process.env.HELGA_DUAL_CAPTURE;
+before(() => {
+  // Existing suites exercise the dual-capture path; production default is off.
+  process.env.HELGA_DUAL_CAPTURE = "1";
+});
+after(() => {
+  if (PREV_HELGA_DUAL_CAPTURE === undefined) delete process.env.HELGA_DUAL_CAPTURE;
+  else process.env.HELGA_DUAL_CAPTURE = PREV_HELGA_DUAL_CAPTURE;
+});
+
+describe("helga dual-capture disabled", () => {
+  it("rejects uploads with 410 when dual-capture is off", async () => {
+    const previous = process.env.HELGA_DUAL_CAPTURE;
+    delete process.env.HELGA_DUAL_CAPTURE;
+    try {
+      const store = createMemoryRecordingStore();
+      const response = await handleHelgaRecording(
+        upload("https://techtalktobi.com", "203.0.113.99", UPLOAD_A),
+        { store, dualCapture: false },
+      );
+      assert.equal(response.status, 410);
+      assert.deepEqual(await response.json(), { error: "dual_capture_disabled" });
+    } finally {
+      if (previous === undefined) delete process.env.HELGA_DUAL_CAPTURE;
+      else process.env.HELGA_DUAL_CAPTURE = previous;
+    }
+  });
+
+  it("still rejects when env is unset even if a store is provided", async () => {
+    const previous = process.env.HELGA_DUAL_CAPTURE;
+    delete process.env.HELGA_DUAL_CAPTURE;
+    try {
+      const store = createMemoryRecordingStore();
+      const response = await handleHelgaRecording(
+        upload("https://techtalktobi.com", "203.0.113.98", UPLOAD_A),
+        { store },
+      );
+      assert.equal(response.status, 410);
+    } finally {
+      if (previous === undefined) delete process.env.HELGA_DUAL_CAPTURE;
+      else process.env.HELGA_DUAL_CAPTURE = previous;
+    }
+  });
 });
 
 describe("helga recording join", () => {

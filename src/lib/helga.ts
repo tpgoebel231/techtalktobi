@@ -26,6 +26,23 @@ export function isHelgaAgentId(agentId: string): boolean {
 /** Same-origin route that mints a one-time session token. */
 export const HELGA_AUTHORIZE_PATH = "/api/helga/authorize";
 export const HELGA_RECORDING_PATH = "/api/helga/recording";
+
+/**
+ * Client dual-capture (mic + agent PCM → our Blob WAV) is OFF.
+ * Bland web recordings remain unreadable with the org API key as of
+ * 2026-09-30 (unsigned S3 URL / Accept audio/* → 500). Keep this false so
+ * About/Helga stops writing stretched WAVs. Server upload also rejects unless
+ * `HELGA_DUAL_CAPTURE=1` is set explicitly for experiments.
+ */
+export const HELGA_DUAL_CAPTURE_ENABLED = false;
+
+/** Server-only override. Browser code must use `HELGA_DUAL_CAPTURE_ENABLED`. */
+export function helgaDualCaptureEnabled(
+  env: { HELGA_DUAL_CAPTURE?: string | undefined } = process.env,
+): boolean {
+  return env.HELGA_DUAL_CAPTURE?.trim() === "1";
+}
+
 export const HELGA_WEBHOOK_PATH = "/api/helga/webhook";
 export const HELGA_LISTEN_PATH = "/api/helga/listen";
 
