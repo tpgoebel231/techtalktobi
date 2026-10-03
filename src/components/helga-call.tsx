@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useWebchat } from "bland-client-js-sdk/react";
 import { Button } from "@/components/ui/button";
 import {
+  HELGA_CALL_BUTTON_ENABLED,
   HELGA_DUAL_CAPTURE_ENABLED,
   fetchHelgaSession,
   helgaAgentIdForLocale,
@@ -34,7 +35,13 @@ function formatRemaining(ms: number): string {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
+/** Hidden while {@link HELGA_CALL_BUTTON_ENABLED} is false. Call behavior is unchanged when it is true. */
 export function HelgaCall() {
+  if (!HELGA_CALL_BUTTON_ENABLED) return null;
+  return <HelgaCallLive />;
+}
+
+function HelgaCallLive() {
   const copy = useCopy().helga;
   const locale = useLocale();
   const [open, setOpen] = useState(false);

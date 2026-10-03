@@ -27,6 +27,8 @@ jobs:
     env:
       VITE_AUTH_ENABLED: "false"
       NITRO_PRESET: github_pages
+      # Helga button: HELGA_CALL_BUTTON_ENABLED in src/lib/helga.ts.
+      # Leave it a source constant. A VITE_ var here would not match Vercel.
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
