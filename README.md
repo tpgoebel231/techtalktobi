@@ -34,7 +34,9 @@ Auth is off (`VITE_AUTH_ENABLED=false`).
 
 ## Helga
 
-The About page button starts a call through `POST /api/helga/authorize`. GitHub Pages stays the static site. The API host is the existing Vercel project: [https://techtalktobi.vercel.app](https://techtalktobi.vercel.app).
+The About page call button is off. The only switch is `HELGA_CALL_BUTTON_ENABLED` in `src/lib/helga.ts`. It ships as `false`, which hides “Talk to Helga” and “Mit Helga sprechen”. Set it to `true`, and update the assertion in `src/lib/helga-call-button.test.ts`, to show the button again. Do not use a Vercel env var for this: GitHub Pages never reads that environment, so techtalktobi.com would keep the button. The API routes stay mounted either way.
+
+When the button is on, it starts a call through `POST /api/helga/authorize`. GitHub Pages stays the static site. The API host is the existing Vercel project: [https://techtalktobi.vercel.app](https://techtalktobi.vercel.app).
 
 On `https://techtalktobi.com` and `https://www.techtalktobi.com`, the browser posts to `https://techtalktobi.vercel.app/api/helga/authorize`. On that Vercel host, localhost, and grok-sandbox, it uses the relative path. The server allows those two Pages origins only when the request host is exactly `techtalktobi.vercel.app`. Recording upload uses the same split (`/api/helga/recording`).
 
@@ -48,7 +50,7 @@ Set these on the Vercel project’s runtime environment. Do not prefix them with
 | `HELGA_OPS_LISTEN_SECRET` | Ops bearer for listen and listen-link. HMAC key for permanent and optional TTL listen URLs.    |
 | `HELGA_RECORDING_DIR`     | Optional local directory for smoke tests when Blob is unset. Not a public web root.            |
 
-After merge, the Vercel Git integration deploys `main`. Start on techtalktobi.com talks to Vercel; it does not run on Pages itself.
+After merge, the Vercel Git integration deploys `main` (techtalktobi.vercel.app). That does not update the public site. techtalktobi.com is the `gh-pages` branch, a static snapshot. Publish a new `NITRO_PRESET=github_pages` build to `gh-pages` or the previous bundle stays up, button included. When the button is on, Start on techtalktobi.com talks to Vercel; it does not run on Pages itself.
 
 ### Call audio (ops)
 

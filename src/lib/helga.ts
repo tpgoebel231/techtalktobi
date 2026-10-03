@@ -36,6 +36,16 @@ export const HELGA_RECORDING_PATH = "/api/helga/recording";
  */
 export const HELGA_DUAL_CAPTURE_ENABLED = false;
 
+/**
+ * About-page call button ("Talk to Helga" / "Mit Helga sprechen").
+ *
+ * The only switch. `false` hides the button. `true` shows it again, unchanged.
+ * A source constant, not a Vercel env var: techtalktobi.com is a static GitHub
+ * Pages build and does not receive the Vercel project environment. Both hosts
+ * compile this value. `/api/helga/*` stays mounted either way.
+ */
+export const HELGA_CALL_BUTTON_ENABLED: boolean = false;
+
 /** Server-only override. Browser code must use `HELGA_DUAL_CAPTURE_ENABLED`. */
 export function helgaDualCaptureEnabled(
   env: { HELGA_DUAL_CAPTURE?: string | undefined } = process.env,
