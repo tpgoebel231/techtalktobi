@@ -39,20 +39,7 @@ jobs:
       - run: npm run typecheck
       - run: npx vite build
       - name: Prepare Pages files
-        run: |
-          cp dist/client/_shell.html dist/client/index.html
-          cp dist/client/_shell.html dist/client/404.html
-          echo techtalktobi.com > dist/client/CNAME
-          touch dist/client/.nojekyll
-          # Kill-switch lives on the artifact branch tip (not public/vercel.json),
-          # so Vercel skips Previews when gh-pages is pushed. Main keeps its own
-          # vercel.json with branch-scoped deploymentEnabled.
-          cat > dist/client/vercel.json <<'VERCEL_JSON'
-          {
-            "$schema": "https://openapi.vercel.sh/vercel.json",
-            "git": { "deploymentEnabled": false }
-          }
-          VERCEL_JSON
+        run: node scripts/prepare-github-pages.mjs dist/client
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist/client
