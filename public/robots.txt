@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /temp/
 
 Sitemap: https://techtalktobi.com/sitemap.xml
