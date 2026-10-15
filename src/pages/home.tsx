@@ -37,9 +37,6 @@ export function HomePage() {
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-fg/90 sm:text-lg">
               {copy.home.dek}
             </p>
-            <p className="mt-3 max-w-2xl text-sm text-muted sm:text-base">
-              {copy.home.kicker}
-            </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild>
                 <Link to="/$locale/media" params={{ locale }}>
