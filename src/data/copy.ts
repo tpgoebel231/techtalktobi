@@ -98,7 +98,7 @@ export const copy = {
       channels: "Channels",
       otherProductions: "Other productions",
       consultCta: "Advisory",
-      mediaKitCta: "Media Kit Oktober 2026 (PDF)",
+      mediaKitCta: "Media Kit October 2026 (PDF)",
     },
     helga: {
       talk: "Talk to Helga",
