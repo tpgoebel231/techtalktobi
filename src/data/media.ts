@@ -274,7 +274,7 @@ export const links = {
   mediaKit: "/TeslaTobi_MediaKit_Oct_2026.pdf",
   cv: "/cv/tobias-p-goebel-cv.pdf",
   // German CV target. Switch to the German PDF once it is approved.
-  cvDe: "/cv/tobias-p-goebel-cv.pdf",
+  cvDe: "/cv/tobias-p-goebel-lebenslauf.pdf",
 };
 
 export function cvHref(locale: string) {
