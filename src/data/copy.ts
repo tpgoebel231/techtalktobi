@@ -27,8 +27,6 @@ export const copy = {
       eyebrow: "Media & Advisory · Boston",
       title: "Tobias P. Goebel",
       dek: "Journalist and advisor on autonomous systems — AI, robotics, self-driving vehicles, and the Tesla and competitive ecosystem.",
-      kicker:
-        "Two channels: TeslaTobi and TechTalkTobi. Analysis you can read before we talk. Paid advisory on the technology and the rules.",
       ctaMedia: "Media & PR",
       ctaAdvisory: "Advisory",
       ctaResearch: "Research",
@@ -183,8 +181,6 @@ export const copy = {
       eyebrow: "Medien & Beratung · Boston",
       title: "Tobias P. Goebel",
       dek: "Journalist und Berater für autonome Systeme — KI, Robotik, selbstfahrende Fahrzeuge und das Tesla-Ökosystem samt Wettbewerb.",
-      kicker:
-        "Zwei Kanäle: TeslaTobi und TechTalkTobi. Analysen, die Sie vorher lesen können. Bezahlte Beratung zu Technik und Regelwerk.",
       ctaMedia: "Für Medien & PR",
       ctaAdvisory: "Zur Beratung",
       ctaResearch: "Forschung",
