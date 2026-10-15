@@ -18,8 +18,9 @@ export function MediaPage() {
   const locale = useLocale();
   const copy = useCopy();
 
-  const teslaRobotics = videosByTopic(teslaTobiVideos, "robotics");
-  const teslaDriving = videosByTopic(teslaTobiVideos, "self-driving");
+  const teslaRobotics = videosByTopic(teslaTobiVideos[locale], "robotics");
+  const teslaSociety = videosByTopic(teslaTobiVideos[locale], "ai-society");
+  const teslaDriving = videosByTopic(teslaTobiVideos[locale], "self-driving");
   const talkSociety = videosByTopic(techTalkVideos, "ai-society");
   const talkDriving = videosByTopic(techTalkVideos, "self-driving");
   const talkRobotics = videosByTopic(techTalkVideos, "robotics");
@@ -74,6 +75,14 @@ export function MediaPage() {
         </h3>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {teslaRobotics.map((video) => (
+            <YoutubeCard key={video.id} video={video} />
+          ))}
+        </div>
+        <h3 className="mt-12 font-mono text-[11px] tracking-widest text-muted uppercase">
+          {copy.media.topicSociety}
+        </h3>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {teslaSociety.map((video) => (
             <YoutubeCard key={video.id} video={video} />
           ))}
         </div>

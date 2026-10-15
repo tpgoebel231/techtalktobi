@@ -22,79 +22,147 @@ export const reportVideos: Video[] = [
   {
     id: "HeCNKWzG80E",
     title: {
-      en: "Impressive progress in robotics — exclusive impressions from Robotics Expo 2026 Boston",
-      de: "Beeindruckende Fortschritte in der Robotik — Exklusive Eindrücke von der Robotics Expo 2026 Boston",
+      en: "Impressive progress in robotics: exclusive impressions from Robotics Expo 2026 Boston",
+      de: "Beeindruckende Fortschritte in der Robotik: Exklusive Eindrücke von der Robotics Expo 2026 Boston",
     },
     channel: "reports",
     topic: "reports",
   },
 ];
 
-export const teslaTobiVideos: Video[] = [
-  {
-    id: "_mH2BBknCTk",
-    title: {
-      en: "Tesla Optimus V3: Mass production ahead — strategy or Musk hype?",
-      de: "Tesla Optimus V3: Massenproduktion steht bevor – Strategie oder Musk-Hype?",
+// Localized samples: DE picks target a German/DACH audience, EN picks a US audience.
+export const teslaTobiVideos: Record<Locale, Video[]> = {
+  de: [
+    {
+      id: "MYy-XYcn22A",
+      title: {
+        en: "How exactly (and why?) a super AI could actually wipe out humanity",
+        de: "Wie genau (und warum eigentlich??) eine Super-KI tatsächlich die Menschheit ausrotten könnte",
+      },
+      channel: "teslatobi",
+      topic: "ai-society",
     },
-    channel: "teslatobi",
-    topic: "robotics",
-  },
-  {
-    id: "uObXl89zyYE",
-    title: {
-      en: "Digital Optimus and Macrohard: Elon’s challenge to the tech giants",
-      de: "Digital Optimus und Macrohard: Elons Kampfansage an die Tech-Giganten",
+    {
+      id: "Guh-ZArDzv4",
+      title: {
+        en: "Getting started with Grok Bot: what Elon Musk's new AI assistant can actually do",
+        de: "Erste Schritte mit Grok Bot: Was dieser krasse neue KI-Assistent von Elon Musk alles kann",
+      },
+      channel: "teslatobi",
+      topic: "ai-society",
     },
-    channel: "teslatobi",
-    topic: "robotics",
-  },
-  {
-    id: "3RNnCa0jSEU",
-    title: {
-      en: "Tesla rival shows a 24/7 livestream of humanoid robots at work",
-      de: "Krass: Tesla-Konkurrent zeigt 24/7-Livestream von humanoiden Robotern bei der Arbeit",
+    {
+      id: "3RNnCa0jSEU",
+      title: {
+        en: "Tesla rival shows a 24/7 livestream of humanoid robots at work",
+        de: "Krass: Tesla-Konkurrent zeigt 24/7-Livestream von humanoiden Robotern bei der Arbeit",
+      },
+      channel: "teslatobi",
+      topic: "robotics",
     },
-    channel: "teslatobi",
-    topic: "robotics",
-  },
-  {
-    id: "dnPNOR_NNSg",
-    title: {
-      en: "Done with end-to-end AI? A new approach takes on Tesla FSD in Munich",
-      de: "Schluss mit End-to-End-KI? Dieser neue Ansatz greift Tesla FSD in München beim autonomen Fahren an",
+    {
+      id: "w75L3SeEgKA",
+      title: {
+        en: "ADAC tests Tesla: did FSD really run a red light?",
+        de: "ADAC testet Tesla: Hat FSD wirklich eine rote Ampel überfahren?",
+      },
+      channel: "teslatobi",
+      topic: "self-driving",
     },
-    channel: "teslatobi",
-    topic: "self-driving",
-  },
-  {
-    id: "5kC7SkaC9aw",
-    title: {
-      en: "Why the whole Tesla LiDAR debate is asking the wrong question",
-      de: "Warum die ganze Tesla-LiDAR-Debatte die FALSCHE FRAGE STELLT",
+    {
+      id: "uvbbrUtNwSo",
+      title: {
+        en: "Transport minister: Tesla FSD is coming to Europe, but under a new name",
+        de: "Verkehrsminister: Tesla FSD kommt nach Europa! Wird aber umbenannt.",
+      },
+      channel: "teslatobi",
+      topic: "self-driving",
     },
-    channel: "teslatobi",
-    topic: "self-driving",
-  },
-  {
-    id: "Gs9PdWpSuWY",
-    title: {
-      en: "Tesla FSD meets a spontaneous fire-department roadblock — my three-way test",
-      de: "Tesla FSD wird mit spontaner Straßenblockade durch die Feuerwehr konfrontiert — mein Dreifachtest",
+    {
+      id: "SHcNP0I0wpw",
+      title: {
+        en: "FSD: what German Tesla owners can look forward to",
+        de: "FSD: Worauf sich deutsche Tesla-Besitzer freuen können",
+      },
+      channel: "teslatobi",
+      topic: "self-driving",
     },
-    channel: "teslatobi",
-    topic: "self-driving",
-  },
-  {
-    id: "bBy8IwQj08w",
-    title: {
-      en: "Rural robotaxis: why the Eifel is a Tesla pioneer in Europe, and who may use the service",
-      de: "Robotaxis auf dem Land: Warum die Eifel Tesla-Vorreiter in Europa ist und wer den Dienst nutzen darf",
+    {
+      id: "bBy8IwQj08w",
+      title: {
+        en: "Rural robotaxis: why the Eifel is a Tesla pioneer in Europe, and who may use the service",
+        de: "Robotaxis auf dem Land: Warum die Eifel Tesla-Vorreiter in Europa ist und wer den Dienst nutzen darf",
+      },
+      channel: "teslatobi",
+      topic: "self-driving",
     },
-    channel: "teslatobi",
-    topic: "self-driving",
-  },
-];
+  ],
+  en: [
+    {
+      id: "MYy-XYcn22A",
+      title: {
+        en: "How exactly (and why?) a super AI could actually wipe out humanity",
+        de: "Wie genau (und warum eigentlich??) eine Super-KI tatsächlich die Menschheit ausrotten könnte",
+      },
+      channel: "teslatobi",
+      topic: "ai-society",
+    },
+    {
+      id: "GZH1Y9vOlYs",
+      title: {
+        en: "Elon Musk at All-In: how we could better control AI",
+        de: "Elon Musk bei All-In: So könnten wir KI besser kontrollieren",
+      },
+      channel: "teslatobi",
+      topic: "ai-society",
+    },
+    {
+      id: "3RNnCa0jSEU",
+      title: {
+        en: "Tesla rival shows a 24/7 livestream of humanoid robots at work",
+        de: "Krass: Tesla-Konkurrent zeigt 24/7-Livestream von humanoiden Robotern bei der Arbeit",
+      },
+      channel: "teslatobi",
+      topic: "robotics",
+    },
+    {
+      id: "WyxAuECNoYI",
+      title: {
+        en: "Why a Tesla will be your next car: 11 reasons, and 4 things only Tesla can do",
+        de: "Warum ein Tesla Dein nächstes Auto wird: 11 Gründe, und 4 Dinge, die so nur Tesla kann",
+      },
+      channel: "teslatobi",
+      topic: "self-driving",
+    },
+    {
+      id: "wDrZx0vRJ0Q",
+      title: {
+        en: "Tesla will NEVER license FSD to other automakers",
+        de: "Tesla wird FSD *NIEMALS* an andere Hersteller lizensieren",
+      },
+      channel: "teslatobi",
+      topic: "self-driving",
+    },
+    {
+      id: "u3IOG-btcuE",
+      title: {
+        en: "Cybercab launch event: highlights and the full Tesla stage presentation",
+        de: "Highlights des Cybercab Launch Events und volle Bühnenpräsentation des Tesla-Teams",
+      },
+      channel: "teslatobi",
+      topic: "self-driving",
+    },
+    {
+      id: "bBy8IwQj08w",
+      title: {
+        en: "Rural robotaxis: why the Eifel is a Tesla pioneer in Europe, and who may use the service",
+        de: "Robotaxis auf dem Land: Warum die Eifel Tesla-Vorreiter in Europa ist und wer den Dienst nutzen darf",
+      },
+      channel: "teslatobi",
+      topic: "self-driving",
+    },
+  ],
+};
 
 export const techTalkVideos: Video[] = [
   {
@@ -107,13 +175,31 @@ export const techTalkVideos: Video[] = [
     topic: "robotics",
   },
   {
-    id: "29pAii3Jk_w",
+    id: "cURqO-Pks0U",
     title: {
-      en: "Tesla FSD Supervised in Europe, the UK and Japan? New UNECE rules might delay it further",
-      de: "Tesla FSD Supervised in Europa, Großbritannien und Japan? Neue UNECE-Regeln könnten es weiter verzögern",
+      en: "How I taught my Grok Bot AI to speak like a human on the phone and not get a hang-up",
+      de: "Wie ich meinem Grok-Bot-KI-Assistenten beigebracht habe, am Telefon wie ein Mensch zu sprechen",
     },
     channel: "techtalktobi",
-    topic: "self-driving",
+    topic: "robotics",
+  },
+  {
+    id: "mfNZqnblIPo",
+    title: {
+      en: "Is AI really dangerous? A simple explanation",
+      de: "Ist KI wirklich gefährlich? Einfach erklärt",
+    },
+    channel: "techtalktobi",
+    topic: "ai-society",
+  },
+  {
+    id: "iquGLaKwbhQ",
+    title: {
+      en: "I think I just cracked the Musk Method of running his orgs",
+      de: "Ich glaube, ich habe Musks Methode der Unternehmensführung entschlüsselt",
+    },
+    channel: "techtalktobi",
+    topic: "ai-society",
   },
   {
     id: "wtmmbC0c1ms",
@@ -125,10 +211,28 @@ export const techTalkVideos: Video[] = [
     topic: "ai-society",
   },
   {
+    id: "xDonoPGwHWI",
+    title: {
+      en: "Cybercab launch: highlights and the full stage presentation by the Tesla team",
+      de: "Cybercab-Launch: Highlights und die komplette Bühnenpräsentation des Tesla-Teams",
+    },
+    channel: "techtalktobi",
+    topic: "self-driving",
+  },
+  {
+    id: "29pAii3Jk_w",
+    title: {
+      en: "Tesla FSD Supervised in Europe, the UK and Japan? New UNECE rules might delay it further",
+      de: "Tesla FSD Supervised in Europa, Großbritannien und Japan? Neue UNECE-Regeln könnten es weiter verzögern",
+    },
+    channel: "techtalktobi",
+    topic: "self-driving",
+  },
+  {
     id: "Q01JG1-jSGQ",
     title: {
-      en: "Tesla FSD Supervised needs to change before it can come to Europe — and here is why",
-      de: "Tesla FSD Supervised muss sich ändern, bevor es nach Europa kommen kann — und hier ist der Grund",
+      en: "Tesla FSD Supervised needs to change before it can come to Europe, and here is why",
+      de: "Tesla FSD Supervised muss sich ändern, bevor es nach Europa kommen kann, und hier ist der Grund",
     },
     channel: "techtalktobi",
     topic: "self-driving",
