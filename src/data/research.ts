@@ -36,8 +36,8 @@ export const research: ResearchPiece[] = [
       de: "Analyse: Autonomes Fahren",
     },
     dek: {
-      en: "Comparative analysis of autonomous development cycles and SAE standards — and why the slideware levels keep getting used as a marketing language.",
-      de: "Vergleichende Analyse der Entwicklungszyklen und SAE-Stufen — und warum Folienstufen weiterhin als Marketingsprache dienen.",
+      en: "Comparative analysis of autonomous development cycles and SAE standards, and why the slideware levels keep getting used as a marketing language.",
+      de: "Vergleichende Analyse der Entwicklungszyklen und SAE-Stufen, und warum Folienstufen weiterhin als Marketingsprache dienen.",
     },
     tags: [
       { en: "SAE J3016", de: "SAE J3016" },
@@ -49,12 +49,12 @@ export const research: ResearchPiece[] = [
         de: "SAE J3016 ist eine technische Taxonomie, kein Etikett für Endkunden. Level 2 heißt: der Mensch ist der Fahrer. Level 4 heißt: das System ist der Fahrer, in einem festgelegten Bereich. Die öffentliche Debatte behandelt die Zahlen oft wie eine Rangliste.",
       },
       {
-        en: "Two development cycles now run in parallel. The mapping-and-ODD school (Waymo and peers) grows competence by fencing the world: geofence, HD map, stacked redundancy, operational playbooks. The vision-and-fleet school (Tesla and a few others) grows competence by collecting edge cases at consumer scale and training through them. Neither cycle is 'faster' in the abstract — they spend time on different risks.",
-        de: "Zwei Entwicklungszyklen laufen parallel. Die Mapping-Schule (Waymo und vergleichbare) wächst, indem sie die Welt eingrenzt: Geofence, HD-Karte, Redundanz, Einsatzregeln. Die Vision-und-Flotten-Schule (Tesla und wenige andere) wächst, indem sie Grenzfälle in der Kundenflotte einsammelt und durcharbeitet. Kein Zyklus ist abstrakt „schneller“ — sie gehen unterschiedliche Risiken ein.",
+        en: "Two development cycles now run in parallel. The mapping-and-ODD school (Waymo and peers) grows competence by fencing the world: geofence, HD map, stacked redundancy, operational playbooks. The vision-and-fleet school (Tesla and a few others) grows competence by collecting edge cases at consumer scale and training through them. Neither cycle is 'faster' in the abstract; they spend time on different risks.",
+        de: "Zwei Entwicklungszyklen laufen parallel. Die Mapping-Schule (Waymo und vergleichbare) wächst, indem sie die Welt eingrenzt: Geofence, HD-Karte, Redundanz, Einsatzregeln. Die Vision-und-Flotten-Schule (Tesla und wenige andere) wächst, indem sie Grenzfälle in der Kundenflotte einsammelt und durcharbeitet. Kein Zyklus ist abstrakt „schneller“; sie gehen unterschiedliche Risiken ein.",
       },
       {
-        en: "A useful question is not 'what level is it?' but 'who is legally the driver, in which domain, with what fallback, and who holds the keys when it fails?' That question maps cleanly onto UNECE automation categories and German StVG obligations — and poorly onto a single SAE integer.",
-        de: "Die bessere Frage ist nicht „welches Level?“, sondern: wer ist rechtlich der Fahrer, in welchem Bereich, mit welchem Rückfall, und wer hat im Fehlerfall die Kontrolle? Das lässt sich sauber auf UNECE-Kategorien und das StVG abbilden — und schlecht auf eine einzelne SAE-Zahl.",
+        en: "A useful question is not 'what level is it?' but 'who is legally the driver, in which domain, with what fallback, and who holds the keys when it fails?' That question maps cleanly onto UNECE automation categories and German StVG obligations, and poorly onto a single SAE integer.",
+        de: "Die bessere Frage ist nicht „welches Level?“, sondern: wer ist rechtlich der Fahrer, in welchem Bereich, mit welchem Rückfall, und wer hat im Fehlerfall die Kontrolle? Das lässt sich sauber auf UNECE-Kategorien und das StVG abbilden, und schlecht auf eine einzelne SAE-Zahl.",
       },
     ],
   },
@@ -92,8 +92,8 @@ export const research: ResearchPiece[] = [
       de: "Tesla-Ökosystem",
     },
     dek: {
-      en: "Historical data tracking the financial evolution of Full Self-Driving technology — package price, subscription, and the Robotaxi story sitting on top of it.",
-      de: "Historische Daten zur finanziellen Entwicklung von Full Self-Driving — Paketpreis, Abo und die Robotaxi-Erzählung darüber.",
+      en: "Historical data tracking the financial evolution of Full Self-Driving technology: package price, subscription, and the Robotaxi story sitting on top of it.",
+      de: "Historische Daten zur finanziellen Entwicklung von Full Self-Driving: Paketpreis, Abo und die Robotaxi-Erzählung darüber.",
     },
     tags: [
       { en: "FSD pricing", de: "FSD-Preise" },
@@ -120,8 +120,8 @@ export const research: ResearchPiece[] = [
       de: "KI & Robotik",
     },
     dek: {
-      en: "Mapping the humanoid robotics landscape and the technological stack — actuation, compute, teleoperation, and the policy problems nobody puts in the keynote.",
-      de: "Die Humanoide-Landschaft und der technische Stack: Aktorik, Rechenleistung, Teleoperation — und die Regulierungsfragen, die es nicht in die Keynote schaffen.",
+      en: "Mapping the humanoid robotics landscape and the technological stack: actuation, compute, teleoperation, and the policy problems nobody puts in the keynote.",
+      de: "Die Humanoide-Landschaft und der technische Stack: Aktorik, Rechenleistung, Teleoperation, und die Regulierungsfragen, die es nicht in die Keynote schaffen.",
     },
     tags: [
       { en: "Humanoids", de: "Humanoide" },
@@ -130,7 +130,7 @@ export const research: ResearchPiece[] = [
     paragraphs: [
       {
         en: "A humanoid is a bet that the world is already built for humans, so the robot should be too. The stack underneath that bet is not one product: actuators and gearboxes, battery and thermal, hands, onboard compute, foundation models, teleoperation for data, and a safety case that industrial regulators will actually accept.",
-        de: "Ein Humanoid ist die Wette, dass die Welt für Menschen gebaut ist — also auch der Roboter so sein sollte. Der Stack darunter ist kein einzelnes Produkt: Aktorik, Getriebe, Batterie und Thermik, Hände, Rechenleistung an Bord, Foundation Models, Teleoperation für Daten, und ein Sicherheitsnachweis, den die Industrieaufsicht wirklich akzeptiert.",
+        de: "Ein Humanoid ist die Wette, dass die Welt für Menschen gebaut ist, also auch der Roboter so sein sollte. Der Stack darunter ist kein einzelnes Produkt: Aktorik, Getriebe, Batterie und Thermik, Hände, Rechenleistung an Bord, Foundation Models, Teleoperation für Daten, und ein Sicherheitsnachweis, den die Industrieaufsicht wirklich akzeptiert.",
       },
       {
         en: "The interesting split in 2026 is not 'who has a demo'. It is who is collecting real hours in a real workplace, who still depends on a puppeteer, and who has a path from supervised factory tasks to unsupervised ones without rewriting the safety case every quarter.",
@@ -148,8 +148,8 @@ export const research: ResearchPiece[] = [
       de: "Tesla-FSD-Bewertungsmatrix",
     },
     dek: {
-      en: "Public assessment matrix of the state of FSD — a subjective take by the author, from daily supervised driving in the US.",
-      de: "Öffentliche Bewertungsmatrix zum Stand von FSD — subjektive Einordnung des Autors, aus dem beaufsichtigten Alltag in den USA.",
+      en: "Public assessment matrix of the state of FSD: a subjective take by the author, from daily supervised driving in the US.",
+      de: "Öffentliche Bewertungsmatrix zum Stand von FSD: subjektive Einordnung des Autors, aus dem beaufsichtigten Alltag in den USA.",
     },
     tags: [
       { en: "FSD Supervised", de: "FSD Supervised" },
@@ -172,8 +172,8 @@ export const research: ResearchPiece[] = [
       de: "Waymo-Rollout",
     },
     dek: {
-      en: "Tracking Waymo's autonomous vehicle deployment and market expansion — cities, service mode, and what 'driverless' actually covers.",
-      de: "Waymos Ausrollen und Marktexpansion — Städte, Betriebsmodus, und was „fahrerlos“ tatsächlich abdeckt.",
+      en: "Tracking Waymo's autonomous vehicle deployment and market expansion: cities, service mode, and what 'driverless' actually covers.",
+      de: "Waymos Ausrollen und Marktexpansion: Städte, Betriebsmodus, und was „fahrerlos“ tatsächlich abdeckt.",
     },
     tags: [
       { en: "Robotaxi", de: "Robotaxi" },
@@ -447,8 +447,8 @@ export const waymoCities: WaymoCity[] = [
     since: "2024",
     mode: { en: "Public robotaxi", de: "Öffentliches Robotaxi" },
     note: {
-      en: "Scale play. Freeways plus sprawl — a different ODD than the grid of SF.",
-      de: "Ein Spiel um Größe. Freeways plus Fläche — ein anderer Einsatzbereich als das Raster von San Francisco.",
+      en: "Scale play. Freeways plus sprawl: a different ODD than the grid of SF.",
+      de: "Ein Spiel um Größe. Freeways plus Fläche: ein anderer Einsatzbereich als das Raster von San Francisco.",
     },
   },
   {

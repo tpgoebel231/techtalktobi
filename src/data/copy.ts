@@ -13,7 +13,7 @@ export const copy = {
       media: "Media",
       about: "About",
       consulting: "Advisory",
-      mediaKit: "Media kit",
+      mediaKit: "Media Kit",
       menu: "Menu",
       primary: "Primary",
     },
@@ -26,18 +26,18 @@ export const copy = {
     home: {
       eyebrow: "Media & Advisory · Boston",
       title: "Tobias P. Goebel",
-      dek: "Journalist and advisor on autonomous systems — AI, robotics, self-driving vehicles, and the Tesla and competitive ecosystem.",
+      dek: "Journalist and advisor on autonomous systems: AI, robotics, self-driving vehicles, and the Tesla and competitive ecosystem.",
       ctaMedia: "Media & PR",
       ctaAdvisory: "Advisory",
       ctaResearch: "Research",
       doorsKicker: "Work with me",
       mediaDoorTitle: "Media & PR",
       mediaDoorDek:
-        "Comment, moderation, on-site reports. TeslaTobi in German, TechTalkTobi in English. Media kit for producers, agencies, and press offices.",
-      mediaDoorCta: "Channels and media kit",
+        "Comment, moderation, on-site reports. TeslaTobi in German, TechTalkTobi in English. Media Kit for producers, agencies, and press offices.",
+      mediaDoorCta: "Channels and Media Kit",
       advisoryDoorTitle: "Advisory",
       advisoryDoorDek:
-        "Independent briefings on what these systems actually do — and what European rules already allow. From Boston, in English or German.",
+        "Independent briefings on what these systems actually do, and what European rules already allow. From Boston, in English or German.",
       advisoryDoorCta: "Advisory",
       featured: "Research",
       featuredDek: "Published graphics, a public FSD scorecard, and an interactive tool.",
@@ -67,9 +67,9 @@ export const copy = {
       eyebrow: "Media & PR",
       title: "TeslaTobi and TechTalkTobi",
       dek: "Two commentary channels and TV-format event reports. For producers, event agencies, and press officers.",
-      teslaTobiDek: "German commentary channel — robotics and self-driving vehicles.",
+      teslaTobiDek: "German commentary channel: robotics, self-driving vehicles, and AI and society.",
       techTalkDek:
-        "English commentary channel — robotics, self-driving vehicles, and AI and society.",
+        "English commentary channel: robotics, self-driving vehicles, and AI and society.",
       reportsTitle: "Reports",
       reportsDek: "Two field reports: the first ProRL race, and Robotics Expo Boston 2026.",
       watch: "Watch on YouTube",
@@ -88,7 +88,7 @@ export const copy = {
       title: "Tobias P. Goebel",
       dek: "Content and advisory on autonomous driving systems (robotaxis, driver assistance), AI, and robotics.",
       body: [
-        "My journey started at the intersection of language and code. After earning degrees in computational linguistics, computer science, and general linguistics in Bonn and Edinburgh back in 2003, I spent the next two decades in the enterprise software trenches—relocating from Germany to the US in 2010.",
+        "My journey started at the intersection of language and code. After earning degrees in computational linguistics, computer science, and general linguistics in Bonn and Edinburgh back in 2003, I spent the next two decades in the enterprise software trenches, relocating from Germany to the US in 2010.",
         "Over the years, I transitioned from engineering and consulting into technical product marketing, carving out a niche in conversational AI and the contact center world through keynotes, industry panels, and thought leadership. A highlight along the way: picking up a CogX Award for “Best Consumer Chatbot” after building an AI wine sommelier for Lidl in the UK.",
         "Following a five-year run in the IoT space, I took the entrepreneurial leap in 2025 to go fully independent. For years, I’ve been fascinated by the future of mobility, diving headfirst into the engineering and policy behind self-driving vehicles. That passion sparked TeslaTobi, my German YouTube channel focused on deep-dive breakdowns of autonomous tech, robotics, and AI - primarily tracking Tesla and its fiercest rivals.",
         "Now, with TechTalkTobi, I’m going global. It’s an English-first platform where I’m casting a wider net; unpacking the real tech and impact behind artificial intelligence, automation, and the innovations reshaping our world, but in a language that reaches everyone, not just the nerds.",
@@ -98,7 +98,7 @@ export const copy = {
       channels: "Channels",
       otherProductions: "Other productions",
       consultCta: "Advisory",
-      mediaKitCta: "Media kit October 2026 (PDF)",
+      mediaKitCta: "Media Kit Oktober 2026 (PDF)",
     },
     helga: {
       talk: "Talk to Helga",
@@ -123,7 +123,7 @@ export const copy = {
     },
     mediaKit: {
       eyebrow: "Press",
-      title: "Media kit",
+      title: "Media Kit",
       dek: "Bio, channels, and contacts for producers, journalists, agencies, and partners.",
       print: "Print / save as PDF",
       shortBio: "Short bio",
@@ -181,18 +181,18 @@ export const copy = {
     home: {
       eyebrow: "Medien & Beratung · Boston",
       title: "Tobias P. Goebel",
-      dek: "Journalist und Berater für autonome Systeme — KI, Robotik, selbstfahrende Fahrzeuge und das Tesla-Ökosystem samt Wettbewerb.",
+      dek: "Journalist und Berater für autonome Systeme: KI, Robotik, selbstfahrende Fahrzeuge und das Tesla-Ökosystem samt Wettbewerb.",
       ctaMedia: "Für Medien & PR",
       ctaAdvisory: "Zur Beratung",
       ctaResearch: "Forschung",
       doorsKicker: "Zusammenarbeit",
       mediaDoorTitle: "Medien & PR",
       mediaDoorDek:
-        "Kommentar, Moderation, Eventberichte. TeslaTobi auf Deutsch, TechTalkTobi auf Englisch. Media Kit für Produktionen, Agenturen und Behördenkommunikation.",
+        "Kommentar, Moderation, Eventberichte. TeslaTobi auf Deutsch, TechTalkTobi auf Englisch. Media Kit für Produktionen, Agenturen und Pressestellen.",
       mediaDoorCta: "Kanäle und Media Kit",
       advisoryDoorTitle: "Beratung",
       advisoryDoorDek:
-        "Unabhängige Einordnung: was diese Systeme wirklich können — und was nationales, EU- und UNECE-Recht schon erlaubt. Aus Boston, auf Deutsch oder Englisch.",
+        "Unabhängige Einordnung: was diese Systeme wirklich können, und was nationales, EU- und UNECE-Recht schon erlaubt. Aus Boston, auf Deutsch oder Englisch.",
       advisoryDoorCta: "Beratung",
       featured: "Forschung",
       featuredDek:
@@ -223,9 +223,9 @@ export const copy = {
       eyebrow: "Medien & PR",
       title: "TeslaTobi und TechTalkTobi",
       dek: "Zwei Kommentar-Kanäle und Eventberichte im TV-Stil. Für Produktionen, Eventagenturen und Pressestellen.",
-      teslaTobiDek: "Deutschsprachiger Kommentar-Kanal — Robotik und selbstfahrende Fahrzeuge.",
+      teslaTobiDek: "Deutschsprachiger Kommentar-Kanal: Robotik, selbstfahrende Fahrzeuge sowie KI und Gesellschaft.",
       techTalkDek:
-        "Englischsprachiger Kommentar-Kanal — Robotik, selbstfahrende Fahrzeuge sowie KI und Gesellschaft.",
+        "Englischsprachiger Kommentar-Kanal: Robotik, selbstfahrende Fahrzeuge sowie KI und Gesellschaft.",
       reportsTitle: "Berichte",
       reportsDek: "Zwei Berichte: der erste ProRL-Lauf und die Robotics Expo Boston 2026.",
       watch: "Auf YouTube ansehen",
@@ -254,7 +254,7 @@ export const copy = {
       channels: "Kanäle",
       otherProductions: "Weitere Produktionen",
       consultCta: "Beratung",
-      mediaKitCta: "Media Kit October 2026 (PDF)",
+      mediaKitCta: "Media Kit Oktober 2026 (PDF)",
     },
     helga: {
       talk: "Mit Helga sprechen",
@@ -273,8 +273,8 @@ export const copy = {
     },
     consulting: {
       eyebrow: "Beratung",
-      title: "Autonomes Fahren — Technik und Regulierung",
-      dek: "Bezahlte, unabhängige Einordnung auf Deutsch: Stand der Technik, nationales Recht, EU- und UNECE-Regelwerk — was schon gilt, was noch kommt.",
+      title: "Autonomes Fahren: Technik und Regulierung",
+      dek: "Bezahlte, unabhängige Einordnung auf Deutsch: Stand der Technik, nationales Recht, EU- und UNECE-Regelwerk: was schon gilt, was noch kommt.",
       cta: "Gespräch anfragen",
     },
     mediaKit: {
@@ -305,10 +305,10 @@ export const copy = {
       brake: "Bremsweg",
       total: "Anhalteweg",
       energy: "Aufprallenergie",
-      fatal: "Fußgänger — Todesrisiko",
-      serious: "Fußgänger — schwere Verletzung",
+      fatal: "Fußgänger: Todesrisiko",
+      serious: "Fußgänger: schwere Verletzung",
       model:
-        "Anhalteweg: v² / (2μg) plus Reaktionsweg. Die Verletzungskurven sind logistische Näherungen veröffentlichter Fußgängerstudien (Tefft / Rosen) — keine rechtliche oder medizinische Aussage.",
+        "Anhalteweg: v² / (2μg) plus Reaktionsweg. Die Verletzungskurven sind logistische Näherungen veröffentlichter Fußgängerstudien (Tefft / Rosen), keine rechtliche oder medizinische Aussage.",
     },
   },
 } as const;
