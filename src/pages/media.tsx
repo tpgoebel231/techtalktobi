@@ -10,6 +10,7 @@ import {
   techTalkVideos,
   teslaTobiVideos,
   videosByTopic,
+  cvHref,
 } from "@/data/media";
 import { useCopy, useLocale } from "@/lib/i18n";
 
@@ -44,7 +45,7 @@ export function MediaPage() {
             </a>
           </Button>
           <Button asChild variant="outline">
-            <a href={links.cv} download>
+            <a href={cvHref(locale)} download>
               {copy.media.cvCta}
             </a>
           </Button>

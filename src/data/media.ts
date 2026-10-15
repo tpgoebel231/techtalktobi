@@ -273,7 +273,13 @@ export const links = {
   costInMyCity: "https://costinmycity.com",
   mediaKit: "/TeslaTobi_MediaKit_Oct_2026.pdf",
   cv: "/cv/tobias-p-goebel-cv.pdf",
+  // German CV target. Switch to the German PDF once it is approved.
+  cvDe: "/cv/tobias-p-goebel-cv.pdf",
 };
+
+export function cvHref(locale: string) {
+  return locale === "de" ? links.cvDe : links.cv;
+}
 
 export function videosByTopic(list: Video[], topic: VideoTopic) {
   return list.filter((video) => video.topic === topic);

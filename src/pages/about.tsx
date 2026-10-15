@@ -3,7 +3,7 @@ import { Globe, Mail, Youtube } from "lucide-react";
 import { HelgaCall } from "@/components/helga-call";
 import { Container } from "@/components/container";
 import { Button } from "@/components/ui/button";
-import { links } from "@/data/media";
+import { cvHref, links } from "@/data/media";
 import { useCopy, useLocale } from "@/lib/i18n";
 
 export function AboutPage() {
@@ -94,6 +94,11 @@ export function AboutPage() {
           <Button asChild>
             <a href={links.mediaKit} download>
               {copy.about.mediaKitCta}
+            </a>
+          </Button>
+          <Button asChild variant="outline">
+            <a href={cvHref(locale)} download>
+              {copy.media.cvCta}
             </a>
           </Button>
           <Button asChild variant="outline">
