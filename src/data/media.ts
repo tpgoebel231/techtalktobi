@@ -79,13 +79,22 @@ export const teslaTobiVideos: Record<Locale, Video[]> = {
       topic: "self-driving",
     },
     {
-      id: "SHcNP0I0wpw",
+      id: "_mH2BBknCTk",
       title: {
-        en: "FSD: what German Tesla owners can look forward to",
-        de: "FSD: Worauf sich deutsche Tesla-Besitzer freuen können",
+        en: "Tesla Optimus V3: mass production ahead. Strategy or Musk hype?",
+        de: "Tesla Optimus V3: Massenproduktion steht bevor. Strategie oder Musk-Hype?",
       },
       channel: "teslatobi",
-      topic: "self-driving",
+      topic: "robotics",
+    },
+    {
+      id: "uObXl89zyYE",
+      title: {
+        en: "Digital Optimus and Macrohard: Elon's challenge to the tech giants",
+        de: "Digital Optimus und Macrohard: Elons Kampfansage an die Tech-Giganten",
+      },
+      channel: "teslatobi",
+      topic: "robotics",
     },
     {
       id: "bBy8IwQj08w",
@@ -263,6 +272,7 @@ export const links = {
   email: "info@techtalktobi.com",
   costInMyCity: "https://costinmycity.com",
   mediaKit: "/TeslaTobi_MediaKit_Oct_2026.pdf",
+  cv: "/cv/tobias-p-goebel-cv.pdf",
 };
 
 export function videosByTopic(list: Video[], topic: VideoTopic) {

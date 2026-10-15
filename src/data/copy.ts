@@ -78,6 +78,7 @@ export const copy = {
       topicRobotics: "Robotics",
       topicDriving: "Self-driving vehicles",
       topicSociety: "AI and society",
+      cvCta: "CV (PDF)",
       pressTitle: "For press and bookings",
       pressDek:
         "Short bio, topics, and contacts in one PDF. Name: Tobias P. Goebel. Channels: TeslaTobi and TechTalkTobi.",
@@ -233,6 +234,7 @@ export const copy = {
       topicRobotics: "Robotik",
       topicDriving: "Selbstfahrende Fahrzeuge",
       topicSociety: "KI und Gesellschaft",
+      cvCta: "Lebenslauf (PDF)",
       pressTitle: "Für Presse und Buchungen",
       pressDek:
         "Kurzbio, Themen und Kontakt in einem PDF. Name: Tobias P. Goebel. Kanäle: TeslaTobi und TechTalkTobi.",

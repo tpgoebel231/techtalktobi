@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/container";
 import { Badge } from "@/components/ui/badge";
@@ -45,9 +44,9 @@ export function MediaPage() {
             </a>
           </Button>
           <Button asChild variant="outline">
-            <Link to="/$locale/media-kit" params={{ locale }}>
-              {copy.nav.mediaKit}
-            </Link>
+            <a href={links.cv} download>
+              {copy.media.cvCta}
+            </a>
           </Button>
         </div>
       </section>
