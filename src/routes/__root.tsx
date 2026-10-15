@@ -21,7 +21,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "Tobias P. Goebel — media and advisory on autonomous systems. TeslaTobi, TechTalkTobi, published analysis. Online: tpgoebel.",
+          "Tobias P. Goebel: media and advisory on autonomous systems. TeslaTobi, TechTalkTobi, published analysis. Online: tpgoebel.",
       },
       { name: "theme-color", content: "#0B0D11" },
     ],

@@ -153,10 +153,10 @@ export const teslaTobiVideos: Record<Locale, Video[]> = {
       topic: "self-driving",
     },
     {
-      id: "u3IOG-btcuE",
+      id: "4HXrFY8bKh0",
       title: {
-        en: "Cybercab launch event: highlights and the full Tesla stage presentation",
-        de: "Highlights des Cybercab Launch Events und volle Bühnenpräsentation des Tesla-Teams",
+        en: "Tesla FSD 13 now drives better than human drivers",
+        de: "Tesla FSD 13 fährt mittlerweile besser als menschliche Fahrer",
       },
       channel: "teslatobi",
       topic: "self-driving",

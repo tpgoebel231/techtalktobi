@@ -19,17 +19,17 @@ type AdvisoryCopy = {
 export const advisory: Record<Locale, AdvisoryCopy> = {
   en: {
     eyebrow: "Advisory",
-    title: "What these systems do — and what the rules allow",
+    title: "What these systems do, and what the rules allow",
     dek: "Paid, independent briefings in English. I drive these systems in US daily use and read the European rulebook. That gap is the work.",
     offerTitle: "What I brief",
     offer: [
       {
         title: "State of the technology",
-        body: "What Tesla FSD, Waymo, and the rest of the field can actually do. SAE levels versus marketing language. Supervised vs. unsupervised vs. robotaxi — without the slide fog.",
+        body: "What Tesla FSD, Waymo, and the rest of the field can actually do. SAE levels versus marketing language. Supervised vs. unsupervised vs. robotaxi, without the slide fog.",
       },
       {
         title: "US practice → European rules",
-        body: "I use these systems in Boston. English-speaking teams get a clear map of what transfers to Germany, the EU, and UNECE — and what does not.",
+        body: "I use these systems in Boston. English-speaking teams get a clear map of what transfers to Germany, the EU, and UNECE, and what does not.",
       },
       {
         title: "UNECE, EU, German law",
@@ -60,24 +60,24 @@ export const advisory: Record<Locale, AdvisoryCopy> = {
       },
       {
         title: "Ongoing read",
-        body: "Regular notes on releases, hearings, and UNECE texts — before they become a slide.",
+        body: "Regular notes on releases, hearings, and UNECE texts, before they become a slide.",
       },
     ],
     cta: "Request a briefing",
     ctaHint: "A short note on the question is enough. I reply in English.",
-    mailSubject: "Advisory inquiry — autonomy",
+    mailSubject: "Advisory inquiry: autonomy",
     aside:
       "Independent. No mandate from Tesla, Waymo, or any OEM. A fan of the technology, not of the press release. Deep German regulatory work is also available in German.",
   },
   de: {
     eyebrow: "Beratung",
-    title: "Autonomes Fahren — Technik und Regulierung",
-    dek: "Bezahlte, unabhängige Einordnung auf Deutsch. Für Teams, die den Stand der Technik brauchen — und das Regelwerk, das schon gilt oder noch kommt.",
+    title: "Autonomes Fahren: Technik und Regulierung",
+    dek: "Bezahlte, unabhängige Einordnung auf Deutsch. Für Teams, die den Stand der Technik brauchen, und das Regelwerk, das schon gilt oder noch kommt.",
     offerTitle: "Wobei ich helfe",
     offer: [
       {
         title: "Stand der Technik",
-        body: "Was Tesla FSD, Waymo und das übrige Feld heute wirklich können. SAE-Stufen gegen Marketingsprache. Supervised vs. Unsupervised vs. Robotaxi — ohne Foliennebel.",
+        body: "Was Tesla FSD, Waymo und das übrige Feld heute wirklich können. SAE-Stufen gegen Marketingsprache. Supervised vs. Unsupervised vs. Robotaxi, ohne Foliennebel.",
       },
       {
         title: "Nationales Recht",
@@ -112,7 +112,7 @@ export const advisory: Record<Locale, AdvisoryCopy> = {
       },
       {
         title: "Laufende Einordnung",
-        body: "Regelmäßige Einordnung zu Softwareständen, Anhörungen und UNECE-Texten — bevor sie zur Folie werden.",
+        body: "Regelmäßige Einordnung zu Softwareständen, Anhörungen und UNECE-Texten, bevor sie zur Folie werden.",
       },
     ],
     cta: "Gespräch anfragen",

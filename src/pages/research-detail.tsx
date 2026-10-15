@@ -106,14 +106,14 @@ function SaeTable() {
     locale === "de"
       ? [
           ["SAE L0–L1", "Assistenz", "Mensch fährt, System hilft."],
-          ["SAE L2", "Teilautomatisiert", "Mensch bleibt Fahrer — Teslas FSD Supervised sitzt hier, egal wie gut es fährt."],
+          ["SAE L2", "Teilautomatisiert", "Mensch bleibt Fahrer: Teslas FSD Supervised sitzt hier, egal wie gut es fährt."],
           ["SAE L3", "Bedingt automatisiert", "System fährt in der ODD, Mensch muss übernahmefähig sein. In DE rechtlich der spannende Fall."],
           ["SAE L4", "Hochautomatisiert", "Kein Mensch als Fahrer in der ODD. Waymo-Robotaxi in der Geofence."],
           ["SAE L5", "Vollautomatisiert", "Überall. Existiert nicht als Produkt."],
         ]
       : [
           ["SAE L0–L1", "Assistance", "Human drives; the system helps."],
-          ["SAE L2", "Partial", "Human remains the driver — Tesla FSD Supervised lives here, however good the drive."],
+          ["SAE L2", "Partial", "Human remains the driver; Tesla FSD Supervised lives here, however good the drive."],
           ["SAE L3", "Conditional", "System drives in the ODD; a human must be able to take over. The legally interesting German case."],
           ["SAE L4", "High", "No human as driver inside the ODD. Waymo robotaxi inside the geofence."],
           ["SAE L5", "Full", "Everywhere. Not a product."],

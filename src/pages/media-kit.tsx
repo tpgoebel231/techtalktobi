@@ -15,20 +15,20 @@ export function MediaKitPage() {
 
   const long =
     locale === "de"
-      ? "Tobias P. Goebel — Tobi — ist in Deutschland aufgewachsen und lebt in Boston. Zwei Jahrzehnte Enterprise-Software (Forschung, Produkt, Sales Engineering, technisches Produktmarketing). Seit Jahren fährt er Tesla FSD Supervised im US-Alltag und veröffentlicht die Befunde. TeslaTobi ist der deutsche Kommentar-Kanal; TechTalkTobi der englische; techtalktobi.com die öffentliche Forschungsseite. Online überall: tpgoebel. Sein Thema: die Lücke zwischen US-Technikrealität und europäischer Regulierung (StVG, UNECE, EU)."
-      : "Tobias P. Goebel — Tobi — grew up in Germany and lives in Boston. Two decades in enterprise software spanning R&D, product, sales engineering, and technical product marketing. For years he has driven Tesla FSD Supervised as a US daily driver and published what he finds. TeslaTobi is the German commentary channel; TechTalkTobi the English one; techtalktobi.com the public research site. Online everywhere: tpgoebel. The beat is the gap between US technical reality and European regulation (StVG, UNECE, EU).";
+      ? "Tobias P. Goebel (Tobi) ist in Deutschland aufgewachsen und lebt in Boston. Zwei Jahrzehnte Enterprise-Software (Forschung, Produkt, Sales Engineering, technisches Produktmarketing). Seit Jahren fährt er Tesla FSD Supervised im US-Alltag und veröffentlicht die Befunde. TeslaTobi ist der deutsche Kommentar-Kanal; TechTalkTobi der englische; techtalktobi.com die öffentliche Forschungsseite. Online überall: tpgoebel. Sein Thema: die Lücke zwischen US-Technikrealität und europäischer Regulierung (StVG, UNECE, EU)."
+      : "Tobias P. Goebel (Tobi) grew up in Germany and lives in Boston. Two decades in enterprise software spanning R&D, product, sales engineering, and technical product marketing. For years he has driven Tesla FSD Supervised as a US daily driver and published what he finds. TeslaTobi is the German commentary channel; TechTalkTobi the English one; techtalktobi.com the public research site. Online everywhere: tpgoebel. The beat is the gap between US technical reality and European regulation (StVG, UNECE, EU).";
 
   const topics =
     locale === "de"
       ? [
-          "FSD Supervised im US-Alltag — was die Software tut, wo sie scheitert",
+          "FSD Supervised im US-Alltag: was die Software tut, wo sie scheitert",
           "SAE-Stufen gegen Marketingsprache",
           "Robotaxi-Stacks im Vergleich (Tesla, Waymo, andere)",
           "Humanoide: Technik-Stack, Betriebsstunden, Sicherheitsnachweis",
           "Regulierung DE / EU / UNECE vs. US-Praxis",
         ]
       : [
-          "FSD Supervised as a US daily driver — what the software does, where it fails",
+          "FSD Supervised as a US daily driver: what the software does, where it fails",
           "SAE levels versus marketing language",
           "Robotaxi stacks compared (Tesla, Waymo, others)",
           "Humanoids: stack, hours, safety case",
@@ -94,19 +94,19 @@ export function MediaKitPage() {
               <a href={channels.teslatobi.url} className="text-accent" target="_blank" rel="noreferrer">
                 {channels.teslatobi.handle}
               </a>
-              <span className="text-muted"> — TeslaTobi (DE)</span>
+              <span className="text-muted">: TeslaTobi (DE)</span>
             </li>
             <li>
               <a href={channels.techtalktobi.url} className="text-accent" target="_blank" rel="noreferrer">
                 {channels.techtalktobi.handle}
               </a>
-              <span className="text-muted"> — TechTalkTobi (EN)</span>
+              <span className="text-muted">: TechTalkTobi (EN)</span>
             </li>
             <li>
               <a href={links.x} className="text-accent" target="_blank" rel="noreferrer">
                 @tpgoebel
               </a>
-              <span className="text-muted"> — X</span>
+              <span className="text-muted">: X</span>
             </li>
             <li>
               <a href={`mailto:${links.email}`} className="text-accent">
