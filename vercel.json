@@ -5,5 +5,22 @@
       "main": true,
       "gh-pages": false
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "/media-kit.pdf",
+      "destination": "/TeslaTobi_MediaKit_Oct_2026.pdf",
+      "permanent": true
+    },
+    {
+      "source": "/TeslaTobi_MediaKit_July_2026.pdf",
+      "destination": "/TeslaTobi_MediaKit_Oct_2026.pdf",
+      "permanent": true
+    },
+    {
+      "source": "/TeslaTobi_MediaKit_Sep_2026.pdf",
+      "destination": "/TeslaTobi_MediaKit_Oct_2026.pdf",
+      "permanent": true
+    }
+  ]
 }

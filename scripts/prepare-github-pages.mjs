@@ -6,6 +6,7 @@
  */
 import { copyFileSync, mkdirSync, writeFileSync, accessSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { publish as publishMediaKit } from "./media-kit.mjs";
 
 const root = process.argv[2] || "dist/client";
 const shell = join(root, "_shell.html");
@@ -57,6 +58,9 @@ for (const route of routes) {
   mkdirSync(dirname(dirIndex), { recursive: true });
   copyFileSync(shell, dirIndex);
 }
+
+// Old media kit URLs + /media-kit.pdf serve the current kit (no redirects on Pages).
+console.log(`prepare-github-pages: media kit aliases ${publishMediaKit(root).join(", ")}`);
 
 writeFileSync(join(root, "CNAME"), "techtalktobi.com\n");
 writeFileSync(join(root, ".nojekyll"), "");

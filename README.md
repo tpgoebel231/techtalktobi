@@ -96,3 +96,13 @@ Response: `{ "url", "expires_at": null, "expires_in_seconds": null }`. The URL i
 Optional `ttl_seconds` mints a time-limited link instead (clamped to 60..86400). That response has an ISO `expires_at` and numeric `expires_in_seconds`, and the URL includes `exp`. Omit `ttl_seconds` or send `null` for a permanent link. Links already minted with `exp` and `sig` keep working until that expiry. The bearer listen curl above still works.
 
 Manual smoke: open `/de/about` or `/en/about`, Start, talk, end the call. The WAV upload lands, Bland’s webhook joins `call_id`, then the curl above plays the mix. The listen-link curl is what Helga pastes for Tobias.
+
+## Media kit updates
+
+Old media kit URLs stay indexed by Google, so they must keep serving the latest kit.
+When a new kit is ready:
+
+1. Copy the PDF into `public/` (for example `public/TeslaTobi_MediaKit_Nov_2026.pdf`).
+2. Run `node scripts/media-kit.mjs new TeslaTobi_MediaKit_Nov_2026.pdf`. This retires the previous kit to the `old` list in `scripts/media-kit.json`, removes its PDF from `public/`, updates `src/data/media.ts` and the Vercel redirects.
+3. Update the `mediaKitCta` month labels in `src/data/copy.ts`.
+4. Build and publish as usual. `prepare-github-pages.mjs` copies the current kit onto every old path and onto `/media-kit.pdf` (GitHub Pages has no redirects).
