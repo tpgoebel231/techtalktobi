@@ -5,61 +5,69 @@ import { cn } from "@/lib/utils";
 /*
  * Port of muskonomy/synergies.html (techtalktobi-old, last edited Aug 25 2026).
  * All data is static and inline, exactly as in the original page.
+ * German strings: Colleen's localization (Oct 21 2026).
  */
+
+type L = { en: string; de: string };
+const same = (v: string): L => ({ en: v, de: v });
 
 type Category = {
   id: string;
-  title: string;
+  title: L;
   color: string;
-  products: { label: string; row?: string }[];
-  enabling: string[];
+  products: { label: L; row?: string }[];
+  enabling: L[];
 };
 
 const CATEGORIES: Category[] = [
   {
     id: "connectivity",
-    title: "Orbital Compute and Connectivity",
+    title: { en: "Orbital Compute and Connectivity", de: "Rechenzentren und Vernetzung im Orbit" },
     color: "#17b7ff",
-    products: [{ label: "Starlink", row: "starlink" }],
-    enabling: ["Raptor", "Dragon", "Starshield", "Starbase", "Starship", "Falcon 9", "Falcon Heavy"],
+    products: [{ label: same("Starlink"), row: "starlink" }],
+    enabling: ["Raptor", "Dragon", "Starshield", "Starbase", "Starship", "Falcon 9", "Falcon Heavy"].map(same),
   },
   {
     id: "ai",
-    title: "Intelligence",
+    title: { en: "Intelligence", de: "Intelligenz" },
     color: "#ff5f9a",
     products: [
-      { label: "Grok", row: "grok" },
-      { label: "Colossus", row: "colossus" },
-      { label: "FSD", row: "fsd" },
-      { label: "Chips", row: "chip-design" },
-      { label: "FSD fleet data", row: "fsd-fleet-data" },
+      { label: same("Grok"), row: "grok" },
+      { label: same("Colossus"), row: "colossus" },
+      { label: same("FSD"), row: "fsd" },
+      { label: same("Chips"), row: "chip-design" },
+      { label: { en: "FSD fleet data", de: "FSD-Flottendaten" }, row: "fsd-fleet-data" },
     ],
-    enabling: ["Cortex", "X"],
+    enabling: ["Cortex", "X"].map(same),
   },
   {
     id: "energy",
-    title: "Hardware & Energy",
+    title: { en: "Hardware & Energy", de: "Hardware & Energie" },
     color: "#ffb020",
     products: [
-      { label: "Optimus", row: "optimus" },
-      { label: "Cybertruck", row: "cybertruck" },
-      { label: "Megapack", row: "megapack" },
+      { label: same("Optimus"), row: "optimus" },
+      { label: same("Cybertruck"), row: "cybertruck" },
+      { label: same("Megapack"), row: "megapack" },
     ],
-    enabling: ["Cybercab", "Model 3", "Model Y", "Powerwall", "Solar Roof", "4680 cell", "Gigafactory"],
+    enabling: [
+      ...["Cybercab", "Model 3", "Model Y", "Powerwall", "Solar Roof"].map(same),
+      { en: "4680 cell", de: "4680-Zelle" },
+      same("Gigafactory"),
+    ],
   },
 ];
 
-type Section = { label: string; y: number; color: string };
+type Section = { label: L; y: number; color: string };
 const SECTIONS: Section[] = [
-  { label: "Orbital Compute and Connectivity", y: 78, color: "#17b7ff" },
-  { label: "Intelligence", y: 222, color: "#ff5f9a" },
-  { label: "Hardware & Energy", y: 486, color: "#ffb020" },
+  { label: CATEGORIES[0].title, y: 78, color: "#17b7ff" },
+  { label: CATEGORIES[1].title, y: 222, color: "#ff5f9a" },
+  { label: CATEGORIES[2].title, y: 486, color: "#ffb020" },
 ];
 
 type Row = {
   id: string;
-  label: string;
-  note: string;
+  label: L;
+  note: L;
   y: number;
   /** "toTesla": SpaceX / xAI to Tesla. "toSpacex": Tesla to SpaceX / xAI. */
   dir: "toTesla" | "toSpacex";
@@ -71,17 +79,38 @@ const PINK = { stroke: "#ff5f9a" };
 const AMBER = { stroke: "#ffb020" };
 
 const ROWS: Row[] = [
-  { id: "orbital-ai", label: "Orbital AI", note: "for Optimus and FSD training", y: 120, dir: "toTesla", ...BLUE },
-  { id: "starlink", label: "Starlink*", note: "for robotaxi remote monitoring", y: 160, dir: "toTesla", ...BLUE },
-  { id: "grok", label: "Grok*", note: "for in-car AI and Optimus", y: 274, dir: "toTesla", ...PINK },
-  { id: "colossus", label: "Colossus", note: "for large-scale Optimus training", y: 314, dir: "toTesla", ...PINK },
-  { id: "fsd-fleet-data", label: "FSD fleet data", note: "for world-model training", y: 354, dir: "toSpacex", ...PINK },
-  { id: "chip-design", label: "Chips", note: "for Orbital AI", y: 394, dir: "toSpacex", ...PINK },
-  { id: "fsd", label: "FSD", note: "for Moon base", y: 434, dir: "toSpacex", ...PINK },
-  { id: "optimus", label: "Optimus", note: "for Moon base", y: 538, dir: "toSpacex", ...AMBER },
-  { id: "cybertruck", label: "Cybertruck", note: "for Moon base", y: 578, dir: "toSpacex", ...AMBER },
-  { id: "megapack", label: "Megapack*", note: "for Earth and Moon facilities", y: 618, dir: "toSpacex", ...AMBER },
+  { id: "orbital-ai", label: { en: "Orbital AI", de: "Orbitale KI" }, note: { en: "for Optimus and FSD training", de: "fürs Training von Optimus und FSD" }, y: 120, dir: "toTesla", ...BLUE },
+  { id: "starlink", label: same("Starlink*"), note: { en: "for robotaxi remote monitoring", de: "für Robotaxi-Fernüberwachung" }, y: 160, dir: "toTesla", ...BLUE },
+  { id: "grok", label: same("Grok*"), note: { en: "for in-car AI and Optimus", de: "als KI im Auto und in Optimus" }, y: 274, dir: "toTesla", ...PINK },
+  { id: "colossus", label: same("Colossus"), note: { en: "for large-scale Optimus training", de: "für Optimus-Training im großen Stil" }, y: 314, dir: "toTesla", ...PINK },
+  { id: "fsd-fleet-data", label: { en: "FSD fleet data", de: "FSD-Flottendaten" }, note: { en: "for world-model training", de: "fürs Training von Weltmodellen" }, y: 354, dir: "toSpacex", ...PINK },
+  { id: "chip-design", label: same("Chips"), note: { en: "for Orbital AI", de: "für Orbitale KI" }, y: 394, dir: "toSpacex", ...PINK },
+  { id: "fsd", label: same("FSD"), note: { en: "for Moon base", de: "für die Mondbasis" }, y: 434, dir: "toSpacex", ...PINK },
+  { id: "optimus", label: same("Optimus"), note: { en: "for Moon base", de: "für die Mondbasis" }, y: 538, dir: "toSpacex", ...AMBER },
+  { id: "cybertruck", label: same("Cybertruck"), note: { en: "for Moon base", de: "für die Mondbasis" }, y: 578, dir: "toSpacex", ...AMBER },
+  { id: "megapack", label: same("Megapack*"), note: { en: "for Earth and Moon facilities", de: "für Anlagen auf Erde und Mond" }, y: 618, dir: "toSpacex", ...AMBER },
 ];
+
+const TEXT = {
+  eyebrow: { en: "Strategic dependency map", de: "Strategische Abhängigkeiten" },
+  heading: { en: "SpaceX, xAI and Tesla", de: "SpaceX, xAI und Tesla" },
+  intro: {
+    en: "This map organizes the relationships between SpaceX, xAI and Tesla into orbital compute and connectivity, intelligence, and hardware and energy. The diagram highlights the practical exchange of models, data, connectivity, chips, robots, vehicles, and large-scale infrastructure across the network.",
+    de: "Diese Karte ordnet die Verflechtungen zwischen SpaceX, xAI und Tesla drei Bereichen zu: Rechenzentren und Vernetzung im Orbit, Intelligenz sowie Hardware und Energie. Das Diagramm zeigt, was zwischen den Firmen konkret hin und her geht: Modelle, Daten, Konnektivität, Chips, Roboter, Fahrzeuge und Infrastruktur im großen Stil.",
+  },
+  grouped: { en: "Products grouped by category", de: "Produkte nach Bereich" },
+  enabling: { en: "Enabling tech", de: "Technische Basis" },
+  diagram: { en: "Mutual dependencies between SpaceX, xAI and Tesla", de: "Wer von wem abhängt: SpaceX, xAI und Tesla" },
+  svgTitle: {
+    en: "Three-category dependency diagram between SpaceX, xAI, and Tesla",
+    de: "Abhängigkeitsdiagramm zwischen SpaceX, xAI und Tesla in drei Bereichen",
+  },
+  svgDesc: {
+    en: "Diagram showing orbital compute and connectivity, intelligence, and hardware and energy dependencies between SpaceX/xAI and Tesla, with arrows indicating the direction of dependency.",
+    de: "Das Diagramm zeigt die Abhängigkeiten zwischen SpaceX/xAI und Tesla in den Bereichen Rechenzentren und Vernetzung im Orbit, Intelligenz sowie Hardware und Energie. Die Pfeile zeigen, wer wen braucht.",
+  },
+  footnote: { en: "* already a commercial relationship today", de: "* schon heute eine bestehende Geschäftsbeziehung" },
+} satisfies Record<string, L>;
 
 type Box = { x: number; y: number; width: number; height: number };
 
@@ -107,7 +136,7 @@ export function MuskonomyMap() {
     if (typeof document !== "undefined" && document.fonts?.ready) {
       document.fonts.ready.then(measure).catch(() => {});
     }
-  }, []);
+  }, [locale]);
 
   const toggle = (key: string) =>
     setGreyed((prev) => {
@@ -125,35 +154,28 @@ export function MuskonomyMap() {
   };
 
   return (
-    <div lang="en" className="flex flex-col gap-8">
-      {locale === "de" ? (
-        <p lang="de" className="text-sm text-muted">
-          Diese Analyse ist auf Englisch.
-        </p>
-      ) : null}
+    <div className="flex flex-col gap-8">
 
       <section
         id="overview"
         className="rounded-xl bg-surface p-5 shadow-[var(--shadow-border)] sm:p-8"
       >
         <p className="font-mono text-[11px] tracking-widest text-accent uppercase">
-          Strategic dependency map
+          {TEXT.eyebrow[locale]}
         </p>
         <h2 className="mt-3 font-display text-3xl leading-tight text-fg sm:text-4xl">
-          SpaceX, xAI and Tesla
+          {TEXT.heading[locale]}
         </h2>
         <p className="mt-4 max-w-3xl text-base leading-relaxed text-muted">
-          This map organizes the relationships between SpaceX, xAI and Tesla into orbital compute and
-          connectivity, intelligence, and hardware and energy. The diagram highlights the practical exchange of
-          models, data, connectivity, chips, robots, vehicles, and large-scale infrastructure across the network.
+          {TEXT.intro[locale]}
         </p>
 
         <p className="mt-8 mb-3 font-mono text-[11px] tracking-widest text-faint uppercase">
-          Products grouped by category
+          {TEXT.grouped[locale]}
         </p>
         <div
           className="grid gap-3 md:grid-cols-3"
-          aria-label="Products grouped by category"
+          aria-label={TEXT.grouped[locale]}
         >
           {CATEGORIES.map((cat) => (
             <div
@@ -167,7 +189,7 @@ export function MuskonomyMap() {
                   className="size-2 flex-none rounded-full"
                   style={{ background: cat.color, boxShadow: `0 0 0 4px ${cat.color}38` }}
                 />
-                {cat.title}
+                {cat.title[locale]}
               </h3>
               <ul className="flex flex-wrap gap-1.5">
                 {cat.products.map((p) => {
@@ -175,7 +197,7 @@ export function MuskonomyMap() {
                   const off = greyed.has(key);
                   return (
                     <li
-                      key={p.label}
+                      key={p.label.en}
                       role="button"
                       tabIndex={0}
                       aria-pressed={off}
@@ -187,22 +209,22 @@ export function MuskonomyMap() {
                       )}
                       style={{ background: `${cat.color}24`, borderColor: `${cat.color}61` }}
                     >
-                      {p.label}
+                      {p.label[locale]}
                     </li>
                   );
                 })}
               </ul>
               <p className="mt-4 mb-2 flex items-center gap-2 font-mono text-[10px] tracking-widest text-faint uppercase after:h-px after:flex-1 after:bg-border">
-                Enabling tech
+                {TEXT.enabling[locale]}
               </p>
               <ul className="flex flex-wrap gap-1.5">
                 {cat.enabling.map((label) => (
                   <li
-                    key={label}
+                    key={label.en}
                     className="rounded-full border border-dashed px-2.5 py-1 text-[13px] leading-tight whitespace-nowrap text-muted"
                     style={{ borderColor: `${cat.color}6b` }}
                   >
-                    {label}
+                    {label[locale]}
                   </li>
                 ))}
               </ul>
@@ -216,7 +238,7 @@ export function MuskonomyMap() {
         className="rounded-xl bg-surface p-4 shadow-[var(--shadow-border)] sm:p-8"
       >
         <h2 className="font-display text-2xl leading-tight text-fg sm:text-3xl">
-          Mutual dependencies between SpaceX, xAI and Tesla
+          {TEXT.diagram[locale]}
         </h2>
         <div className="mt-6 overflow-x-auto rounded-lg bg-bg/60">
           <svg
@@ -225,13 +247,8 @@ export function MuskonomyMap() {
             role="img"
             aria-labelledby="mm-diagram-title mm-diagram-desc"
           >
-            <title id="mm-diagram-title">
-              Three-category dependency diagram between SpaceX, xAI, and Tesla
-            </title>
-            <desc id="mm-diagram-desc">
-              Diagram showing orbital compute and connectivity, intelligence, and hardware and energy
-              dependencies between SpaceX/xAI and Tesla, with arrows indicating the direction of dependency.
-            </desc>
+            <title id="mm-diagram-title">{TEXT.svgTitle[locale]}</title>
+            <desc id="mm-diagram-desc">{TEXT.svgDesc[locale]}</desc>
             <defs>
               <marker
                 id="mm-ar"
@@ -266,7 +283,7 @@ export function MuskonomyMap() {
             <line x1="510" y1="60" x2="510" y2="660" stroke="#888780" strokeWidth="1" strokeDasharray="4 4" />
 
             {SECTIONS.map((s) => (
-              <g key={s.label}>
+              <g key={s.label.en}>
                 <rect x="150" y={s.y} width="380" height="18" rx="9" fill={s.color} opacity="0.18" />
                 <text
                   x="340"
@@ -277,7 +294,7 @@ export function MuskonomyMap() {
                   fontSize="10"
                   fontWeight="600"
                 >
-                  {s.label}
+                  {s.label[locale]}
                 </text>
               </g>
             ))}
@@ -312,7 +329,7 @@ export function MuskonomyMap() {
                     fontSize="10"
                     fontWeight="600"
                   >
-                    {row.note}
+                    {row.note[locale]}
                   </text>
                   {box ? (
                     <rect
@@ -347,7 +364,7 @@ export function MuskonomyMap() {
                     onClick={() => toggle(row.id)}
                     onKeyDown={onKey(row.id)}
                   >
-                    {row.label}
+                    {row.label[locale]}
                   </text>
                 </g>
               );
@@ -357,7 +374,7 @@ export function MuskonomyMap() {
             <line x1="490" y1="660" x2="530" y2="660" stroke="#888780" strokeWidth="1" />
           </svg>
         </div>
-        <p className="mt-4 text-sm text-muted italic">* already a commercial relationship today</p>
+        <p className="mt-4 text-sm text-muted italic">{TEXT.footnote[locale]}</p>
       </section>
     </div>
   );
