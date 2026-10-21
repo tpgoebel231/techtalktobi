@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
 import { useLocale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -88,19 +88,116 @@ const PINK = { stroke: "#ff5f9a" };
 const AMBER = { stroke: "#ffb020" };
 
 const ROWS: Row[] = [
-  { id: "starmind", label: same("Starmind"), note: { en: "for Optimus and FSD training", de: "fürs Training von Optimus und FSD" }, y: 120, dir: "toTesla", ...BLUE },
-  { id: "starlink", label: same("Starlink*"), note: { en: "for robotaxi remote monitoring", de: "für Robotaxi-Fernüberwachung" }, y: 160, dir: "toTesla", ...BLUE },
-  { id: "starshield", label: same("Starshield"), note: { en: "for secure robotaxi fleet comms", de: "für sichere Robotaxi-Kommunikation" }, y: 200, dir: "toTesla", ...BLUE },
-  { id: "grok", label: same("Grok*"), note: { en: "for in-car AI and Optimus voice", de: "als KI im Auto und Stimme von Optimus" }, y: 274, dir: "toTesla", ...PINK },
-  { id: "colossus-2", label: same("Colossus 2"), note: { en: "for Optimus training", de: "fürs Optimus-Training" }, y: 314, dir: "toTesla", ...PINK },
-  { id: "x", label: same("X*"), note: { en: "for advertising", de: "für Werbung" }, y: 354, dir: "toTesla", ...PINK },
-  { id: "fsd-fleet-data", label: { en: "FSD fleet data", de: "FSD-Flottendaten" }, note: { en: "for world-model training", de: "fürs Training von Weltmodellen" }, y: 394, dir: "toSpacex", ...PINK },
-  { id: "ai5-ai6", label: same("AI5/AI6"), note: { en: "for Starmind", de: "für Starmind" }, y: 434, dir: "toSpacex", ...PINK },
-  { id: "fsd", label: same("FSD"), note: { en: "for Moon base", de: "für die Mondbasis" }, y: 474, dir: "toSpacex", ...PINK },
-  { id: "optimus", label: same("Optimus"), note: { en: "for Moon base", de: "für die Mondbasis" }, y: 550, dir: "toSpacex", ...AMBER },
-  { id: "cybertruck", label: same("Cybertruck*"), note: { en: "for Starbase fleet and Moon base", de: "für die Flotte in Starbase und die Mondbasis" }, y: 590, dir: "toSpacex", ...AMBER },
-  { id: "cybercab", label: same("Cybercab"), note: { en: "for Starbase and Moon base transport", de: "für Transporte in Starbase und auf dem Mond" }, y: 630, dir: "toSpacex", ...AMBER },
-  { id: "megapack", label: same("Megapack*"), note: { en: "for Earth and Moon facilities", de: "für Anlagen auf Erde und Mond" }, y: 670, dir: "toSpacex", ...AMBER },
+  {
+    id: "starmind",
+    label: same("Starmind"),
+    note: { en: "for Optimus and FSD training", de: "fürs Training von Optimus und FSD" },
+    y: 120,
+    dir: "toTesla",
+    ...BLUE,
+  },
+  {
+    id: "starlink",
+    label: same("Starlink*"),
+    note: { en: "for robotaxi remote monitoring", de: "für Robotaxi-Fernüberwachung" },
+    y: 160,
+    dir: "toTesla",
+    ...BLUE,
+  },
+  {
+    id: "starshield",
+    label: same("Starshield"),
+    note: { en: "for secure robotaxi fleet comms", de: "für sichere Robotaxi-Kommunikation" },
+    y: 200,
+    dir: "toTesla",
+    ...BLUE,
+  },
+  {
+    id: "grok",
+    label: same("Grok*"),
+    note: { en: "for in-car AI and Optimus voice", de: "als KI im Auto und Stimme von Optimus" },
+    y: 274,
+    dir: "toTesla",
+    ...PINK,
+  },
+  {
+    id: "colossus-2",
+    label: same("Colossus 2"),
+    note: { en: "for Optimus training", de: "fürs Optimus-Training" },
+    y: 314,
+    dir: "toTesla",
+    ...PINK,
+  },
+  {
+    id: "x",
+    label: same("X*"),
+    note: { en: "for advertising", de: "für Werbung" },
+    y: 354,
+    dir: "toTesla",
+    ...PINK,
+  },
+  {
+    id: "fsd-fleet-data",
+    label: { en: "FSD fleet data", de: "FSD-Flottendaten" },
+    note: { en: "for world-model training", de: "fürs Training von Weltmodellen" },
+    y: 394,
+    dir: "toSpacex",
+    ...PINK,
+  },
+  {
+    id: "ai5-ai6",
+    label: same("AI5/AI6"),
+    note: { en: "for Starmind", de: "für Starmind" },
+    y: 434,
+    dir: "toSpacex",
+    ...PINK,
+  },
+  {
+    id: "fsd",
+    label: same("FSD"),
+    note: { en: "for Moon base", de: "für die Mondbasis" },
+    y: 474,
+    dir: "toSpacex",
+    ...PINK,
+  },
+  {
+    id: "optimus",
+    label: same("Optimus"),
+    note: { en: "for Moon base", de: "für die Mondbasis" },
+    y: 550,
+    dir: "toSpacex",
+    ...AMBER,
+  },
+  {
+    id: "cybertruck",
+    label: same("Cybertruck*"),
+    note: {
+      en: "for Starbase fleet and Moon base",
+      de: "für die Flotte in Starbase und die Mondbasis",
+    },
+    y: 590,
+    dir: "toSpacex",
+    ...AMBER,
+  },
+  {
+    id: "cybercab",
+    label: same("Cybercab"),
+    note: {
+      en: "for Starbase and Moon base transport",
+      de: "für Transporte in Starbase und auf dem Mond",
+    },
+    y: 630,
+    dir: "toSpacex",
+    ...AMBER,
+  },
+  {
+    id: "megapack",
+    label: same("Megapack*"),
+    note: { en: "for Earth and Moon facilities", de: "für Anlagen auf Erde und Mond" },
+    y: 670,
+    dir: "toSpacex",
+    ...AMBER,
+  },
 ];
 
 const TEXT = {
@@ -121,7 +218,10 @@ const TEXT = {
     de: "Oben: wird untereinander verkauft oder geliefert. Unten: technische Basis, wird nicht gehandelt.",
   },
   enabling: { en: "Enabling tech (not traded)", de: "Technische Basis (nicht gehandelt)" },
-  diagram: { en: "Mutual dependencies between SpaceX, xAI and Tesla", de: "Wer von wem abhängt: SpaceX, xAI und Tesla" },
+  diagram: {
+    en: "Mutual dependencies between SpaceX, xAI and Tesla",
+    de: "Wer von wem abhängt: SpaceX, xAI und Tesla",
+  },
   svgTitle: {
     en: "Three-category dependency diagram between SpaceX, xAI, and Tesla",
     de: "Abhängigkeitsdiagramm zwischen SpaceX, xAI und Tesla in drei Bereichen",
@@ -130,7 +230,11 @@ const TEXT = {
     en: "Diagram showing orbital compute and connectivity, intelligence, and hardware and energy dependencies between SpaceX/xAI and Tesla, with arrows indicating the direction of dependency.",
     de: "Das Diagramm zeigt die Abhängigkeiten zwischen SpaceX/xAI und Tesla in den Bereichen Rechenzentren und Vernetzung im Orbit, Intelligenz sowie Hardware und Energie. Die Pfeile zeigen, wer wen braucht.",
   },
-  footnote: { en: "* already a commercial relationship today", de: "* schon heute eine bestehende Geschäftsbeziehung" },
+  footnote: {
+    en: "* already a commercial relationship today",
+    de: "* schon heute eine bestehende Geschäftsbeziehung",
+  },
+  present: { en: "Interactive", de: "Interaktiv" },
   footnote2: {
     en: "Tesla's $2B xAI investment converted to SpaceX stock (under 1%) in March 2026.",
     de: "Teslas Beteiligung an xAI über 2 Milliarden Dollar wurde im März 2026 in SpaceX-Aktien umgewandelt (unter 1 %).",
@@ -171,6 +275,36 @@ export function MuskonomyMap() {
       return next;
     });
 
+  // Presentation mode (for video): arrows hidden, revealed one by one with
+  // Down, hidden again in reverse with Up; Esc or the button turns it off.
+  const [presenting, setPresenting] = useState(false);
+  const [revealed, setRevealed] = useState(0);
+  const diagramRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!presenting) return;
+    const onKeyDown = (e: globalThis.KeyboardEvent) => {
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setRevealed((n) => Math.min(n + 1, ROWS.length));
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        setRevealed((n) => Math.max(n - 1, 0));
+      } else if (e.key === "Escape") {
+        setPresenting(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [presenting]);
+
+  const togglePresenting = () => {
+    const next = !presenting;
+    setPresenting(next);
+    setRevealed(0);
+    if (next) diagramRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   const onKey = (key: string) => (e: KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
@@ -190,9 +324,7 @@ export function MuskonomyMap() {
         <h2 className="mt-3 font-display text-3xl leading-tight text-fg sm:text-4xl">
           {TEXT.heading[locale]}
         </h2>
-        <p className="mt-4 max-w-3xl text-base leading-relaxed text-muted">
-          {TEXT.intro[locale]}
-        </p>
+        <p className="mt-4 max-w-3xl text-base leading-relaxed text-muted">{TEXT.intro[locale]}</p>
         <p className="mt-4 max-w-3xl rounded-lg bg-surface-2 px-4 py-3 text-sm leading-relaxed text-fg shadow-[var(--shadow-border)]">
           {TEXT.howToRead[locale]}
         </p>
@@ -200,10 +332,7 @@ export function MuskonomyMap() {
         <p className="mt-8 mb-3 font-mono text-[11px] tracking-widest text-faint uppercase">
           {TEXT.grouped[locale]}
         </p>
-        <div
-          className="grid gap-3 md:grid-cols-3"
-          aria-label={TEXT.grouped[locale]}
-        >
+        <div className="grid gap-3 md:grid-cols-3" aria-label={TEXT.grouped[locale]}>
           {CATEGORIES.map((cat) => (
             <div
               key={cat.id}
@@ -269,7 +398,8 @@ export function MuskonomyMap() {
 
       <section
         id="diagram"
-        className="rounded-xl bg-surface p-4 shadow-[var(--shadow-border)] sm:p-8"
+        ref={diagramRef}
+        className="scroll-mt-20 rounded-xl bg-surface p-4 shadow-[var(--shadow-border)] sm:p-8"
       >
         <h2 className="font-display text-2xl leading-tight text-fg sm:text-3xl">
           {TEXT.diagram[locale]}
@@ -313,12 +443,36 @@ export function MuskonomyMap() {
               <TeslaLogo />
             </HeaderBox>
 
-            <line x1="170" y1="60" x2="170" y2="700" stroke="#888780" strokeWidth="1" strokeDasharray="4 4" />
-            <line x1="510" y1="60" x2="510" y2="700" stroke="#888780" strokeWidth="1" strokeDasharray="4 4" />
+            <line
+              x1="170"
+              y1="60"
+              x2="170"
+              y2="700"
+              stroke="#888780"
+              strokeWidth="1"
+              strokeDasharray="4 4"
+            />
+            <line
+              x1="510"
+              y1="60"
+              x2="510"
+              y2="700"
+              stroke="#888780"
+              strokeWidth="1"
+              strokeDasharray="4 4"
+            />
 
             {SECTIONS.map((s) => (
               <g key={s.label.en}>
-                <rect x="150" y={s.y} width="380" height="18" rx="9" fill={s.color} opacity="0.18" />
+                <rect
+                  x="150"
+                  y={s.y}
+                  width="380"
+                  height="18"
+                  rx="9"
+                  fill={s.color}
+                  opacity="0.18"
+                />
                 <text
                   x="340"
                   y={s.y + 9}
@@ -333,8 +487,9 @@ export function MuskonomyMap() {
               </g>
             ))}
 
-            {ROWS.map((row) => {
+            {ROWS.map((row, index) => {
               const off = greyed.has(row.id);
+              const shown = !presenting || index < revealed;
               const toTesla = row.dir === "toTesla";
               const box = boxes[row.id];
               return (
@@ -344,27 +499,35 @@ export function MuskonomyMap() {
                   className="transition-[opacity,filter]"
                   style={off ? { opacity: 0.3, filter: "grayscale(1)" } : undefined}
                 >
-                  <line
-                    x1={toTesla ? 174 : 506}
-                    y1={row.y}
-                    x2={toTesla ? 506 : 174}
-                    y2={row.y}
-                    stroke={row.stroke}
-                    strokeWidth="1.6"
-                    markerEnd="url(#mm-ar)"
-                    fill="none"
-                  />
-                  <text
-                    x="340"
-                    y={row.y - 7}
-                    textAnchor="middle"
-                    dominantBaseline="central"
-                    fill="#ece9df"
-                    fontSize="10"
-                    fontWeight="600"
+                  <g
+                    data-arrow={row.id}
+                    data-shown={shown}
+                    aria-hidden={shown ? undefined : true}
+                    className="transition-opacity duration-300 ease-out"
+                    style={{ opacity: shown ? 1 : 0 }}
                   >
-                    {row.note[locale]}
-                  </text>
+                    <line
+                      x1={toTesla ? 174 : 506}
+                      y1={row.y}
+                      x2={toTesla ? 506 : 174}
+                      y2={row.y}
+                      stroke={row.stroke}
+                      strokeWidth="1.6"
+                      markerEnd="url(#mm-ar)"
+                      fill="none"
+                    />
+                    <text
+                      x="340"
+                      y={row.y - 7}
+                      textAnchor="middle"
+                      dominantBaseline="central"
+                      fill="#ece9df"
+                      fontSize="10"
+                      fontWeight="600"
+                    >
+                      {row.note[locale]}
+                    </text>
+                  </g>
                   {box ? (
                     <rect
                       x={box.x - 9}
@@ -410,6 +573,24 @@ export function MuskonomyMap() {
         </div>
         <p className="mt-4 text-sm text-muted italic">{TEXT.footnote[locale]}</p>
         <p className="mt-1 text-sm text-muted italic">{TEXT.footnote2[locale]}</p>
+        <div className="mt-6 flex justify-end">
+          <button
+            type="button"
+            aria-pressed={presenting}
+            onClick={togglePresenting}
+            className={cn(
+              "inline-flex h-8 items-center gap-2 rounded-full px-3 font-mono text-[11px] tracking-wide text-faint shadow-[var(--shadow-border)] transition-colors hover:text-muted",
+              presenting && "text-muted",
+            )}
+          >
+            <span>{TEXT.present[locale]}</span>
+            {presenting ? (
+              <span className="text-accent tabular-nums" aria-live="polite">
+                {revealed}/{ROWS.length}
+              </span>
+            ) : null}
+          </button>
+        </div>
       </section>
     </div>
   );
@@ -418,7 +599,16 @@ export function MuskonomyMap() {
 function HeaderBox({ x, children }: { x: number; children: React.ReactNode }) {
   return (
     <g>
-      <rect x={x} y="20" width="220" height="40" rx="8" fill="#050505" stroke="#ffffff" strokeWidth="1.2" />
+      <rect
+        x={x}
+        y="20"
+        width="220"
+        height="40"
+        rx="8"
+        fill="#050505"
+        stroke="#ffffff"
+        strokeWidth="1.2"
+      />
       <foreignObject x={x + 4} y="23" width="212" height="34">
         <div className="flex size-full items-center justify-center gap-2.5 text-[13px] font-bold tracking-wide text-white">
           {children}
@@ -430,7 +620,13 @@ function HeaderBox({ x, children }: { x: number; children: React.ReactNode }) {
 
 function SpacexLogo() {
   return (
-    <svg className="block h-[18px] w-[92px]" viewBox="0 0 400 50" fill="#ffffff" aria-label="SpaceX logo" role="img">
+    <svg
+      className="block h-[18px] w-[92px]"
+      viewBox="0 0 400 50"
+      fill="#ffffff"
+      aria-label="SpaceX logo"
+      role="img"
+    >
       <path d="M37.5 30.5H10.9v-6.6h34.3c-.9-2.8-3.8-5.4-8.9-5.4H11.4c-5.7 0-9 2.1-9 6.7v4.9c0 4 3.4 6.3 8.4 6.3h26.9v7H1.5c.9 3.8 3.8 5.8 9 5.8h27.1c5.7 0 8.5-2.2 8.5-6.9v-4.9c0-4.3-3.3-6.6-8.6-6.9z" />
       <path d="M91.8 18.6H59v30.7h9.3V37.5h24.2c6.7 0 10.4-2.3 10.4-7.7v-3.4c-.1-5-4.3-7.8-11.1-7.8zm3 9.8c0 2.2-.4 3.4-4 3.4H68.3l.1-8h22c4 0 4.5 1.2 4.5 3.3v1.3z" />
       <polygon points="129.9,17.3 124.3,24.2 133.8,37.3 114,37.3 109.1,42.5 137.7,42.5 142.6,49.3 153.6,49.3" />
@@ -442,7 +638,6 @@ function SpacexLogo() {
     </svg>
   );
 }
-
 
 function XaiLogo() {
   return (
@@ -457,7 +652,13 @@ function XaiLogo() {
 
 function TeslaLogo() {
   return (
-    <svg className="block h-[22px] w-[62px]" viewBox="0 0 253.58401 252.502" fill="#ffffff" aria-label="Tesla logo" role="img">
+    <svg
+      className="block h-[22px] w-[62px]"
+      viewBox="0 0 253.58401 252.502"
+      fill="#ffffff"
+      aria-label="Tesla logo"
+      role="img"
+    >
       <g transform="translate(-46.34,-64.797)">
         <path d="M 173.146,317.299 208.622,117.78 c 33.815,0 44.481,3.708 46.021,18.843 0,0 22.684,-8.458 34.125,-25.636 C 244.122,90.299 199.263,89.366 199.263,89.366 l -26.176,31.882 0.059,-0.004 -26.176,-31.883 c 0,0 -44.86,0.934 -89.5,21.622 11.431,17.178 34.124,25.636 34.124,25.636 1.549,-15.136 12.202,-18.844 45.79,-18.868 l 35.762,199.548" />
         <path d="m 173.132,80.157 c 36.09,-0.276 77.399,5.583 119.687,24.014 5.652,-10.173 7.105,-14.669 7.105,-14.669 C 253.697,71.213 210.406,64.954 173.127,64.797 135.85,64.954 92.561,71.214 46.34,89.502 c 0,0 2.062,5.538 7.1,14.669 42.28,-18.431 83.596,-24.29 119.687,-24.014 h 0.005" />
