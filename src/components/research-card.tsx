@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
+import { NEW_TAB, NewTabHint } from "@/components/new-tab-hint";
 import { Badge } from "@/components/ui/badge";
 import type { ResearchPiece } from "@/data/research";
 import { useCopy, useLocale } from "@/lib/i18n";
@@ -12,6 +13,7 @@ export function ResearchCard({ piece }: { piece: ResearchPiece }) {
     <Link
       to="/$locale/research/$slug"
       params={{ locale, slug: piece.slug }}
+      {...NEW_TAB}
       className="group flex flex-col overflow-hidden rounded-xl bg-surface no-underline shadow-[var(--shadow-border)] transition-[box-shadow] duration-150 hover:shadow-[var(--shadow-border-hover)]"
     >
       <div className="aspect-3/2 overflow-hidden bg-surface-2">
@@ -36,7 +38,8 @@ export function ResearchCard({ piece }: { piece: ResearchPiece }) {
         </p>
         <span className="inline-flex items-center gap-1 text-sm text-accent">
           {copy.research.read}
-          <ArrowUpRight className="size-4" />
+          <ArrowUpRight className="size-4" aria-hidden="true" />
+          <NewTabHint />
         </span>
       </div>
     </Link>

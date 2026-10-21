@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
+import { NEW_TAB, NewTabHint } from "@/components/new-tab-hint";
 import { Container } from "@/components/container";
 import { ResearchCard } from "@/components/research-card";
 import { Button } from "@/components/ui/button";
@@ -102,9 +103,10 @@ export function HomePage() {
               </p>
             </div>
             <Button asChild variant="link" className="hidden sm:inline-flex">
-              <Link to="/$locale/research" params={{ locale }}>
+              <Link to="/$locale/research" params={{ locale }} {...NEW_TAB}>
                 {copy.nav.research}
-                <ArrowUpRight className="size-4" />
+                <ArrowUpRight className="size-4" aria-hidden="true" />
+                <NewTabHint />
               </Link>
             </Button>
           </div>
@@ -138,6 +140,7 @@ function Door({
     <Link
       to={to}
       params={{ locale }}
+      {...NEW_TAB}
       className="group flex flex-col rounded-xl bg-surface p-7 no-underline shadow-[var(--shadow-border)] transition-[box-shadow] duration-150 hover:shadow-[var(--shadow-border-hover)] sm:p-8"
     >
       <p className="font-mono text-xs text-accent tabular-nums">{index}</p>
@@ -145,7 +148,8 @@ function Door({
       <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{dek}</p>
       <span className="mt-6 inline-flex items-center gap-1 text-sm text-accent">
         {cta}
-        <ArrowUpRight className="size-4" />
+        <ArrowUpRight className="size-4" aria-hidden="true" />
+        <NewTabHint />
       </span>
     </Link>
   );
