@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { Container } from "@/components/container";
 import { FsdMatrix } from "@/components/fsd-matrix";
 import { FsdPriceChart } from "@/components/fsd-price-chart";
+import { MuskonomyMap } from "@/components/muskonomy-map";
 import { ResearchCard } from "@/components/research-card";
 import { RoboticsMap } from "@/components/robotics-map";
 import { SpeedSafetyTool } from "@/components/speed-safety-tool";
@@ -40,10 +41,17 @@ export function ResearchDetailPage({ slug }: { slug: ResearchSlug }) {
             {piece.date}
           </span>
         </div>
-        <h1 className="mt-4 max-w-4xl font-display text-4xl leading-tight text-fg sm:text-6xl">
+        <h1
+          lang={slug === "muskonomy" ? "en" : undefined}
+          className="mt-4 max-w-4xl font-display text-4xl leading-tight text-fg sm:text-6xl">
           {piece.title[locale]}
         </h1>
-        <p className="mt-4 max-w-2xl text-lg text-muted">{piece.dek[locale]}</p>
+        <p
+          lang={slug === "muskonomy" ? "en" : undefined}
+          className="mt-4 max-w-2xl text-lg text-muted"
+        >
+          {piece.dek[locale]}
+        </p>
       </Container>
 
       {hoistWidget && widget ? (
@@ -58,18 +66,20 @@ export function ResearchDetailPage({ slug }: { slug: ResearchSlug }) {
         />
       </div>
 
-      <Container className="max-w-3xl py-12 sm:py-16">
-        <div className="flex flex-col gap-6">
-          {piece.paragraphs.map((p) => (
-            <p key={p.en} className="text-base leading-relaxed text-fg">
-              {p[locale]}
-            </p>
-          ))}
-        </div>
-        {!hoistWidget && widget ? (
-          <div className="mt-10 max-w-none">{widget}</div>
-        ) : null}
-      </Container>
+      {piece.paragraphs.length > 0 || (!hoistWidget && widget) ? (
+        <Container className="max-w-3xl py-12 sm:py-16">
+          <div className="flex flex-col gap-6">
+            {piece.paragraphs.map((p) => (
+              <p key={p.en} className="text-base leading-relaxed text-fg">
+                {p[locale]}
+              </p>
+            ))}
+          </div>
+          {!hoistWidget && widget ? (
+            <div className="mt-10 max-w-none">{widget}</div>
+          ) : null}
+        </Container>
+      ) : null}
 
       <Container className="border-t border-border py-16">
         <h2 className="font-display text-2xl text-fg">{copy.research.related}</h2>
@@ -97,6 +107,8 @@ function widgetFor(slug: ResearchSlug) {
       return <WaymoTracker />;
     case "self-driving":
       return <SaeTable />;
+    case "muskonomy":
+      return <MuskonomyMap />;
   }
 }
 

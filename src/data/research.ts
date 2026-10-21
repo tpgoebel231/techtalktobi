@@ -7,6 +7,7 @@ export const RESEARCH_SLUGS = [
   "ai-robotics",
   "fsd-matrix",
   "waymo",
+  "muskonomy",
 ] as const;
 
 export type ResearchSlug = (typeof RESEARCH_SLUGS)[number];
@@ -185,6 +186,27 @@ export const research: ResearchPiece[] = [
         de: "Waymo ist der Existenzbeweis, dass ein räumlich begrenzter, stark kartierter, multisensorischer L4-Dienst Fahrgäste ohne Person auf dem Sitz befördern kann. Die Frage 2026 ist nicht, ob Phoenix funktioniert. Sondern: wie teuer jede neue Stadt ist, wie Wetter und Dichte den Einsatzbereich belasten, und wie schnell sich das Vorgehen kopieren lässt.",
       },
     ],
+  },
+  {
+    slug: "muskonomy",
+    kind: "map",
+    date: "2026-06",
+    image: "/images/research-muskonomy.jpg",
+    // English-only analysis: the German route shows the English text
+    // with a one-line German note (see MuskonomyMap).
+    title: {
+      en: "SpaceX, xAI and Tesla Category Map",
+      de: "SpaceX, xAI and Tesla Category Map",
+    },
+    dek: {
+      en: "A visual map of orbital compute and connectivity, intelligence, and hardware and energy dependencies connecting SpaceX, xAI and Tesla.",
+      de: "A visual map of orbital compute and connectivity, intelligence, and hardware and energy dependencies connecting SpaceX, xAI and Tesla.",
+    },
+    tags: [
+      { en: "Muskonomy", de: "Muskonomy" },
+      { en: "Dependencies", de: "Dependencies" },
+    ],
+    paragraphs: [],
   },
 ];
 

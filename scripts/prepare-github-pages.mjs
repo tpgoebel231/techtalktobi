@@ -26,6 +26,7 @@ const research = [
   "ai-robotics",
   "fsd-matrix",
   "waymo",
+  "muskonomy",
 ];
 
 const routes = ["/"];
