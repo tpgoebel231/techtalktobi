@@ -24,6 +24,8 @@ export type ResearchPiece = {
   dek: LocalizedText;
   tags: LocalizedText[];
   paragraphs: LocalizedText[];
+  /** Skip the full-width image band on the detail page (image is card-only). */
+  noBanner?: boolean;
 };
 
 export const research: ResearchPiece[] = [
@@ -192,6 +194,7 @@ export const research: ResearchPiece[] = [
     kind: "map",
     date: "2026-06",
     image: "/images/research-muskonomy.jpg",
+    noBanner: true,
     // English-only analysis: the German route shows the English text
     // with a one-line German note (see MuskonomyMap).
     title: {
