@@ -91,7 +91,7 @@ const ROWS: Row[] = [
   { id: "starmind", label: same("Starmind"), note: { en: "for Optimus and FSD training", de: "fürs Training von Optimus und FSD" }, y: 120, dir: "toTesla", ...BLUE },
   { id: "starlink", label: same("Starlink*"), note: { en: "for robotaxi remote monitoring", de: "für Robotaxi-Fernüberwachung" }, y: 160, dir: "toTesla", ...BLUE },
   { id: "starshield", label: same("Starshield"), note: { en: "for secure robotaxi fleet comms", de: "für sichere Robotaxi-Kommunikation" }, y: 200, dir: "toTesla", ...BLUE },
-  { id: "grok", label: same("Grok*"), note: { en: "for in-car AI", de: "als KI im Auto" }, y: 274, dir: "toTesla", ...PINK },
+  { id: "grok", label: same("Grok*"), note: { en: "for in-car AI and Optimus voice", de: "als KI im Auto und Stimme von Optimus" }, y: 274, dir: "toTesla", ...PINK },
   { id: "colossus-2", label: same("Colossus 2"), note: { en: "for Optimus training", de: "fürs Optimus-Training" }, y: 314, dir: "toTesla", ...PINK },
   { id: "x", label: same("X*"), note: { en: "for advertising", de: "für Werbung" }, y: 354, dir: "toTesla", ...PINK },
   { id: "fsd-fleet-data", label: { en: "FSD fleet data", de: "FSD-Flottendaten" }, note: { en: "for world-model training", de: "fürs Training von Weltmodellen" }, y: 394, dir: "toSpacex", ...PINK },
