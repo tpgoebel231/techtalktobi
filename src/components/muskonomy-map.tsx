@@ -6,6 +6,9 @@ import { cn } from "@/lib/utils";
  * Port of muskonomy/synergies.html (techtalktobi-old, last edited Aug 25 2026).
  * All data is static and inline, exactly as in the original page.
  * German strings: Colleen's localization (Oct 21 2026).
+ * Round 2 (Oct 21 2026): Kimbal review edits + Tobias decisions, copy by Colleen.
+ * Rule: above the line = sold or provided between the companies;
+ * below the line = enabling tech, not sold to each other.
  */
 
 type L = { en: string; de: string };
@@ -24,8 +27,12 @@ const CATEGORIES: Category[] = [
     id: "connectivity",
     title: { en: "Orbital Compute and Connectivity", de: "Rechenzentren und Vernetzung im Orbit" },
     color: "#17b7ff",
-    products: [{ label: same("Starlink"), row: "starlink" }],
-    enabling: ["Raptor", "Dragon", "Starshield", "Starbase", "Starship", "Falcon 9", "Falcon Heavy"].map(same),
+    products: [
+      { label: same("Starmind"), row: "starmind" },
+      { label: same("Starlink"), row: "starlink" },
+      { label: same("Starshield"), row: "starshield" },
+    ],
+    enabling: ["Raptor", "Dragon", "Starbase", "Starship", "Falcon 9", "Falcon Heavy"].map(same),
   },
   {
     id: "ai",
@@ -33,12 +40,13 @@ const CATEGORIES: Category[] = [
     color: "#ff5f9a",
     products: [
       { label: same("Grok"), row: "grok" },
-      { label: same("Colossus"), row: "colossus" },
+      { label: same("Colossus 2"), row: "colossus-2" },
+      { label: same("X"), row: "x" },
       { label: same("FSD"), row: "fsd" },
-      { label: same("Chips"), row: "chip-design" },
+      { label: same("AI5/AI6"), row: "ai5-ai6" },
       { label: { en: "FSD fleet data", de: "FSD-Flottendaten" }, row: "fsd-fleet-data" },
     ],
-    enabling: ["Cortex", "X"].map(same),
+    enabling: ["Cortex", "Terafab", "Dojo3"].map(same),
   },
   {
     id: "energy",
@@ -47,10 +55,11 @@ const CATEGORIES: Category[] = [
     products: [
       { label: same("Optimus"), row: "optimus" },
       { label: same("Cybertruck"), row: "cybertruck" },
+      { label: same("Cybercab"), row: "cybercab" },
       { label: same("Megapack"), row: "megapack" },
     ],
     enabling: [
-      ...["Cybercab", "Model 3", "Model Y", "Powerwall", "Solar Roof"].map(same),
+      ...["Model 3", "Model Y", "Powerwall"].map(same),
       { en: "4680 cell", de: "4680-Zelle" },
       same("Gigafactory"),
     ],
@@ -60,8 +69,8 @@ const CATEGORIES: Category[] = [
 type Section = { label: L; y: number; color: string };
 const SECTIONS: Section[] = [
   { label: CATEGORIES[0].title, y: 78, color: "#17b7ff" },
-  { label: CATEGORIES[1].title, y: 222, color: "#ff5f9a" },
-  { label: CATEGORIES[2].title, y: 486, color: "#ffb020" },
+  { label: CATEGORIES[1].title, y: 232, color: "#ff5f9a" },
+  { label: CATEGORIES[2].title, y: 508, color: "#ffb020" },
 ];
 
 type Row = {
@@ -79,16 +88,19 @@ const PINK = { stroke: "#ff5f9a" };
 const AMBER = { stroke: "#ffb020" };
 
 const ROWS: Row[] = [
-  { id: "orbital-ai", label: { en: "Orbital AI", de: "Orbitale KI" }, note: { en: "for Optimus and FSD training", de: "fürs Training von Optimus und FSD" }, y: 120, dir: "toTesla", ...BLUE },
+  { id: "starmind", label: same("Starmind"), note: { en: "for Optimus and FSD training", de: "fürs Training von Optimus und FSD" }, y: 120, dir: "toTesla", ...BLUE },
   { id: "starlink", label: same("Starlink*"), note: { en: "for robotaxi remote monitoring", de: "für Robotaxi-Fernüberwachung" }, y: 160, dir: "toTesla", ...BLUE },
-  { id: "grok", label: same("Grok*"), note: { en: "for in-car AI and Optimus", de: "als KI im Auto und in Optimus" }, y: 274, dir: "toTesla", ...PINK },
-  { id: "colossus", label: same("Colossus"), note: { en: "for large-scale Optimus training", de: "für Optimus-Training im großen Stil" }, y: 314, dir: "toTesla", ...PINK },
-  { id: "fsd-fleet-data", label: { en: "FSD fleet data", de: "FSD-Flottendaten" }, note: { en: "for world-model training", de: "fürs Training von Weltmodellen" }, y: 354, dir: "toSpacex", ...PINK },
-  { id: "chip-design", label: same("Chips"), note: { en: "for Orbital AI", de: "für Orbitale KI" }, y: 394, dir: "toSpacex", ...PINK },
-  { id: "fsd", label: same("FSD"), note: { en: "for Moon base", de: "für die Mondbasis" }, y: 434, dir: "toSpacex", ...PINK },
-  { id: "optimus", label: same("Optimus"), note: { en: "for Moon base", de: "für die Mondbasis" }, y: 538, dir: "toSpacex", ...AMBER },
-  { id: "cybertruck", label: same("Cybertruck"), note: { en: "for Moon base", de: "für die Mondbasis" }, y: 578, dir: "toSpacex", ...AMBER },
-  { id: "megapack", label: same("Megapack*"), note: { en: "for Earth and Moon facilities", de: "für Anlagen auf Erde und Mond" }, y: 618, dir: "toSpacex", ...AMBER },
+  { id: "starshield", label: same("Starshield"), note: { en: "for secure robotaxi fleet comms", de: "für sichere Robotaxi-Kommunikation" }, y: 200, dir: "toTesla", ...BLUE },
+  { id: "grok", label: same("Grok*"), note: { en: "for in-car AI", de: "als KI im Auto" }, y: 274, dir: "toTesla", ...PINK },
+  { id: "colossus-2", label: same("Colossus 2"), note: { en: "for Optimus training", de: "fürs Optimus-Training" }, y: 314, dir: "toTesla", ...PINK },
+  { id: "x", label: same("X*"), note: { en: "for advertising", de: "für Werbung" }, y: 354, dir: "toTesla", ...PINK },
+  { id: "fsd-fleet-data", label: { en: "FSD fleet data", de: "FSD-Flottendaten" }, note: { en: "for world-model training", de: "fürs Training von Weltmodellen" }, y: 394, dir: "toSpacex", ...PINK },
+  { id: "ai5-ai6", label: same("AI5/AI6"), note: { en: "for Starmind", de: "für Starmind" }, y: 434, dir: "toSpacex", ...PINK },
+  { id: "fsd", label: same("FSD"), note: { en: "for Moon base", de: "für die Mondbasis" }, y: 474, dir: "toSpacex", ...PINK },
+  { id: "optimus", label: same("Optimus"), note: { en: "for Moon base", de: "für die Mondbasis" }, y: 550, dir: "toSpacex", ...AMBER },
+  { id: "cybertruck", label: same("Cybertruck*"), note: { en: "for Starbase fleet and Moon base", de: "für die Flotte in Starbase und die Mondbasis" }, y: 590, dir: "toSpacex", ...AMBER },
+  { id: "cybercab", label: same("Cybercab"), note: { en: "for Starbase and Moon base transport", de: "für Transporte in Starbase und auf dem Mond" }, y: 630, dir: "toSpacex", ...AMBER },
+  { id: "megapack", label: same("Megapack*"), note: { en: "for Earth and Moon facilities", de: "für Anlagen auf Erde und Mond" }, y: 670, dir: "toSpacex", ...AMBER },
 ];
 
 const TEXT = {
@@ -98,8 +110,17 @@ const TEXT = {
     en: "This map organizes the relationships between SpaceX, xAI and Tesla into orbital compute and connectivity, intelligence, and hardware and energy. The diagram highlights the practical exchange of models, data, connectivity, chips, robots, vehicles, and large-scale infrastructure across the network.",
     de: "Diese Karte ordnet die Verflechtungen zwischen SpaceX, xAI und Tesla drei Bereichen zu: Rechenzentren und Vernetzung im Orbit, Intelligenz sowie Hardware und Energie. Das Diagramm zeigt, was zwischen den Firmen konkret hin und her geht: Modelle, Daten, Konnektivität, Chips, Roboter, Fahrzeuge und Infrastruktur im großen Stil.",
   },
+  howToRead: {
+    en: "How to read this map: in each card, everything above the line is a product or service one side sells or provides to the other, now or down the road. The arrows show which way it flows, and * means it's already a paying relationship today. Everything below the line is enabling tech; it makes those products possible but isn't sold between the companies, like Model 3 and Model Y.",
+    de: "So liest man die Karte: In jeder Karte steht oberhalb der Linie, was eine Seite der anderen verkauft oder liefert, heute oder in Zukunft. Die Pfeile zeigen, in welche Richtung das geht, und * heißt: Da fließt heute schon Geld. Unterhalb der Linie steht die technische Basis; sie macht diese Produkte erst möglich, wird zwischen den Firmen aber nicht gehandelt, zum Beispiel Model 3 und Model Y.",
+  },
   grouped: { en: "Products grouped by category", de: "Produkte nach Bereich" },
-  enabling: { en: "Enabling tech", de: "Technische Basis" },
+  supplied: { en: "Supplied to each other", de: "Liefern sich gegenseitig" },
+  lineNote: {
+    en: "Above: sold or provided to each other. Below: enabling tech, not sold between them.",
+    de: "Oben: wird untereinander verkauft oder geliefert. Unten: technische Basis, wird nicht gehandelt.",
+  },
+  enabling: { en: "Enabling tech (not traded)", de: "Technische Basis (nicht gehandelt)" },
   diagram: { en: "Mutual dependencies between SpaceX, xAI and Tesla", de: "Wer von wem abhängt: SpaceX, xAI und Tesla" },
   svgTitle: {
     en: "Three-category dependency diagram between SpaceX, xAI, and Tesla",
@@ -110,6 +131,10 @@ const TEXT = {
     de: "Das Diagramm zeigt die Abhängigkeiten zwischen SpaceX/xAI und Tesla in den Bereichen Rechenzentren und Vernetzung im Orbit, Intelligenz sowie Hardware und Energie. Die Pfeile zeigen, wer wen braucht.",
   },
   footnote: { en: "* already a commercial relationship today", de: "* schon heute eine bestehende Geschäftsbeziehung" },
+  footnote2: {
+    en: "Tesla's $2B xAI investment converted to SpaceX stock (under 1%) in March 2026.",
+    de: "Teslas Beteiligung an xAI über 2 Milliarden Dollar wurde im März 2026 in SpaceX-Aktien umgewandelt (unter 1 %).",
+  },
 } satisfies Record<string, L>;
 
 type Box = { x: number; y: number; width: number; height: number };
@@ -155,7 +180,6 @@ export function MuskonomyMap() {
 
   return (
     <div className="flex flex-col gap-8">
-
       <section
         id="overview"
         className="rounded-xl bg-surface p-5 shadow-[var(--shadow-border)] sm:p-8"
@@ -168,6 +192,9 @@ export function MuskonomyMap() {
         </h2>
         <p className="mt-4 max-w-3xl text-base leading-relaxed text-muted">
           {TEXT.intro[locale]}
+        </p>
+        <p className="mt-4 max-w-3xl rounded-lg bg-surface-2 px-4 py-3 text-sm leading-relaxed text-fg shadow-[var(--shadow-border)]">
+          {TEXT.howToRead[locale]}
         </p>
 
         <p className="mt-8 mb-3 font-mono text-[11px] tracking-widest text-faint uppercase">
@@ -191,6 +218,9 @@ export function MuskonomyMap() {
                 />
                 {cat.title[locale]}
               </h3>
+              <p className="mb-2 font-mono text-[10px] tracking-widest text-muted uppercase">
+                {TEXT.supplied[locale]}
+              </p>
               <ul className="flex flex-wrap gap-1.5">
                 {cat.products.map((p) => {
                   const key = p.row!;
@@ -214,7 +244,11 @@ export function MuskonomyMap() {
                   );
                 })}
               </ul>
-              <p className="mt-4 mb-2 flex items-center gap-2 font-mono text-[10px] tracking-widest text-faint uppercase after:h-px after:flex-1 after:bg-border">
+              <div className="mt-4" role="separator" aria-hidden="true">
+                <div className="h-0.5 rounded-full" style={{ background: `${cat.color}b3` }} />
+              </div>
+              <p className="mt-2 text-xs leading-snug text-muted italic">{TEXT.lineNote[locale]}</p>
+              <p className="mt-3 mb-2 font-mono text-[10px] tracking-widest text-faint uppercase">
                 {TEXT.enabling[locale]}
               </p>
               <ul className="flex flex-wrap gap-1.5">
@@ -243,7 +277,7 @@ export function MuskonomyMap() {
         <div className="mt-6 overflow-x-auto rounded-lg bg-bg/60">
           <svg
             className="block h-auto w-full min-w-[640px] font-sans"
-            viewBox="0 0 680 700"
+            viewBox="0 0 680 740"
             role="img"
             aria-labelledby="mm-diagram-title mm-diagram-desc"
           >
@@ -279,8 +313,8 @@ export function MuskonomyMap() {
               <TeslaLogo />
             </HeaderBox>
 
-            <line x1="170" y1="60" x2="170" y2="660" stroke="#888780" strokeWidth="1" strokeDasharray="4 4" />
-            <line x1="510" y1="60" x2="510" y2="660" stroke="#888780" strokeWidth="1" strokeDasharray="4 4" />
+            <line x1="170" y1="60" x2="170" y2="700" stroke="#888780" strokeWidth="1" strokeDasharray="4 4" />
+            <line x1="510" y1="60" x2="510" y2="700" stroke="#888780" strokeWidth="1" strokeDasharray="4 4" />
 
             {SECTIONS.map((s) => (
               <g key={s.label.en}>
@@ -370,11 +404,12 @@ export function MuskonomyMap() {
               );
             })}
 
-            <line x1="150" y1="660" x2="190" y2="660" stroke="#888780" strokeWidth="1" />
-            <line x1="490" y1="660" x2="530" y2="660" stroke="#888780" strokeWidth="1" />
+            <line x1="150" y1="700" x2="190" y2="700" stroke="#888780" strokeWidth="1" />
+            <line x1="490" y1="700" x2="530" y2="700" stroke="#888780" strokeWidth="1" />
           </svg>
         </div>
         <p className="mt-4 text-sm text-muted italic">{TEXT.footnote[locale]}</p>
+        <p className="mt-1 text-sm text-muted italic">{TEXT.footnote2[locale]}</p>
       </section>
     </div>
   );
@@ -407,6 +442,7 @@ function SpacexLogo() {
     </svg>
   );
 }
+
 
 function XaiLogo() {
   return (
