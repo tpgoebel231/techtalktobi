@@ -28,9 +28,9 @@ const CATEGORIES: Category[] = [
     title: { en: "Orbital Compute and Connectivity", de: "Rechenzentren und Vernetzung im Orbit" },
     color: "#17b7ff",
     products: [
-      { label: same("Starmind"), row: "starmind" },
       { label: same("Starlink"), row: "starlink" },
       { label: same("Starshield"), row: "starshield" },
+      { label: same("Starmind"), row: "starmind" },
     ],
     enabling: ["Raptor", "Dragon", "Starbase", "Starship", "Falcon 9", "Falcon Heavy"].map(same),
   },
@@ -39,12 +39,12 @@ const CATEGORIES: Category[] = [
     title: { en: "Intelligence", de: "Intelligenz" },
     color: "#ff5f9a",
     products: [
+      { label: same("FSD"), row: "fsd" },
+      { label: { en: "FSD fleet data", de: "FSD-Flottendaten" }, row: "fsd-fleet-data" },
+      { label: same("AI5/AI6"), row: "ai5-ai6" },
+      { label: same("X"), row: "x" },
       { label: same("Grok"), row: "grok" },
       { label: same("Colossus 2"), row: "colossus-2" },
-      { label: same("X"), row: "x" },
-      { label: same("FSD"), row: "fsd" },
-      { label: same("AI5/AI6"), row: "ai5-ai6" },
-      { label: { en: "FSD fleet data", de: "FSD-Flottendaten" }, row: "fsd-fleet-data" },
     ],
     enabling: ["Cortex", "Terafab", "Dojo3"].map(same),
   },
@@ -53,10 +53,10 @@ const CATEGORIES: Category[] = [
     title: { en: "Hardware & Energy", de: "Hardware & Energie" },
     color: "#ffb020",
     products: [
+      { label: same("Megapack"), row: "megapack" },
       { label: same("Optimus"), row: "optimus" },
       { label: same("Cybertruck"), row: "cybertruck" },
       { label: same("Cybercab"), row: "cybercab" },
-      { label: same("Megapack"), row: "megapack" },
     ],
     enabling: [
       ...["Model 3", "Model Y", "Powerwall"].map(same),
@@ -89,18 +89,10 @@ const AMBER = { stroke: "#ffb020" };
 
 const ROWS: Row[] = [
   {
-    id: "starmind",
-    label: same("Starmind"),
-    note: { en: "for Optimus and FSD training", de: "fürs Training von Optimus und FSD" },
-    y: 120,
-    dir: "toTesla",
-    ...BLUE,
-  },
-  {
     id: "starlink",
     label: same("Starlink*"),
     note: { en: "for robotaxi remote monitoring", de: "für Robotaxi-Fernüberwachung" },
-    y: 160,
+    y: 120,
     dir: "toTesla",
     ...BLUE,
   },
@@ -108,39 +100,31 @@ const ROWS: Row[] = [
     id: "starshield",
     label: same("Starshield"),
     note: { en: "for secure robotaxi fleet comms", de: "für sichere Robotaxi-Kommunikation" },
+    y: 160,
+    dir: "toTesla",
+    ...BLUE,
+  },
+  {
+    id: "starmind",
+    label: same("Starmind"),
+    note: { en: "for Optimus and FSD training", de: "fürs Training von Optimus und FSD" },
     y: 200,
     dir: "toTesla",
     ...BLUE,
   },
   {
-    id: "grok",
-    label: same("Grok*"),
-    note: { en: "for in-car AI and Optimus voice", de: "als KI im Auto und Stimme von Optimus" },
+    id: "fsd",
+    label: same("FSD"),
+    note: { en: "for Moon base", de: "für die Mondbasis" },
     y: 274,
-    dir: "toTesla",
-    ...PINK,
-  },
-  {
-    id: "colossus-2",
-    label: same("Colossus 2"),
-    note: { en: "for Optimus training", de: "fürs Optimus-Training" },
-    y: 314,
-    dir: "toTesla",
-    ...PINK,
-  },
-  {
-    id: "x",
-    label: same("X*"),
-    note: { en: "for advertising", de: "für Werbung" },
-    y: 354,
-    dir: "toTesla",
+    dir: "toSpacex",
     ...PINK,
   },
   {
     id: "fsd-fleet-data",
     label: { en: "FSD fleet data", de: "FSD-Flottendaten" },
     note: { en: "for world-model training", de: "fürs Training von Weltmodellen" },
-    y: 394,
+    y: 314,
     dir: "toSpacex",
     ...PINK,
   },
@@ -148,23 +132,47 @@ const ROWS: Row[] = [
     id: "ai5-ai6",
     label: same("AI5/AI6"),
     note: { en: "for Starmind", de: "für Starmind" },
-    y: 434,
+    y: 354,
     dir: "toSpacex",
     ...PINK,
   },
   {
-    id: "fsd",
-    label: same("FSD"),
-    note: { en: "for Moon base", de: "für die Mondbasis" },
-    y: 474,
-    dir: "toSpacex",
+    id: "x",
+    label: same("X*"),
+    note: { en: "for advertising", de: "für Werbung" },
+    y: 394,
+    dir: "toTesla",
     ...PINK,
+  },
+  {
+    id: "grok",
+    label: same("Grok*"),
+    note: { en: "for in-car AI and Optimus voice", de: "als KI im Auto und Stimme von Optimus" },
+    y: 434,
+    dir: "toTesla",
+    ...PINK,
+  },
+  {
+    id: "colossus-2",
+    label: same("Colossus 2"),
+    note: { en: "for Optimus training", de: "fürs Optimus-Training" },
+    y: 474,
+    dir: "toTesla",
+    ...PINK,
+  },
+  {
+    id: "megapack",
+    label: same("Megapack*"),
+    note: { en: "for Earth and Moon facilities", de: "für Anlagen auf Erde und Mond" },
+    y: 550,
+    dir: "toSpacex",
+    ...AMBER,
   },
   {
     id: "optimus",
     label: same("Optimus"),
     note: { en: "for Moon base", de: "für die Mondbasis" },
-    y: 550,
+    y: 590,
     dir: "toSpacex",
     ...AMBER,
   },
@@ -175,7 +183,7 @@ const ROWS: Row[] = [
       en: "for Starbase fleet and Moon base",
       de: "für die Flotte in Starbase und die Mondbasis",
     },
-    y: 590,
+    y: 630,
     dir: "toSpacex",
     ...AMBER,
   },
@@ -186,14 +194,6 @@ const ROWS: Row[] = [
       en: "for Starbase and Moon base transport",
       de: "für Transporte in Starbase und auf dem Mond",
     },
-    y: 630,
-    dir: "toSpacex",
-    ...AMBER,
-  },
-  {
-    id: "megapack",
-    label: same("Megapack*"),
-    note: { en: "for Earth and Moon facilities", de: "für Anlagen auf Erde und Mond" },
     y: 670,
     dir: "toSpacex",
     ...AMBER,
@@ -275,8 +275,9 @@ export function MuskonomyMap() {
       return next;
     });
 
-  // Presentation mode (for video): arrows hidden, revealed one by one with
-  // Down, hidden again in reverse with Up; Esc or the button turns it off.
+  // Presentation mode (for video): whole rows (pill, label, arrow, note) hidden,
+  // revealed one by one with Down, hidden again in reverse with Up;
+  // Esc or the button turns it off.
   const [presenting, setPresenting] = useState(false);
   const [revealed, setRevealed] = useState(0);
   const diagramRef = useRef<HTMLElement | null>(null);
@@ -504,7 +505,7 @@ export function MuskonomyMap() {
                     data-shown={shown}
                     aria-hidden={shown ? undefined : true}
                     className="transition-opacity duration-300 ease-out"
-                    style={{ opacity: shown ? 1 : 0 }}
+                    style={{ opacity: shown ? 1 : 0, pointerEvents: shown ? undefined : "none" }}
                   >
                     <line
                       x1={toTesla ? 174 : 506}
@@ -527,42 +528,42 @@ export function MuskonomyMap() {
                     >
                       {row.note[locale]}
                     </text>
+                    {box ? (
+                      <rect
+                        x={box.x - 9}
+                        y={box.y - 4}
+                        width={box.width + 18}
+                        height={box.height + 8}
+                        rx={(box.height + 8) / 2}
+                        fill={row.stroke}
+                        fillOpacity="0.14"
+                        stroke={row.stroke}
+                        strokeOpacity="0.55"
+                        strokeWidth="1"
+                        pointerEvents="none"
+                      />
+                    ) : null}
+                    <text
+                      ref={(el) => {
+                        labelRefs.current[row.id] = el;
+                      }}
+                      x={toTesla ? 162 : 518}
+                      y={row.y}
+                      textAnchor={toTesla ? "end" : "start"}
+                      dominantBaseline="central"
+                      fill="#f7f7f3"
+                      fontSize="11"
+                      fontWeight="700"
+                      tabIndex={shown ? 0 : -1}
+                      role="button"
+                      aria-pressed={off}
+                      className="cursor-pointer select-none"
+                      onClick={() => toggle(row.id)}
+                      onKeyDown={onKey(row.id)}
+                    >
+                      {row.label[locale]}
+                    </text>
                   </g>
-                  {box ? (
-                    <rect
-                      x={box.x - 9}
-                      y={box.y - 4}
-                      width={box.width + 18}
-                      height={box.height + 8}
-                      rx={(box.height + 8) / 2}
-                      fill={row.stroke}
-                      fillOpacity="0.14"
-                      stroke={row.stroke}
-                      strokeOpacity="0.55"
-                      strokeWidth="1"
-                      pointerEvents="none"
-                    />
-                  ) : null}
-                  <text
-                    ref={(el) => {
-                      labelRefs.current[row.id] = el;
-                    }}
-                    x={toTesla ? 162 : 518}
-                    y={row.y}
-                    textAnchor={toTesla ? "end" : "start"}
-                    dominantBaseline="central"
-                    fill="#f7f7f3"
-                    fontSize="11"
-                    fontWeight="700"
-                    tabIndex={0}
-                    role="button"
-                    aria-pressed={off}
-                    className="cursor-pointer select-none"
-                    onClick={() => toggle(row.id)}
-                    onKeyDown={onKey(row.id)}
-                  >
-                    {row.label[locale]}
-                  </text>
                 </g>
               );
             })}
