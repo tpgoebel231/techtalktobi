@@ -1,4 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
+import { NEW_TAB, NewTabHint } from "@/components/new-tab-hint";
 import { Container } from "@/components/container";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -158,9 +159,10 @@ function ChannelHead({
         <p className="mt-1 font-mono text-[11px] text-faint">{meta}</p>
       </div>
       <Button asChild variant="outline">
-        <a href={url} target="_blank" rel="noreferrer">
+        <a href={url} {...NEW_TAB}>
           {copy.media.subscribe}
-          <ArrowUpRight className="size-4" />
+          <ArrowUpRight className="size-4" aria-hidden="true" />
+          <NewTabHint />
         </a>
       </Button>
     </div>

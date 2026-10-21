@@ -3,6 +3,7 @@ import type { Locale } from "@/lib/locale";
 export const copy = {
   en: {
     skip: "Skip to content",
+    newTab: "(opens in new tab)",
     brand: {
       name: "Tobias P. Goebel",
       tagline: "Media & Advisory",
@@ -157,6 +158,7 @@ export const copy = {
   },
   de: {
     skip: "Zum Inhalt springen",
+    newTab: "(öffnet in neuem Tab)",
     brand: {
       name: "Tobias P. Goebel",
       tagline: "Medien & Beratung",
