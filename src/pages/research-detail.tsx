@@ -58,13 +58,15 @@ export function ResearchDetailPage({ slug }: { slug: ResearchSlug }) {
         <Container className="pb-12">{widget}</Container>
       ) : null}
 
-      <div className="overflow-hidden">
-        <img
-          src={piece.image}
-          alt=""
-          className="max-h-80 w-full object-cover"
-        />
-      </div>
+      {piece.noBanner ? null : (
+        <div className="overflow-hidden">
+          <img
+            src={piece.image}
+            alt=""
+            className="max-h-80 w-full object-cover"
+          />
+        </div>
+      )}
 
       {piece.paragraphs.length > 0 || (!hoistWidget && widget) ? (
         <Container className="max-w-3xl py-12 sm:py-16">
