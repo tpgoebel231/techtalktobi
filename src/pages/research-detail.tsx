@@ -42,16 +42,10 @@ export function ResearchDetailPage({ slug }: { slug: ResearchSlug }) {
           </span>
         </div>
         <h1
-          lang={slug === "muskonomy" ? "en" : undefined}
           className="mt-4 max-w-4xl font-display text-4xl leading-tight text-fg sm:text-6xl">
           {piece.title[locale]}
         </h1>
-        <p
-          lang={slug === "muskonomy" ? "en" : undefined}
-          className="mt-4 max-w-2xl text-lg text-muted"
-        >
-          {piece.dek[locale]}
-        </p>
+        <p className="mt-4 max-w-2xl text-lg text-muted">{piece.dek[locale]}</p>
       </Container>
 
       {hoistWidget && widget ? (
