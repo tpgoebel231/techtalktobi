@@ -8,7 +8,7 @@ import { research } from "@/data/research";
 import { links } from "@/data/media";
 import { useCopy, useLocale } from "@/lib/i18n";
 
-const FEATURED = ["speed-vs-safety", "fsd-matrix", "waymo"] as const;
+const FEATURED = ["muskonomy", "ai-robotics", "fsd-matrix"] as const;
 
 export function HomePage() {
   const locale = useLocale();

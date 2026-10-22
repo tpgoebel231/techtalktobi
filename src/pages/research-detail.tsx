@@ -8,6 +8,7 @@ import { ResearchCard } from "@/components/research-card";
 import { RoboticsMap } from "@/components/robotics-map";
 import { SpeedSafetyTool } from "@/components/speed-safety-tool";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { WaymoTracker } from "@/components/waymo-tracker";
 import {
   getResearch,
@@ -84,6 +85,14 @@ export function ResearchDetailPage({ slug }: { slug: ResearchSlug }) {
             <ResearchCard key={item.slug} piece={item} />
           ))}
         </div>
+      </Container>
+
+      <Container className="pb-16">
+        <Button asChild size="lg" className="w-full">
+          <Link to="/$locale/about" params={{ locale }} hash="contact">
+            {copy.research.getAccess}
+          </Link>
+        </Button>
       </Container>
     </article>
   );
