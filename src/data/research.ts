@@ -198,7 +198,7 @@ export const research: ResearchPiece[] = [
     // German copy: Colleen's localization (Oct 21 2026; title/dek updated Oct 21 2026).
     title: {
       en: "SpaceXSI and Tesla: Who Needs Whom More?",
-      de: "SpaceXSI und Tesla: Wer braucht wen?",
+      de: "SpaceXSI und Tesla: Wer braucht wen mehr?",
     },
     dek: {
       en: "An analysis of key technologies, products, and services that each company provides for the other.",
