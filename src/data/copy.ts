@@ -56,6 +56,7 @@ export const copy = {
       read: "Open",
       related: "More research",
       back: "All research",
+      getAccess: "Get access to this research",
       kinds: {
         essay: "Graphic",
         tool: "Interactive",
@@ -213,6 +214,7 @@ export const copy = {
       read: "Öffnen",
       related: "Weitere Beiträge",
       back: "Zur Übersicht",
+      getAccess: "Zugang zu dieser Analyse anfragen",
       kinds: {
         essay: "Grafik",
         tool: "Interaktiv",

@@ -72,7 +72,7 @@ export function AboutPage() {
         </div>
       </div>
 
-      <section className="mt-20 border-t border-border pt-12">
+      <section id="contact" className="mt-20 scroll-mt-24 border-t border-border pt-12">
         <h2 className="font-display text-3xl text-fg">{copy.about.contact}</h2>
 
         <h3 className="mt-8 text-sm font-medium tracking-wide text-muted uppercase">

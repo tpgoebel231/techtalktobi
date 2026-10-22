@@ -195,14 +195,14 @@ export const research: ResearchPiece[] = [
     date: "2026-06",
     image: "/images/research-muskonomy.jpg",
     noBanner: true,
-    // German copy: Colleen's localization (Oct 21 2026).
+    // German copy: Colleen's localization (Oct 21 2026; title/dek updated Oct 21 2026).
     title: {
-      en: "SpaceX, xAI and Tesla Category Map",
-      de: "SpaceX, xAI und Tesla: Wer braucht wen?",
+      en: "SpaceXSI and Tesla: Who needs Who",
+      de: "SpaceXSI und Tesla: Wer braucht wen?",
     },
     dek: {
-      en: "A visual map of orbital compute and connectivity, intelligence, and hardware and energy dependencies connecting SpaceX, xAI and Tesla.",
-      de: "Eine Karte der Abhängigkeiten zwischen SpaceX, xAI und Tesla: von Rechenzentren und Vernetzung im Orbit über KI bis zu Hardware und Energie.",
+      en: "An analysis of key technologies, products, and services that each company provides for the other.",
+      de: "Eine Analyse der wichtigsten Technologien, Produkte und Dienstleistungen, die sich die beiden Unternehmen gegenseitig liefern.",
     },
     tags: [
       { en: "Muskonomy", de: "Muskonomy" },
