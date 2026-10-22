@@ -78,6 +78,14 @@ export function ResearchDetailPage({ slug }: { slug: ResearchSlug }) {
         </Container>
       ) : null}
 
+      <Container className="pb-16">
+        <Button asChild size="lg" className="w-full">
+          <Link to="/$locale/about" params={{ locale }} hash="contact">
+            {copy.research.getAccess}
+          </Link>
+        </Button>
+      </Container>
+
       <Container className="border-t border-border py-16">
         <h2 className="font-display text-2xl text-fg">{copy.research.related}</h2>
         <div className="mt-8 grid gap-5 md:grid-cols-3">
@@ -85,14 +93,6 @@ export function ResearchDetailPage({ slug }: { slug: ResearchSlug }) {
             <ResearchCard key={item.slug} piece={item} />
           ))}
         </div>
-      </Container>
-
-      <Container className="pb-16">
-        <Button asChild size="lg" className="w-full">
-          <Link to="/$locale/about" params={{ locale }} hash="contact">
-            {copy.research.getAccess}
-          </Link>
-        </Button>
       </Container>
     </article>
   );
