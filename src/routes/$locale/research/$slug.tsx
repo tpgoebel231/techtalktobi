@@ -8,10 +8,14 @@ export const Route = createFileRoute("/$locale/research/$slug")({
   },
   head: ({ params }) => {
     const piece = getResearch(params.slug);
-    const title =
-      params.locale === "de" ? piece?.title.de : piece?.title.en;
+    const locale = params.locale === "de" ? "de" : "en";
+    const title = piece?.title[locale];
+    const description = piece?.dek[locale];
     return {
-      meta: [{ title: `${title ?? "Research"} · TechTalkTobi` }],
+      meta: [
+        { title: `${title ?? "Research"} · TechTalkTobi` },
+        ...(description ? [{ name: "description", content: description }] : []),
+      ],
     };
   },
   component: ResearchDetailRoute,
