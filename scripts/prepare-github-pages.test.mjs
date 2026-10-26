@@ -10,6 +10,7 @@ import {
   PAGE_TITLES,
   SITE_ORIGIN,
   applyRouteHead,
+  structuredData,
   loadResearchPieces,
   prepare,
   seoForRoute,
@@ -203,4 +204,22 @@ test("prepare writes unique heads, keeps 404 generic, and preserves Pages extras
   const vercel = JSON.parse(readFileSync(join(root, "vercel.json"), "utf8"));
   assert.equal(vercel.git.deploymentEnabled, false);
   assert.ok(readFileSync(join(root, "media-kit.pdf")));
+});
+
+test("structuredData emits a schema.org graph with Article for research pages", () => {
+  const seo = {
+    title: "X <b> · TechTalkTobi",
+    description: "Dek",
+    canonical: "https://techtalktobi.com/en/research/x",
+    image: "https://techtalktobi.com/x.png",
+    type: "article",
+    htmlLang: "en",
+  };
+  const tag = structuredData(seo);
+  assert.ok(tag.startsWith('<script type="application/ld+json">'));
+  assert.ok(!tag.slice(35, -9).includes("<"));
+  const data = JSON.parse(tag.slice(tag.indexOf(">") + 1, -"</script>".length));
+  const types = data["@graph"].map((n) => n["@type"]);
+  assert.deepEqual(types, ["WebSite", "Person", "Article"]);
+  assert.equal(data["@graph"][2].headline, "X <b>");
 });
