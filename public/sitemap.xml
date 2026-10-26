@@ -1,112 +1,186 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://techtalktobi.com/</loc>
-    <lastmod>2026-10-07</lastmod>
-  </url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://techtalktobi.com/en</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/en/about</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/about"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/about"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/en/consulting</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/consulting"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/consulting"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/consulting"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/en/media-kit</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/media-kit"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/media-kit"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/media-kit"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/en/media</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/media"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/media"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/media"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/en/research</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/en/research/self-driving</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/self-driving"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/self-driving"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/self-driving"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/en/research/speed-vs-safety</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/speed-vs-safety"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/speed-vs-safety"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/speed-vs-safety"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/en/research/tesla-ecosystem</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/tesla-ecosystem"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/tesla-ecosystem"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/tesla-ecosystem"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/en/research/ai-robotics</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/ai-robotics"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/ai-robotics"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/ai-robotics"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/en/research/fsd-matrix</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/fsd-matrix"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/fsd-matrix"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/fsd-matrix"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/en/research/waymo</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/waymo"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/waymo"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/waymo"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/en/research/muskonomy</loc>
-    <lastmod>2026-10-21</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/muskonomy"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/muskonomy"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/muskonomy"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/de</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/de/about</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/about"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/about"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/de/consulting</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/consulting"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/consulting"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/consulting"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/de/media-kit</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/media-kit"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/media-kit"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/media-kit"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/de/media</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/media"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/media"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/media"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/de/research</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/de/research/self-driving</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/self-driving"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/self-driving"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/self-driving"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/de/research/speed-vs-safety</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/speed-vs-safety"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/speed-vs-safety"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/speed-vs-safety"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/de/research/tesla-ecosystem</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/tesla-ecosystem"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/tesla-ecosystem"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/tesla-ecosystem"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/de/research/ai-robotics</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/ai-robotics"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/ai-robotics"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/ai-robotics"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/de/research/fsd-matrix</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/fsd-matrix"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/fsd-matrix"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/fsd-matrix"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/de/research/waymo</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/waymo"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/waymo"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/waymo"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/de/research/muskonomy</loc>
-    <lastmod>2026-10-21</lastmod>
+    <lastmod>2026-10-25</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/muskonomy"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/muskonomy"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/muskonomy"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/TeslaTobi_MediaKit_Oct_2026.pdf</loc>
