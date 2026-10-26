@@ -140,6 +140,49 @@ export function seoForRoute(route, pieces) {
   };
 }
 
+const PERSON_ID = `${SITE_ORIGIN}/#person`;
+const WEBSITE_ID = `${SITE_ORIGIN}/#website`;
+
+export function structuredData(seo) {
+  const person = {
+    "@type": "Person",
+    "@id": PERSON_ID,
+    name: "Tobias P. Goebel",
+    alternateName: ["Tobias Goebel", "TeslaTobi", "TechTalkTobi", "tpgoebel"],
+    url: `${SITE_ORIGIN}/en/about`,
+    sameAs: [
+      "https://www.youtube.com/@TeslaTobi",
+      "https://www.youtube.com/@TechTalk-Tobi",
+      "https://x.com/tpgoebel",
+    ],
+  };
+  const website = {
+    "@type": "WebSite",
+    "@id": WEBSITE_ID,
+    name: "TechTalkTobi",
+    url: `${SITE_ORIGIN}/`,
+    inLanguage: ["en", "de"],
+    publisher: { "@id": PERSON_ID },
+  };
+  const page = {
+    "@type": seo.type === "article" ? "Article" : "WebPage",
+    "@id": `${seo.canonical}#page`,
+    url: seo.canonical,
+    name: seo.title,
+    description: seo.description,
+    inLanguage: seo.htmlLang || "en",
+    isPartOf: { "@id": WEBSITE_ID },
+    image: seo.image,
+  };
+  if (seo.type === "article") {
+    page.headline = seo.title.replace(/ · TechTalkTobi$/, "");
+    page.author = { "@id": PERSON_ID };
+    page.publisher = { "@id": PERSON_ID };
+  }
+  const json = JSON.stringify({ "@context": "https://schema.org", "@graph": [website, person, page] });
+  return `<script type="application/ld+json">${json.replace(/</g, "\\u003c")}</script>`;
+}
+
 export function extraHeadTags(seo) {
   return [
     `<link rel="canonical" href="${escapeHtml(seo.canonical)}"/>`,
@@ -154,6 +197,7 @@ export function extraHeadTags(seo) {
     `<meta property="og:locale" content="${escapeHtml(seo.locale)}"/>`,
     `<meta property="og:image" content="${escapeHtml(seo.image)}"/>`,
     `<meta name="twitter:card" content="summary_large_image"/>`,
+    structuredData(seo),
   ].join("");
 }
 
