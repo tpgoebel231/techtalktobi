@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 /**
  * Post-build prep for the gh-pages static snapshot.
- * Copies the SPA shell to index.html + 404.html and to canonical route
- * paths so GitHub Pages serves HTTP 200 (not custom-404) for indexable URLs.
- * Each route shell gets its own title, description, canonical, hreflang, and OG tags.
+ *
+ * TanStack Start (spa + prerender pages) writes real HTML for each
+ * canonical route and an empty SPA shell at `_shell.html`. This script
+ * keeps those route bodies, injects per-route title/description/canonical/
+ * hreflang/OG/JSON-LD, and copies each file to the `.html` + `/index.html`
+ * pair GitHub Pages needs for HTTP 200. 404.html stays the SPA shell.
  */
-import { mkdirSync, writeFileSync, accessSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync, accessSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
@@ -19,6 +22,14 @@ export const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/og.jpg`;
 
 const locales = ["en", "de"];
 const pages = ["", "about", "consulting", "media-kit", "media", "research"];
+
+/**
+ * Instant client redirect so `/` never hydrates the `/en` payload against
+ * the `/` route (which still redirects on Vercel). Crawlers that skip JS
+ * still see the English home body in index.html.
+ */
+export const ROOT_CLIENT_REDIRECT =
+  '<script>if(location.pathname==="/")location.replace("/en");</script>';
 
 /** Copy from src/routes/$locale/route.tsx */
 export const LOCALE_HEAD = {
@@ -231,12 +242,8 @@ function shellDest(root, route) {
   return join(root, route.slice(1) + ".html");
 }
 
-export async function prepare(root = "dist/client") {
-  const shell = join(root, "_shell.html");
-  accessSync(shell);
-  const shellHtml = readFileSync(shell, "utf8");
-  const pieces = await loadResearchPieces();
-
+/** Canonical HTML routes: `/` plus every `/en|de/...` page the snapshot ships. */
+export function canonicalRoutes(pieces) {
   const routes = ["/"];
   for (const locale of locales) {
     for (const page of pages) {
@@ -246,11 +253,82 @@ export async function prepare(root = "dist/client") {
       routes.push(`/${locale}/research/${piece.slug}`);
     }
   }
+  return routes;
+}
+
+/**
+ * TanStack Start options for the GitHub Pages build: keep the SPA shell
+ * (`_shell.html` / 404) and prerender every indexable locale route.
+ * `/` stays the SPA mask so Vercel's redirect-at-`/` is unchanged.
+ */
+export async function githubPagesStartOptions() {
+  const pieces = await loadResearchPieces();
+  return {
+    spa: { enabled: true },
+    prerender: {
+      enabled: true,
+      crawlLinks: false,
+      failOnError: true,
+      autoStaticPathsDiscovery: false,
+    },
+    sitemap: { enabled: false },
+    pages: canonicalRoutes(pieces)
+      .filter((route) => route !== "/")
+      .map((path) => ({ path })),
+  };
+}
+
+function prerenderCandidates(root, route) {
+  if (route === "/") {
+    return [join(root, "en", "index.html"), join(root, "en.html")];
+  }
+  return [join(root, route.slice(1), "index.html"), join(root, route.slice(1) + ".html")];
+}
+
+export function readPrerenderedHtml(root, route) {
+  for (const file of prerenderCandidates(root, route)) {
+    if (existsSync(file)) return readFileSync(file, "utf8");
+  }
+  throw new Error(
+    `prepare-github-pages: missing prerendered HTML for ${route} (expected ${prerenderCandidates(root, route)[0]})`,
+  );
+}
+
+export function assertRenderableBody(html, route) {
+  const start = html.search(/<body[\s>]/i);
+  const end = html.search(/<\/body>/i);
+  const body = start >= 0 && end > start ? html.slice(start, end) : "";
+  if (!/<h1[\s>]/i.test(body) || !/<a\s/i.test(body)) {
+    throw new Error(
+      `prepare-github-pages: prerendered HTML for ${route} has no heading or links in <body>`,
+    );
+  }
+}
+
+export function applyRootClientRedirect(html) {
+  if (html.includes(ROOT_CLIENT_REDIRECT)) return html;
+  return mustReplace(html, /<head>/, `<head>${ROOT_CLIENT_REDIRECT}`, "<head>");
+}
+
+export async function prepare(root = "dist/client") {
+  const shell = join(root, "_shell.html");
+  accessSync(shell);
+  const shellHtml = readFileSync(shell, "utf8");
+  const pieces = await loadResearchPieces();
+  const routes = canonicalRoutes(pieces);
+
+  const htmlByRoute = new Map();
+  for (const route of routes) {
+    const html = readPrerenderedHtml(root, route);
+    assertRenderableBody(html, route);
+    htmlByRoute.set(route, html);
+  }
 
   writeFileSync(join(root, "404.html"), shellHtml);
 
   for (const route of routes) {
-    const html = applyRouteHead(shellHtml, seoForRoute(route, pieces));
+    let html = applyRouteHead(htmlByRoute.get(route), seoForRoute(route, pieces));
+    if (route === "/") html = applyRootClientRedirect(html);
     const file = shellDest(root, route);
     mkdirSync(dirname(file), { recursive: true });
     writeFileSync(file, html);
