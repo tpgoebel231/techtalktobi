@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -8,8 +8,12 @@ import {
   DEFAULT_OG_IMAGE,
   LOCALE_HEAD,
   PAGE_TITLES,
+  ROOT_CLIENT_REDIRECT,
   SITE_ORIGIN,
   applyRouteHead,
+  assertRenderableBody,
+  canonicalRoutes,
+  githubPagesStartOptions,
   structuredData,
   loadResearchPieces,
   prepare,
@@ -20,6 +24,23 @@ import { loadConfig } from "./media-kit.mjs";
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 const SAMPLE_SHELL = `<!DOCTYPE html><html lang="en" class="antialiased"><head><meta charSet="utf-8"/><title>Tobias P. Goebel</title><meta name="description" content="Tobias P. Goebel: media and advisory on autonomous systems. TeslaTobi, TechTalkTobi, published analysis. Online: tpgoebel."/><meta name="theme-color" content="#0B0D11"/></head><body></body></html>`;
+
+function prerenderedShell(route) {
+  return SAMPLE_SHELL.replace(
+    "<body></body>",
+    `<body class="min-h-dvh"><h1>${route}</h1><a href="/en/about">About</a></body>`,
+  );
+}
+
+async function seedPrerendered(root) {
+  const pieces = await loadResearchPieces();
+  for (const route of canonicalRoutes(pieces)) {
+    if (route === "/") continue;
+    const dir = join(root, route.slice(1));
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, "index.html"), prerenderedShell(route));
+  }
+}
 
 function head(html) {
   const start = html.indexOf("<head>");
@@ -161,6 +182,7 @@ test("prepare writes unique heads, keeps 404 generic, and preserves Pages extras
   const root = mkdtempSync(join(tmpdir(), "pages-seo-"));
   writeFileSync(join(root, "_shell.html"), SAMPLE_SHELL);
   writeFileSync(join(root, loadConfig().current), "pdf");
+  await seedPrerendered(root);
 
   const { routes } = await prepare(root);
   assert.ok(routes.includes("/en/research/muskonomy"));
@@ -181,6 +203,8 @@ test("prepare writes unique heads, keeps 404 generic, and preserves Pages extras
     /property="og:image" content="https:\/\/techtalktobi.com\/images\/research-muskonomy.jpg"/,
   );
   assert.match(musk, /property="og:type" content="article"/);
+  assert.match(musk, /<h1>\/en\/research\/muskonomy<\/h1>/);
+  assert.match(musk, /<a href="\/en\/about">About<\/a>/);
 
   const deMusk = readFileSync(join(root, "de/research/muskonomy.html"), "utf8");
   assert.match(deMusk, /<html lang="de"/);
@@ -195,6 +219,8 @@ test("prepare writes unique heads, keeps 404 generic, and preserves Pages extras
   const index = readFileSync(join(root, "index.html"), "utf8");
   assert.match(index, /rel="canonical" href="https:\/\/techtalktobi.com\/en"/);
   assert.ok(index.includes("Tobias P. Goebel | Media &amp; Advisory"));
+  assert.match(index, /<h1>\/en<\/h1>/);
+  assert.ok(index.includes(ROOT_CLIENT_REDIRECT));
 
   const notFound = readFileSync(join(root, "404.html"), "utf8");
   assert.equal(notFound, SAMPLE_SHELL);
@@ -204,6 +230,37 @@ test("prepare writes unique heads, keeps 404 generic, and preserves Pages extras
   const vercel = JSON.parse(readFileSync(join(root, "vercel.json"), "utf8"));
   assert.equal(vercel.git.deploymentEnabled, false);
   assert.ok(readFileSync(join(root, "media-kit.pdf")));
+});
+
+test("prepare throws when a canonical route has no prerendered HTML", async () => {
+  const root = mkdtempSync(join(tmpdir(), "pages-seo-missing-"));
+  writeFileSync(join(root, "_shell.html"), SAMPLE_SHELL);
+  await assert.rejects(() => prepare(root), /missing prerendered HTML for \//);
+});
+
+test("assertRenderableBody rejects the empty SPA shell", () => {
+  assert.throws(() => assertRenderableBody(SAMPLE_SHELL, "/en"), /no heading or links/);
+});
+
+test("githubPagesStartOptions prerenders sitemap locale routes and not /", async () => {
+  const options = await githubPagesStartOptions();
+  const paths = options.pages.map((page) => page.path);
+  assert.equal(options.spa.enabled, true);
+  assert.equal(options.prerender.enabled, true);
+  assert.equal(options.prerender.crawlLinks, false);
+  assert.equal(options.sitemap.enabled, false);
+  assert.ok(!paths.includes("/"));
+  assert.ok(paths.includes("/en"));
+  assert.ok(paths.includes("/de/research/muskonomy"));
+
+  const sitemap = readFileSync(join(REPO, "public/sitemap.xml"), "utf8");
+  const locs = [...sitemap.matchAll(/<loc>https:\/\/techtalktobi.com([^<]+)<\/loc>/g)].map(
+    (match) => match[1],
+  );
+  const htmlLocs = locs.filter((loc) => loc === "/en" || loc.startsWith("/en/") || loc === "/de" || loc.startsWith("/de/"));
+  for (const loc of htmlLocs) {
+    assert.ok(paths.includes(loc), `missing prerender page ${loc}`);
+  }
 });
 
 test("structuredData emits a schema.org graph with Article for research pages", () => {
