@@ -218,7 +218,7 @@ test("prepare writes unique heads, keeps 404 generic, and preserves Pages extras
 
   const index = readFileSync(join(root, "index.html"), "utf8");
   assert.match(index, /rel="canonical" href="https:\/\/techtalktobi.com\/en"/);
-  assert.ok(index.includes("Tobias P. Goebel | Media &amp; Advisory"));
+  assert.ok(index.includes("Tobias P. Goebel (TeslaTobi) | Media &amp; Advisory"));
   assert.match(index, /<h1>\/en<\/h1>/);
   assert.ok(index.includes(ROOT_CLIENT_REDIRECT));
 

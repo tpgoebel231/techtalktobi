@@ -34,12 +34,12 @@ export const ROOT_CLIENT_REDIRECT =
 /** Copy from src/routes/$locale/route.tsx */
 export const LOCALE_HEAD = {
   en: {
-    title: "Tobias P. Goebel | Media & Advisory",
+    title: "Tobias P. Goebel (TeslaTobi) | Media & Advisory",
     description:
       "Journalist and advisor on autonomous systems. TeslaTobi, TechTalkTobi, published analysis. Advisory on the technology and the rules. Online: tpgoebel.",
   },
   de: {
-    title: "Tobias P. Goebel | Medien & Beratung",
+    title: "Tobias P. Goebel (TeslaTobi) | Medien & Beratung",
     description:
       "Journalist und Berater für autonome Systeme. TeslaTobi, TechTalkTobi, öffentliche Analysen. Beratung zu Technik und Regulierung. Online: tpgoebel.",
   },
@@ -159,7 +159,7 @@ export function structuredData(seo) {
     "@type": "Person",
     "@id": PERSON_ID,
     name: "Tobias P. Goebel",
-    alternateName: ["Tobias Goebel", "TeslaTobi", "TechTalkTobi", "tpgoebel"],
+    alternateName: ["Tobias Goebel", "TeslaTobi", "Tesla Tobi", "TechTalkTobi", "tpgoebel"],
     url: `${SITE_ORIGIN}/en/about`,
     sameAs: [
       "https://www.youtube.com/@TeslaTobi",
