@@ -8,12 +8,16 @@ import {
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { gaConfigSnippet, gaLoaderSrc } from "@/data/analytics";
+import { isCleanPath } from "@/lib/clean-routes";
 import appCss from "../styles.css?url";
 
 const APP_NAME = "Tobias P. Goebel";
 
 export const Route = createRootRoute({
-  head: () => ({
+  head: ({ matches }) => {
+    // Clean routes (src/lib/clean-routes.ts) skip GA4 and Google Fonts.
+    const clean = isCleanPath(matches[matches.length - 1]?.pathname);
+    return {
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -30,27 +34,34 @@ export const Route = createRootRoute({
       { rel: "apple-touch-icon", href: "/icon-180.png" },
       { rel: "stylesheet", href: appCss },
       { rel: "manifest", href: "/__grok/manifest.webmanifest" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      {
-        rel: "preconnect",
-        href: "https://fonts.gstatic.com",
-        crossOrigin: "anonymous",
-      },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@500;600;700&display=swap",
-      },
+      ...(clean
+        ? []
+        : [
+            { rel: "preconnect", href: "https://fonts.googleapis.com" },
+            {
+              rel: "preconnect",
+              href: "https://fonts.gstatic.com",
+              crossOrigin: "anonymous" as const,
+            },
+            {
+              rel: "stylesheet",
+              href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@500;600;700&display=swap",
+            },
+          ]),
     ],
-    scripts: [
-      {
-        async: true,
-        src: gaLoaderSrc,
-      },
-      {
-        children: gaConfigSnippet,
-      },
-    ],
-  }),
+    scripts: clean
+      ? []
+      : [
+          {
+            async: true,
+            src: gaLoaderSrc,
+          },
+          {
+            children: gaConfigSnippet,
+          },
+        ],
+    };
+  },
   component: RootDocument,
   notFoundComponent: NotFound,
 });

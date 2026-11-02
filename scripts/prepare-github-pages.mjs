@@ -14,6 +14,12 @@ import { fileURLToPath } from "node:url";
 import ts from "typescript";
 import { escapeHtml } from "./grok-pwa-shared.mjs";
 import { publish as publishMediaKit } from "./media-kit.mjs";
+import {
+  GUARDED_ROUTES,
+  allowPlaceholders,
+  assertNoLegalPlaceholders,
+  htmlHasPlaceholder,
+} from "./check-legal-placeholders.mjs";
 
 const repoRoot = fileURLToPath(new URL("..", import.meta.url));
 
@@ -22,6 +28,26 @@ export const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/og.jpg`;
 
 const locales = ["en", "de"];
 const pages = ["", "about", "consulting", "media-kit", "media", "research"];
+
+/**
+ * German-only pages that ship as real HTML (HTTP 200) and may be indexed,
+ * but are NOT in public/sitemap.xml or the site nav yet. When Tobias says
+ * to advertise Live in Bonn, add it to the sitemap and nav, and flip
+ * LIVE_IN_BONN_LISTED in src/lib/clean-routes.ts. Copy from
+ * src/routes/$locale/{live-in-bonn,datenschutz}.tsx.
+ */
+export const DE_ONLY_PAGES = {
+  "live-in-bonn": {
+    title: "Live in Bonn · TeslaTobi Stammtisch",
+    description:
+      "Der erste TeslaTobi Stammtisch zum Anfassen: Dezember 2026 in Bonn. Eckdaten, Terminvorschläge und Anmeldung.",
+  },
+  datenschutz: {
+    title: "Datenschutzerklärung · TechTalkTobi",
+    description:
+      "Datenschutzerklärung für die Seite Live in Bonn und die Anmeldung zum TeslaTobi-Stammtisch in Bonn über Google Forms.",
+  },
+};
 
 /**
  * Instant client redirect so `/` never hydrates the `/en` payload against
@@ -112,6 +138,22 @@ export function seoForRoute(route, pieces) {
     { hreflang: "de", href: `${SITE_ORIGIN}${dePath}` },
     { hreflang: "x-default", href: `${SITE_ORIGIN}${enPath}` },
   ];
+
+  if (DE_ONLY_PAGES[rest]) {
+    if (locale !== "de") {
+      throw new Error(`prepare-github-pages: ${rest} is German-only`);
+    }
+    return {
+      ...DE_ONLY_PAGES[rest],
+      canonical: `${SITE_ORIGIN}${route}`,
+      ogUrl: `${SITE_ORIGIN}${route}`,
+      image: DEFAULT_OG_IMAGE,
+      type: "website",
+      locale: "de_DE",
+      htmlLang: "de",
+      alternates: [{ hreflang: "de", href: `${SITE_ORIGIN}${route}` }],
+    };
+  }
 
   const researchMatch = rest.match(/^research\/([^/]+)$/);
   if (researchMatch) {
@@ -253,6 +295,7 @@ export function canonicalRoutes(pieces) {
       routes.push(`/${locale}/research/${piece.slug}`);
     }
   }
+  for (const page of Object.keys(DE_ONLY_PAGES)) routes.push(`/de/${page}`);
   return routes;
 }
 
@@ -311,6 +354,8 @@ export function applyRootClientRedirect(html) {
 }
 
 export async function prepare(root = "dist/client") {
+  // Ship guard: unfilled legal placeholders block the gh-pages snapshot.
+  await assertNoLegalPlaceholders();
   const shell = join(root, "_shell.html");
   accessSync(shell);
   const shellHtml = readFileSync(shell, "utf8");
@@ -321,6 +366,9 @@ export async function prepare(root = "dist/client") {
   for (const route of routes) {
     const html = readPrerenderedHtml(root, route);
     assertRenderableBody(html, route);
+    if (GUARDED_ROUTES.includes(route) && htmlHasPlaceholder(html) && !allowPlaceholders()) {
+      throw new Error(`prepare-github-pages: ${route} still shows a [placeholder]`);
+    }
     htmlByRoute.set(route, html);
   }
 
