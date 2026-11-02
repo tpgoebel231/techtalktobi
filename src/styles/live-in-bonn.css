@@ -110,7 +110,7 @@
 .lib footer { padding: 48px 0; color: var(--meta); font-size: 16px; }
 .lib footer a { min-height: 48px; display: inline-flex; align-items: center; }
 /* legal pages */
-.lib .legal { max-width: 820px; padding-top: 56px; padding-bottom: 72px; }
+.lib .legal { max-width: 820px; padding-top: 56px; padding-bottom: 72px; overflow-wrap: anywhere; }
 .lib .legal h1 { font-size: clamp(36px, 6vw, 56px); }
 .lib .legal h2 { font-size: 24px; margin-top: 1.6em; scroll-margin-top: 96px; }
 .lib .legal h3 { font-size: 18px; margin-top: 1.4em; }
