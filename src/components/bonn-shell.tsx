@@ -40,7 +40,7 @@ export function BonnShell({
       <footer>
         <div className="wrap">
           <p>
-            TeslaTobi Stammtisch · Live in Bonn · Ohne Tracking. Die Anmeldung läuft über Google
+            TeslaTobi Stammtisch · Live in Bonn · Ohne Tracking. Die Interessenbekundung läuft über Google
             Forms (Server in den USA).
           </p>
           <p>

@@ -20,10 +20,10 @@ const SECTIONS = [
   { href: "#worum", label: "Worum es geht" },
   { href: "#about", label: "Über uns" },
   { href: "#termin", label: "Termin" },
-  { href: "#anmeldung", label: "Anmeldung" },
+  { href: "#anmeldung", label: "Interesse bekunden" },
 ];
 
-const MAILTO = "mailto:tobias@techtalktobi.com?subject=Anmeldung%20Stammtisch%20Bonn";
+const MAILTO = "mailto:tobias@techtalktobi.com?subject=Interesse%20Stammtisch%20Bonn";
 
 /**
  * Two-click Google Form. The iframe src stays about:blank until the visitor
@@ -39,7 +39,7 @@ function GoogleFormTwoClick() {
       <div className={open ? "gform-frame is-open" : "gform-frame"}>
         <iframe
           id="gform"
-          title="Anmeldeformular (Google Forms)"
+          title="Formular zur Interessenbekundung (Google Forms)"
           hidden={!open}
           src={open ? GOOGLE_FORM_URL : "about:blank"}
           data-src={GOOGLE_FORM_URL}
@@ -49,7 +49,7 @@ function GoogleFormTwoClick() {
         <div className="gform-ph" id="gform-ph" hidden={open}>
           <div>
             <p style={{ margin: "0 0 12px" }}>
-              <strong>Das Anmeldeformular läuft bei Google (Server in den USA).</strong>
+              <strong>Das Formular läuft bei Google (Server in den USA).</strong>
             </p>
             <p style={{ margin: "0 0 16px", fontWeight: 400 }}>
               Erst wenn du auf den Knopf klickst, wird das Formular von Google geladen und deine
@@ -81,10 +81,10 @@ export function LiveInBonnPage() {
             <h1>
               TeslaTobi <span>Stammtisch</span>
             </h1>
-            <p className="sub">Mitte bis Ende Dezember 2026 · Bonn</p>
+            <p className="sub">Mitte Dezember 2026 · Bonn</p>
             <div className="btns">
               <a className="btn btn-gold" href="#anmeldung">
-                JETZT ANMELDEN
+                INTERESSE BEKUNDEN
               </a>
               <a className="btn btn-ghost" href="#termin">
                 Terminvorschläge
@@ -136,8 +136,8 @@ export function LiveInBonnPage() {
             <div className="card">
               <div className="hexicon" aria-hidden="true">3</div>
               <p className="label">Wer</p>
-              <p className="val">Tobias Goebel und ihr</p>
-              <p className="meta">Zuschauer von TeslaTobi und TechTalk-Tobi.</p>
+              <p className="val">Alle drei zusammen</p>
+              <p className="meta">Tobi + Zuschauer von TeslaTobi und TechTalkTobi 🙂</p>
             </div>
           </div>
         </div>
@@ -150,8 +150,8 @@ export function LiveInBonnPage() {
             <h2 id="h-worum">Worum es geht</h2>
             <p>
               Der erste echte TeslaTobi Stammtisch zum Anfassen. Tobias ist im Dezember auf
-              Heimaturlaub in Deutschland und lädt euch nach Bonn ein. Ein lockerer Abend in einem
-              Nebenraum, mit Gesprächen über Tesla, Technik und alles andere.
+              Heimaturlaub in Deutschland und lädt euch nach Bonn ein. Ein lockerer Abend, mit
+              Gesprächen über Tesla, Technik und alles andere.
             </p>
             <p>
               Es gibt kein Programm und keine Bühne. Einfach zusammensitzen, sich kennenlernen und
@@ -159,8 +159,9 @@ export function LiveInBonnPage() {
             </p>
           </div>
           <ul className="hexlist">
+            <li>Nicht kommerziell, aber vielleicht gibt's was zu gewinnen</li>
+            <li>Spaß haben</li>
             <li>Lockerer Abend, kein Programm</li>
-            <li>Nicht kommerziell, aber vielleicht gibt's was zu gewinnen :-)</li>
           </ul>
         </div>
       </section>
@@ -206,17 +207,17 @@ export function LiveInBonnPage() {
             <p>
               Ich habe trotzdem gefragt, wer sich vorstellen könnte, zu einem Treffen in Bonn zu
               kommen, ganz ungezwungen, vielleicht in einer Kneipe. Ihr habt eine Eins in den Chat
-              geschrieben, rund zwanzig von euch, und einige wären dafür mehrere hundert Kilometer
-              gefahren. Im Dezember bin ich ohnehin ein paar Wochen im Rheinland. Also machen wir
+              geschrieben, rund zwanzig von euch, und einige würden dafür sogar mehrere hundert
+              Kilometer Anfahrt in Kauf nehmen 🥹. Im Dezember bin ich ohnehin ein paar Wochen im Rheinland. Also machen wir
               es.
             </p>
             <blockquote>
               „In ein paar Jahren kann man dann sagen, ja der TeslaTobi, damals in Bonn das kleine
-              Treffen, ich war dabei." <span className="meta">Zuschauer im Chat</span>
+              Treffen, ich war dabei." <span className="meta">Zuschauer im Chat 😅</span>
             </blockquote>
             <p>
               Danach kamen noch viele Ideen von euch. Genau so soll es werden: klein und gemütlich.
-              Diese Seite war übrigens auch eure Idee.
+              Diese Seite war übrigens auch eure Idee. Erzeugt von Grok Bot.
             </p>
           </div>
         </div>
@@ -241,9 +242,9 @@ export function LiveInBonnPage() {
               <span className="status s-run">Läuft</span>
             </li>
             <li>
-              <h3>3. Anmeldung</h3>
-              <p>Anmeldung, sobald Ort und Termin stehen.</p>
-              <span className="status s-open">Noch offen</span>
+              <h3>3. Interesse bekunden</h3>
+              <p>Geht schon jetzt, siehe unten. Ort und Termin folgen.</p>
+              <span className="status s-run">Läuft</span>
             </li>
           </ol>
         </div>
@@ -272,19 +273,20 @@ export function LiveInBonnPage() {
       <section id="anmeldung" aria-labelledby="h-anm">
         <div className="wrap">
           <p className="label">Dabei sein</p>
-          <h2 id="h-anm">Jetzt anmelden</h2>
-          {/* Required fields match the live Google Form (checked Nov 1 2026). */}
+          <h2 id="h-anm">Interesse bekunden</h2>
+          {/* Required fields: Google Form as specified by Tobias on Nov 2 2026. */}
           <p className="lead">
-            Damit Tobias planen kann, wie viele kommen. Pflicht sind nur deine E-Mail-Adresse, die
-            Bestätigung, dass du mindestens 18 bist, und deine Einwilligung zu Google. Alles andere
-            ist freiwillig.
+            Damit Tobias eine Vorstellung davon bekommt, wie groß er planen muss. Pflicht sind nur
+            deine E-Mail-Adresse, dein Bundesland, mindestens ein möglicher Termin, die Bestätigung,
+            dass du mindestens 18 bist, und deine Einwilligung zu Google. Alles andere ist
+            freiwillig.
           </p>
           <GoogleFormTwoClick />
           <div className="note gform-note" role="note">
             <p>
               <strong>Hinweis zum Datenschutz:</strong> Das Formular wird erst nach deinem Klick von
               Google geladen und läuft bei Google. Deine Angaben werden auf Servern in den USA
-              gespeichert. Zweck: nur die Anmeldung. Löschung spätestens 30 Tage nach dem Event.
+              gespeichert. Zweck: nur die Interessenbekundung. Löschung spätestens 30 Tage nach dem Event.
             </p>
             <p>
               <strong>Lieber ohne Google?</strong> Schreib einfach eine E-Mail an{" "}
