@@ -37,7 +37,7 @@ export const datenschutzDe: LegalPage = {
 
     { h2: "2. Überblick", id: "ueberblick" },
     {
-      p: "Wir verarbeiten personenbezogene Daten nur, soweit dies für eine funktionsfähige Website, die Organisation des TeslaTobi-Stammtischs oder die Beantwortung Ihrer Anfragen erforderlich ist oder Sie eingewilligt haben. Die Verarbeitung richtet sich nach der DSGVO und, für den Zugriff auf Ihr Endgerät, nach § 25 Telekommunikation-Digitale-Dienste-Datenschutz-Gesetz (TDDDG).",
+      p: "Wir verarbeiten personenbezogene Daten nur, soweit dies für eine funktionsfähige Website, die Organisation des TeslaTobi-Stammtischs oder die Beantwortung deiner Anfragen erforderlich ist oder du eingewilligt hast. Die Verarbeitung richtet sich nach der DSGVO und, für den Zugriff auf dein Endgerät, nach § 25 Telekommunikation-Digitale-Dienste-Datenschutz-Gesetz (TDDDG).",
     },
 
     { h2: "3. Hosting über GitHub Pages", id: "hosting" },
@@ -45,7 +45,7 @@ export const datenschutzDe: LegalPage = {
       p: "Diese Website wird bei GitHub Pages gehostet. Anbieter ist GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA, ein Tochterunternehmen der Microsoft Corporation.",
     },
     {
-      p: "Beim Aufruf der Website verarbeitet GitHub technisch notwendige Daten, insbesondere Ihre IP-Adresse, Datum und Uhrzeit des Zugriffs, die aufgerufene Seite, Browsertyp und Betriebssystem. GitHub protokolliert die IP-Adressen von Besuchern nach eigenen Angaben aus Sicherheitsgründen. Wir selbst erhalten diese Protokolle nicht.",
+      p: "Beim Aufruf der Website verarbeitet GitHub technisch notwendige Daten, insbesondere deine IP-Adresse, Datum und Uhrzeit des Zugriffs, die aufgerufene Seite, Browsertyp und Betriebssystem. GitHub protokolliert die IP-Adressen von Besuchern nach eigenen Angaben aus Sicherheitsgründen. Wir selbst erhalten diese Protokolle nicht.",
     },
     {
       p: "Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Unser berechtigtes Interesse liegt in der sicheren und zuverlässigen Bereitstellung der Website.",
@@ -57,28 +57,28 @@ export const datenschutzDe: LegalPage = {
     { h2: "4. Anmeldung zum TeslaTobi-Stammtisch Bonn über Google Forms", id: "anmeldung" },
     { h3: "Laden des Formulars" },
     {
-      p: 'Das Anmeldeformular ist ein Formular von Google Forms, einem Dienst der Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA. Es wird erst geladen, wenn Sie auf "Formular von Google laden" klicken. Vorher werden keine Daten an Google übertragen. Nach dem Klick lädt Ihr Browser Inhalte von Servern von Google (u. a. docs.google.com, www.gstatic.com, ssl.gstatic.com, fonts.googleapis.com, fonts.gstatic.com und play.google.com). Google erhält dabei Ihre IP-Adresse, Browser- und Gerätedaten und die Adresse unserer Seite und kann Cookies und ähnliche Techniken auf Ihrem Gerät speichern oder auslesen (Übersicht: https://policies.google.com/technologies/cookies). Rechtsgrundlage ist Ihre Einwilligung durch den Klick (§ 25 Abs. 1 TDDDG, Art. 6 Abs. 1 lit. a DSGVO). Sie können sie jederzeit für die Zukunft widerrufen, indem Sie die Seite schließen und die Google-Cookies in Ihrem Browser löschen. Unsere Website selbst speichert Ihre Entscheidung nicht.',
+      p: 'Das Anmeldeformular ist ein Formular von Google Forms, einem Dienst der Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA. Es wird erst geladen, wenn du auf "Formular von Google laden" klickst. Vorher werden keine Daten an Google übertragen. Nach dem Klick lädt dein Browser Inhalte von Servern von Google (u. a. docs.google.com, www.gstatic.com, ssl.gstatic.com, fonts.googleapis.com, fonts.gstatic.com und play.google.com). Google erhält dabei deine IP-Adresse, Browser- und Gerätedaten und die Adresse unserer Seite und kann Cookies und ähnliche Techniken auf deinem Gerät speichern oder auslesen (Übersicht: https://policies.google.com/technologies/cookies). Rechtsgrundlage ist deine Einwilligung durch den Klick (§ 25 Abs. 1 TDDDG, Art. 6 Abs. 1 lit. a DSGVO). Du kannst sie jederzeit für die Zukunft widerrufen, indem du die Seite schließt und die Google-Cookies in deinem Browser löschst. Unsere Website selbst speichert deine Entscheidung nicht.',
     },
     { h3: "Zwecke und Daten" },
     {
-      p: "Wir nutzen Ihre Angaben, um den Stammtisch zu planen und durchzuführen und Sie dazu zu kontaktieren (Bestätigung, Änderung, Absage). Das Formular fragt ab:",
+      p: "Wir nutzen deine Angaben, um den Stammtisch zu planen und durchzuführen und dich dazu zu kontaktieren (Bestätigung, Änderung, Absage). Das Formular fragt ab:",
     },
     {
       ul: [
-        "**Pflicht:** E-Mail-Adresse, Bestätigung, dass Sie mindestens 18 Jahre alt sind, und Ihre Einwilligung in die Verarbeitung Ihrer Angaben durch Google (USA).",
-        "**Freiwillig:** Vorname, Nachname, Landkreis bzw. kreisfreie Stadt, was Sie beitragen möchten, ob Sie mit einem Tesla kommen und gegebenenfalls Modell und Baujahr, Wunschtermin.",
+        "**Pflicht:** E-Mail-Adresse, Bestätigung, dass du mindestens 18 Jahre alt bist, und deine Einwilligung in die Verarbeitung deiner Angaben durch Google (USA).",
+        "**Freiwillig:** Vorname, Nachname, Landkreis bzw. kreisfreie Stadt, was du beitragen möchtest, ob du mit einem Tesla kommst und gegebenenfalls Modell und Baujahr, Wunschtermin.",
       ],
     },
     {
-      p: "Freiwillige Angaben helfen uns bei der Planung (z. B. um einzuschätzen, aus welchen Regionen Gäste anreisen), sind aber für die Teilnahme nicht nötig. Bitte geben Sie keine Gesundheitsdaten oder anderen sensiblen Angaben an.",
+      p: "Freiwillige Angaben helfen uns bei der Planung (z. B. um einzuschätzen, aus welchen Regionen Gäste anreisen), sind aber für die Teilnahme nicht nötig. Bitte gib keine Gesundheitsdaten oder anderen sensiblen Angaben an.",
     },
     { h3: "Rechtsgrundlagen" },
     {
-      p: 'Organisation Ihrer Teilnahme: Art. 6 Abs. 1 lit. b DSGVO, ergänzend Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Organisation einer Community-Veranstaltung), weil die Teilnahme kostenlos ist. Speicherung Ihrer Antworten bei Google: Ihre Einwilligung im Formular ("Ich habe die Datenschutzhinweise gelesen und willige in die Verarbeitung meiner Angaben durch Google (USA) ein.", Art. 6 Abs. 1 lit. a DSGVO). Freiwillige Angaben: Ihre Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Jede Einwilligung ist freiwillig und kann jederzeit per E-Mail an tobias@techtalktobi.com für die Zukunft widerrufen werden.',
+      p: 'Organisation deiner Teilnahme: Art. 6 Abs. 1 lit. b DSGVO, ergänzend Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Organisation einer Community-Veranstaltung), weil die Teilnahme kostenlos ist. Speicherung deiner Antworten bei Google: deine Einwilligung im Formular ("Ich habe die Datenschutzhinweise gelesen und willige in die Verarbeitung meiner Angaben durch Google (USA) ein.", Art. 6 Abs. 1 lit. a DSGVO). Freiwillige Angaben: deine Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Jede Einwilligung ist freiwillig und kann jederzeit per E-Mail an tobias@techtalktobi.com für die Zukunft widerrufen werden.',
     },
     { h3: "Empfänger" },
     {
-      p: "Google LLC (USA) speichert Ihre Antworten in Google Forms und in einer Google-Tabelle (Google Sheets) in unserem Google-Konto. Für dieses Konto besteht mit Google **kein** Vertrag zur Auftragsverarbeitung. Google verarbeitet die Daten daher nach eigenen Bedingungen und seiner Datenschutzerklärung (https://policies.google.com/privacy), zum Teil auch für eigene Zwecke wie Sicherheit und Verbesserung der Dienste. Nur wir haben Zugriff auf die Antworten; wir geben sie nicht an Sponsoren oder zu Werbezwecken weiter.",
+      p: "Google LLC (USA) speichert deine Antworten in Google Forms und in einer Google-Tabelle (Google Sheets) in unserem Google-Konto. Für dieses Konto besteht mit Google **kein** Vertrag zur Auftragsverarbeitung. Google verarbeitet die Daten daher nach eigenen Bedingungen und seiner Datenschutzerklärung (https://policies.google.com/privacy), zum Teil auch für eigene Zwecke wie Sicherheit und Verbesserung der Dienste. Nur wir haben Zugriff auf die Antworten; wir geben sie nicht an Sponsoren oder zu Werbezwecken weiter.",
     },
     { h3: "Übermittlung in die USA" },
     {
@@ -86,12 +86,12 @@ export const datenschutzDe: LegalPage = {
     },
     { h3: "Speicherdauer und Löschung" },
     {
-      p: "Wir schließen das Formular zum Anmeldeschluss. Spätestens 30 Tage nach dem Stammtisch löschen wir alle Antworten in Google Forms, die Google-Tabelle als ganze Datei samt Versionsverlauf und Papierkorb, Downloads und E-Mails mit Ihren Anmeldedaten. Wenn Sie widerrufen oder sich abmelden, löschen wir Ihre Angaben früher. Wie lange Google gelöschte Daten noch in Sicherungskopien hält, bestimmt Google.",
+      p: "Wir schließen das Formular zum Anmeldeschluss. Spätestens 30 Tage nach dem Stammtisch löschen wir alle Antworten in Google Forms, die Google-Tabelle als ganze Datei samt Versionsverlauf und Papierkorb, Downloads und E-Mails mit deinen Anmeldedaten. Wenn du widerrufst oder dich abmeldest, löschen wir deine Angaben früher. Wie lange Google gelöschte Daten noch in Sicherungskopien hält, bestimmt Google.",
     },
 
     { h2: "5. Anmeldung und Kontakt per E-Mail", id: "kontakt" },
     {
-      p: "Sie können sich ohne Nachteil auch per E-Mail an tobias@techtalktobi.com anmelden oder uns so kontaktieren. Wir verarbeiten dann Ihre Angaben (E-Mail-Adresse, Name falls angegeben, Inhalt der Nachricht), um Ihre Anmeldung oder Anfrage zu bearbeiten. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b und f DSGVO. Unser E-Mail-Postfach liegt bei einem Anbieter in den USA. Anmelde-E-Mails löschen wir spätestens 30 Tage nach dem Stammtisch, andere Anfragen, sobald sie erledigt sind.",
+      p: "Du kannst dich ohne Nachteil auch per E-Mail an tobias@techtalktobi.com anmelden oder uns so kontaktieren. Wir verarbeiten dann deine Angaben (E-Mail-Adresse, Name falls angegeben, Inhalt der Nachricht), um deine Anmeldung oder Anfrage zu bearbeiten. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b und f DSGVO. Unser E-Mail-Postfach liegt bei einem Anbieter in den USA. Anmelde-E-Mails löschen wir spätestens 30 Tage nach dem Stammtisch, andere Anfragen, sobald sie erledigt sind.",
     },
 
     { h2: "6. Keine Webanalyse, keine externen Schriftarten", id: "keine-analyse" },
@@ -99,18 +99,18 @@ export const datenschutzDe: LegalPage = {
       p: "Auf den Seiten zum Stammtisch (techtalktobi.com/de/live-in-bonn und diese Datenschutzerklärung) setzen wir keine Analyse- oder Tracking-Werkzeuge ein. Die Schriftart wird mit der Seite selbst ausgeliefert; es werden dabei keine Daten an Google oder andere Schriftanbieter übertragen.",
     },
 
-    { h2: "7. Cookies und Zugriffe auf Ihr Endgerät", id: "cookies" },
+    { h2: "7. Cookies und Zugriffe auf dein Endgerät", id: "cookies" },
     {
-      p: 'Die Seiten zum Stammtisch setzen keine Cookies und greifen nicht auf Informationen in Ihrem Endgerät zu, die nicht für die Darstellung der Seite unbedingt erforderlich sind (§ 25 Abs. 2 Nr. 2 TDDDG). Ein Cookie-Banner ist deshalb nicht nötig. Das Anmeldeformular von Google lädt erst nach Ihrem Klick auf "Formular von Google laden". Erst dann kann Google (nicht wir) Cookies auf Ihrem Gerät speichern oder lesen, siehe Abschnitt 4.',
+      p: 'Die Seiten zum Stammtisch setzen keine Cookies und greifen nicht auf Informationen in deinem Endgerät zu, die nicht für die Darstellung der Seite unbedingt erforderlich sind (§ 25 Abs. 2 Nr. 2 TDDDG). Ein Cookie-Banner ist deshalb nicht nötig. Das Anmeldeformular von Google lädt erst nach deinem Klick auf "Formular von Google laden". Erst dann kann Google (nicht wir) Cookies auf deinem Gerät speichern oder lesen, siehe Abschnitt 4.',
     },
 
     { h2: "8. Externe Links", id: "links" },
     {
-      p: "Diese Seiten enthalten Links zu anderen Websites. Erst wenn Sie einen Link anklicken, gelangen Sie auf die Seite des jeweiligen Anbieters, der dann für die Datenverarbeitung verantwortlich ist.",
+      p: "Diese Seiten enthalten Links zu anderen Websites. Erst wenn du einen Link anklickst, gelangst du auf die Seite des jeweiligen Anbieters, der dann für die Datenverarbeitung verantwortlich ist.",
     },
 
-    { h2: "9. Ihre Rechte", id: "rechte" },
-    { p: "Sie haben das Recht auf" },
+    { h2: "9. Deine Rechte", id: "rechte" },
+    { p: "Du hast das Recht auf" },
     {
       ul: [
         "Auskunft (Art. 15 DSGVO),",
@@ -118,13 +118,13 @@ export const datenschutzDe: LegalPage = {
         "Löschung (Art. 17 DSGVO),",
         "Einschränkung der Verarbeitung (Art. 18 DSGVO),",
         "Datenübertragbarkeit (Art. 20 DSGVO),",
-        "Widerspruch gegen Verarbeitungen auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO aus Gründen, die sich aus Ihrer besonderen Situation ergeben (Art. 21 DSGVO),",
+        "Widerspruch gegen Verarbeitungen auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO aus Gründen, die sich aus deiner besonderen Situation ergeben (Art. 21 DSGVO),",
         "Widerruf einer erteilten Einwilligung mit Wirkung für die Zukunft (Art. 7 Abs. 3 DSGVO).",
       ],
     },
     { p: "Eine E-Mail an tobias@techtalktobi.com genügt." },
     {
-      p: "**Beschwerderecht:** Sie können sich bei jeder Datenschutz-Aufsichtsbehörde beschweren, insbesondere in dem Mitgliedstaat Ihres Aufenthaltsorts, Ihres Arbeitsplatzes oder des Orts des mutmaßlichen Verstoßes (Art. 77 DSGVO). Für den Veranstaltungsort Bonn ist dies zum Beispiel: Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen (LDI NRW), Kavalleriestraße 2-4, 40213 Düsseldorf, https://www.ldi.nrw.de",
+      p: "**Beschwerderecht:** Du kannst dich bei jeder Datenschutz-Aufsichtsbehörde beschweren, insbesondere in dem Mitgliedstaat deines Aufenthaltsorts, deines Arbeitsplatzes oder des Orts des mutmaßlichen Verstoßes (Art. 77 DSGVO). Für den Veranstaltungsort Bonn ist dies zum Beispiel: Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen (LDI NRW), Kavalleriestraße 2-4, 40213 Düsseldorf, https://www.ldi.nrw.de",
     },
 
     { h2: "10. Keine automatisierte Entscheidungsfindung", id: "automatisiert" },
@@ -134,7 +134,7 @@ export const datenschutzDe: LegalPage = {
 
     { h2: "11. Pflicht zur Bereitstellung", id: "pflicht" },
     {
-      p: "Sie sind nicht verpflichtet, uns Daten bereitzustellen. Ohne E-Mail-Adresse ist eine Anmeldung zum Stammtisch jedoch nicht möglich; im Google-Formular sind außerdem die Bestätigung, dass Sie mindestens 18 Jahre alt sind, und die Einwilligung zu Google nötig.",
+      p: "Du bist nicht verpflichtet, uns Daten bereitzustellen. Ohne E-Mail-Adresse ist eine Anmeldung zum Stammtisch jedoch nicht möglich; im Google-Formular sind außerdem die Bestätigung, dass du mindestens 18 Jahre alt bist, und die Einwilligung zu Google nötig.",
     },
 
     { h2: "12. Änderungen", id: "aenderungen" },

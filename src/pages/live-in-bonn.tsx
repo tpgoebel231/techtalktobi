@@ -13,7 +13,6 @@ const DATES = [
   { tag: "Freitag", d: "18.12.2026", zeit: "ab 17 Uhr" },
   { tag: "Samstag", d: "19.12.2026", zeit: "ab 17 Uhr" },
   { tag: "Sonntag", d: "20.12.2026", zeit: "tagsüber, ab 13 Uhr" },
-  { tag: "Samstag", d: "26.12.2026", zeit: "ab 17 Uhr" },
 ];
 
 const SECTIONS = [
@@ -161,8 +160,7 @@ export function LiveInBonnPage() {
           </div>
           <ul className="hexlist">
             <li>Lockerer Abend, kein Programm</li>
-            <li>Nicht kommerziell, kein Gewinn geplant</li>
-            <li>Tesla Deko, Banner und ein erster Blick auf TeslaTobi Merch</li>
+            <li>Nicht kommerziell, aber vielleicht gibt's was zu gewinnen :-)</li>
           </ul>
         </div>
       </section>
