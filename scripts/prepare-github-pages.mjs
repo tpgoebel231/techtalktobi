@@ -41,6 +41,10 @@ export const DE_ONLY_PAGES = {
     title: "Live in Bonn · TeslaTobi Stammtisch",
     description:
       "Der erste TeslaTobi Stammtisch zum Anfassen: Mitte Dezember 2026 in Bonn. Eckdaten, Terminvorschläge und Interessenbekundung.",
+    // Own social card (Rhonda, picked by Tobias Nov 2 2026). Main og.jpg unchanged.
+    image: `${SITE_ORIGIN}/live-in-bonn/og-live-in-bonn-v2.jpg`,
+    imageWidth: 1200,
+    imageHeight: 630,
   },
   datenschutz: {
     title: "Datenschutzerklärung · TechTalkTobi",
@@ -144,10 +148,10 @@ export function seoForRoute(route, pieces) {
       throw new Error(`prepare-github-pages: ${rest} is German-only`);
     }
     return {
+      image: DEFAULT_OG_IMAGE,
       ...DE_ONLY_PAGES[rest],
       canonical: `${SITE_ORIGIN}${route}`,
       ogUrl: `${SITE_ORIGIN}${route}`,
-      image: DEFAULT_OG_IMAGE,
       type: "website",
       locale: "de_DE",
       htmlLang: "de",
@@ -249,7 +253,16 @@ export function extraHeadTags(seo) {
     `<meta property="og:type" content="${escapeHtml(seo.type)}"/>`,
     `<meta property="og:locale" content="${escapeHtml(seo.locale)}"/>`,
     `<meta property="og:image" content="${escapeHtml(seo.image)}"/>`,
+    // Width/height and twitter:image only where a route sets its own card,
+    // so every other route's head stays byte-identical.
+    ...(seo.imageWidth && seo.imageHeight
+      ? [
+          `<meta property="og:image:width" content="${escapeHtml(String(seo.imageWidth))}"/>`,
+          `<meta property="og:image:height" content="${escapeHtml(String(seo.imageHeight))}"/>`,
+        ]
+      : []),
     `<meta name="twitter:card" content="summary_large_image"/>`,
+    ...(seo.imageWidth ? [`<meta name="twitter:image" content="${escapeHtml(seo.image)}"/>`] : []),
     structuredData(seo),
   ].join("");
 }

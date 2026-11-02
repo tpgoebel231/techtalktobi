@@ -14,6 +14,7 @@ import {
   assertRenderableBody,
   canonicalRoutes,
   githubPagesStartOptions,
+  extraHeadTags,
   structuredData,
   loadResearchPieces,
   prepare,
@@ -294,4 +295,19 @@ test("German-only pages ship as routes with de-only hreflang and stay out of the
   assert.ok(!routes.some((r) => r.includes("impressum")));
   const sitemap = readFileSync(new URL("../public/sitemap.xml", import.meta.url), "utf8");
   assert.ok(!/live-in-bonn|datenschutz/.test(sitemap));
+});
+
+test("Live in Bonn has its own social card; other routes keep og.jpg without twitter:image", async () => {
+  const pieces = await loadResearchPieces();
+  const lib = seoForRoute("/de/live-in-bonn", pieces);
+  assert.equal(lib.image, "https://techtalktobi.com/live-in-bonn/og-live-in-bonn-v2.jpg");
+  const tags = extraHeadTags(lib);
+  assert.match(tags, /property="og:image" content="https:\/\/techtalktobi\.com\/live-in-bonn\/og-live-in-bonn-v2\.jpg"/);
+  assert.match(tags, /property="og:image:width" content="1200"/);
+  assert.match(tags, /property="og:image:height" content="630"/);
+  assert.match(tags, /name="twitter:image" content="https:\/\/techtalktobi\.com\/live-in-bonn\/og-live-in-bonn-v2\.jpg"/);
+  const ds = seoForRoute("/de/datenschutz", pieces);
+  assert.equal(ds.image, DEFAULT_OG_IMAGE);
+  const home = extraHeadTags(seoForRoute("/de", pieces));
+  assert.doesNotMatch(home, /twitter:image|og:image:width/);
 });

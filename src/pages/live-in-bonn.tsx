@@ -139,6 +139,12 @@ export function LiveInBonnPage() {
               <p className="val">Alle drei zusammen</p>
               <p className="meta">Tobi + Zuschauer von TeslaTobi und TechTalkTobi 🙂</p>
             </div>
+            <div className="card">
+              <div className="hexicon" aria-hidden="true">4</div>
+              <p className="label">Was</p>
+              <p className="val">Stammtisch</p>
+              <p className="meta">Nicht kommerziell.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -159,9 +165,9 @@ export function LiveInBonnPage() {
             </p>
           </div>
           <ul className="hexlist">
-            <li>Nicht kommerziell, aber vielleicht gibt's was zu gewinnen</li>
-            <li>Spaß haben</li>
             <li>Lockerer Abend, kein Programm</li>
+            <li>Vielleicht gibt's was zu gewinnen 🙃</li>
+            <li>Spaß haben</li>
           </ul>
         </div>
       </section>
@@ -170,9 +176,9 @@ export function LiveInBonnPage() {
         <div className="wrap">
           <figure className="photo photo-wide">
             <img
-              src="/live-in-bonn/stammtisch-kneipe.jpg"
-              width="1152"
-              height="864"
+              src="/live-in-bonn/stammtisch-kneipe-v2.jpg"
+              width="1800"
+              height="1005"
               loading="lazy"
               alt="Tobias sitzt in einer Kneipe an einem Holztisch, umgeben von lachenden Menschen mit Biergläsern in der Hand"
             />
@@ -186,9 +192,9 @@ export function LiveInBonnPage() {
         <div className="wrap about-grid">
           <figure className="photo photo-portrait">
             <img
-              src="/live-in-bonn/tobias-chic.jpg"
-              width="800"
-              height="1200"
+              src="/live-in-bonn/tobias-portrait-v2.jpg"
+              width="864"
+              height="1080"
               loading="lazy"
               alt="Porträt von Tobias Goebel, lächelnd, im dunklen Sakko mit weißem Hemd"
             />
@@ -217,7 +223,7 @@ export function LiveInBonnPage() {
             </blockquote>
             <p>
               Danach kamen noch viele Ideen von euch. Genau so soll es werden: klein und gemütlich.
-              Diese Seite war übrigens auch eure Idee. Erzeugt von Grok Bot.
+              Diese Seite war übrigens auch eure Idee. Erzeugt von Grok Bot, wem sonst.
             </p>
           </div>
         </div>
