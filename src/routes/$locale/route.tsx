@@ -1,7 +1,13 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Outlet,
+  redirect,
+  useRouterState,
+} from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { LocaleProvider } from "@/lib/i18n";
 import { isLocale } from "@/lib/locale";
+import { isCleanPath } from "@/lib/clean-routes";
 
 export const Route = createFileRoute("/$locale")({
   beforeLoad: ({ params }) => {
@@ -33,6 +39,16 @@ export const Route = createFileRoute("/$locale")({
 function LocaleLayout() {
   const { locale } = Route.useParams();
   const safe = isLocale(locale) ? locale : "en";
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  // Clean routes bring their own minimal shell (no Google Fonts styling).
+  if (isCleanPath(pathname)) {
+    return (
+      <LocaleProvider locale={safe}>
+        <Outlet />
+      </LocaleProvider>
+    );
+  }
 
   return (
     <LocaleProvider locale={safe}>
