@@ -74,8 +74,8 @@ export const datenschutzDe: LegalPage = {
     },
     {
       ul: [
-        "**Pflicht:** E-Mail-Adresse, Bundesland, mindestens ein möglicher Termin (\"Mögliche Termine für mich\", Mehrfachauswahl), Bestätigung, dass du mindestens 18 Jahre alt bist, und deine Einwilligung in die Verarbeitung deiner Angaben durch Google (USA).",
-        "**Freiwillig:** Vorname, Nachname, Landkreis bzw. kreisfreie Stadt, was du beitragen möchtest (z. B. Fotos/Video vor Ort, Kontakte zu einer Location, Printshops), ob du mit einem Tesla kommst und gegebenenfalls das Modell (z. B. 2025 Model Y Performance).",
+        "**Pflicht:** Vorname, Nachname, E-Mail-Adresse, Bundesland, mindestens ein möglicher Termin (\"Mögliche Termine für mich\", Mehrfachauswahl), Bestätigung, dass du mindestens 18 Jahre alt bist, und deine Einwilligung in die Verarbeitung deiner Angaben durch Google (USA).",
+        "**Freiwillig:** Landkreis bzw. kreisfreie Stadt, was du beitragen möchtest (z. B. Fotos/Video vor Ort, Kontakte zu einer Location, Printshops), ob du mit einem Tesla kommst und gegebenenfalls das Modell (z. B. 2025 Model Y Performance).",
       ],
     },
     {
@@ -143,7 +143,7 @@ export const datenschutzDe: LegalPage = {
 
     { h2: "11. Pflicht zur Bereitstellung", id: "pflicht" },
     {
-      p: "Du bist nicht verpflichtet, uns Daten bereitzustellen. Ohne E-Mail-Adresse können wir dein Interesse jedoch nicht berücksichtigen; im Google-Formular sind außerdem dein Bundesland, mindestens ein möglicher Termin, die Bestätigung, dass du mindestens 18 Jahre alt bist, und die Einwilligung zu Google nötig.",
+      p: "Du bist nicht verpflichtet, uns Daten bereitzustellen. Ohne E-Mail-Adresse können wir dein Interesse jedoch nicht berücksichtigen; im Google-Formular sind außerdem dein Vorname, dein Nachname, dein Bundesland, mindestens ein möglicher Termin, die Bestätigung, dass du mindestens 18 Jahre alt bist, und die Einwilligung zu Google nötig.",
     },
 
     { h2: "12. Änderungen", id: "aenderungen" },

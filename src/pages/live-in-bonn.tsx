@@ -136,7 +136,7 @@ export function LiveInBonnPage() {
             <div className="card">
               <div className="hexicon" aria-hidden="true">3</div>
               <p className="label">Wer</p>
-              <p className="val">Alle drei zusammen</p>
+              <p className="val">Alle drei ssusamme</p>
               <p className="meta">Tobi + Zuschauer von TeslaTobi und TechTalkTobi 🙂</p>
             </div>
           </div>
@@ -158,7 +158,7 @@ export function LiveInBonnPage() {
               Spaß haben.
             </p>
           </div>
-          <ul className="hexlist">
+          <ul className="hexlist hexlist-idee">
             <li>Lockerer Abend, kein Programm</li>
             <li>Vielleicht gibt's was zu gewinnen 🙃</li>
             <li>Spaß haben</li>
@@ -277,8 +277,9 @@ export function LiveInBonnPage() {
           {/* Required fields: Google Form as specified by Tobias on Nov 2 2026. */}
           <p className="lead">
             Damit Tobias eine Vorstellung davon bekommt, wie groß er planen muss. Pflicht sind nur
-            deine E-Mail-Adresse, dein Bundesland, mindestens ein möglicher Termin, die Bestätigung,
-            dass du mindestens 18 bist, und deine Einwilligung zu Google. Alles andere ist
+            dein Vorname, dein Nachname, deine E-Mail-Adresse, dein Bundesland, mindestens ein
+            möglicher Termin, die Bestätigung, dass du mindestens 18 bist, und deine Einwilligung zu
+            Google. Alles andere ist
             freiwillig.
           </p>
           <GoogleFormTwoClick />
