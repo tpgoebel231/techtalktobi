@@ -67,7 +67,7 @@
 /* sections */
 .lib section { padding: 88px 0; border-bottom: 1px solid var(--line); }
 .lib .lead { max-width: 720px; }
-.lib .grid4 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 32px; }
+.lib .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 32px; }
 .lib .card { background: var(--card); border: 1px solid var(--line); clip-path: var(--cut); padding: 28px 24px; }
 .lib .hexicon { width: 56px; height: 56px; clip-path: var(--hex); background: var(--gold); display: grid; place-items: center; color: var(--bg); font-weight: 900; font-size: 22px; margin-bottom: 16px; }
 .lib .card .val { color: var(--white); font-size: 22px; font-weight: 800; line-height: 1.3; margin: 6px 0 8px; }
@@ -118,6 +118,9 @@
 .lib .legal strong { color: var(--white); }
 .lib .legal address { font-style: normal; margin: 0 0 1em; }
 .lib mark.ph { background: #a11d2033; color: #ffb3b3; border: 1px dashed var(--crimson-t); border-radius: 4px; padding: 0 4px; }
+@media (max-width: 1100px) {
+  .lib .grid4 { grid-template-columns: repeat(2, 1fr); }
+}
 @media (max-width: 900px) {
   .lib .hero .wrap { grid-template-columns: 1fr; padding-top: 56px; padding-bottom: 72px; }
   .lib .hero-logo { display: none; }
