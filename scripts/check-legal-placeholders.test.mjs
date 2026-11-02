@@ -4,7 +4,7 @@ import { findPlaceholders, htmlHasPlaceholder, loadLegalPages } from "./check-le
 
 test("findPlaceholders flags any string with [", () => {
   const hits = findPlaceholders({
-    impressum: { title: "Impressum", blocks: [{ p: "ok" }, { lines: ["[NAME]", "USA"] }] },
+    datenschutz: { title: "Datenschutz", blocks: [{ p: "ok" }, { lines: ["[NAME]", "USA"] }] },
   });
   assert.equal(hits.length, 1);
   assert.equal(hits[0].path, "blocks[1].lines[0]");
@@ -19,7 +19,8 @@ test("htmlHasPlaceholder ignores script payloads but sees body text", () => {
   assert.equal(htmlHasPlaceholder("<p>[ANSCHRIFT]</p>"), true);
 });
 
-test("legal-de.ts loads and exposes both pages", async () => {
+test("legal-de.ts loads and has no placeholders left", async () => {
   const pages = await loadLegalPages();
-  assert.ok(pages.impressum && pages.datenschutz);
+  assert.ok(pages.datenschutz);
+  assert.deepEqual(findPlaceholders(pages), []);
 });

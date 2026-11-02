@@ -4,10 +4,6 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
-
-// These fixtures test head/route handling, not the legal ship guard
-// (covered in check-legal-placeholders.test.mjs), so allow placeholders here.
-process.env.ALLOW_LEGAL_PLACEHOLDERS = "1";
 import {
   DEFAULT_OG_IMAGE,
   LOCALE_HEAD,
@@ -288,13 +284,14 @@ test("structuredData emits a schema.org graph with Article for research pages", 
 test("German-only pages ship as routes with de-only hreflang and stay out of the sitemap", async () => {
   const pieces = await loadResearchPieces();
   const routes = canonicalRoutes(pieces);
-  for (const r of ["/de/live-in-bonn", "/de/impressum", "/de/datenschutz"]) {
+  for (const r of ["/de/live-in-bonn", "/de/datenschutz"]) {
     assert.ok(routes.includes(r), r);
     const seo = seoForRoute(r, pieces);
     assert.deepEqual(seo.alternates.map((a) => a.hreflang), ["de"]);
     assert.equal(seo.htmlLang, "de");
   }
   assert.ok(!routes.includes("/en/live-in-bonn"));
+  assert.ok(!routes.some((r) => r.includes("impressum")));
   const sitemap = readFileSync(new URL("../public/sitemap.xml", import.meta.url), "utf8");
-  assert.ok(!/live-in-bonn|impressum|datenschutz/.test(sitemap));
+  assert.ok(!/live-in-bonn|datenschutz/.test(sitemap));
 });

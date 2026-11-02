@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 /**
- * Ship guard for the German legal pages (/de/impressum, /de/datenschutz).
+ * Ship guard for the German privacy page (/de/datenschutz).
  *
- * The Corporate Lawyer drafts leave [SQUARE BRACKET] placeholders that only
- * Tobias can fill (name, address, options). This script fails while any "["
- * remains in src/data/legal-de.ts strings, so the pages cannot ship by
+ * The Corporate Lawyer drafts use [SQUARE BRACKET] placeholders for open
+ * items. This script fails if any "[" appears in src/data/legal-de.ts strings, so the pages cannot ship by
  * accident. It runs in CI (npm run check:legal) and inside
  * scripts/prepare-github-pages.mjs, which also checks the rendered HTML.
  *
@@ -18,7 +17,7 @@ import ts from "typescript";
 
 const repoRoot = fileURLToPath(new URL("..", import.meta.url));
 
-export const GUARDED_ROUTES = ["/de/impressum", "/de/datenschutz"];
+export const GUARDED_ROUTES = ["/de/datenschutz"];
 
 export async function loadLegalPages(file = join(repoRoot, "src/data/legal-de.ts")) {
   const { outputText } = ts.transpileModule(readFileSync(file, "utf8"), {
@@ -68,7 +67,7 @@ export async function assertNoLegalPlaceholders() {
   const msg = [
     `check-legal-placeholders: ${hits.length} unfilled [placeholder] string(s) in src/data/legal-de.ts:`,
     ...hits.map((h) => `  ${h.page}.${h.path}: ${h.text.slice(0, 100)}`),
-    "Tobias has to fill these before /de/impressum and /de/datenschutz can ship.",
+    "Resolve these before /de/datenschutz can ship.",
   ].join("\n");
   if (allowPlaceholders()) {
     console.warn(`${msg}\n(ALLOW_LEGAL_PLACEHOLDERS=1: warning only, local preview)`);

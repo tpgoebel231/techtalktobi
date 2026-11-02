@@ -44,8 +44,8 @@ export function BonnShell({
             Forms (Server in den USA).
           </p>
           <p>
-            <a href="/de/datenschutz">Datenschutz</a> · <a href="/de/impressum">Impressum</a> ·{" "}
-            <a href="/de">techtalktobi.com</a>
+            {/* No Impressum link: the main site footer has none to point to. */}
+            <a href="/de/datenschutz">Datenschutz</a> · <a href="/de">techtalktobi.com</a>
           </p>
         </div>
       </footer>

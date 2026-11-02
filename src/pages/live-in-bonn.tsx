@@ -275,7 +275,12 @@ export function LiveInBonnPage() {
         <div className="wrap">
           <p className="label">Dabei sein</p>
           <h2 id="h-anm">Jetzt anmelden</h2>
-          <p className="lead">Damit Tobias planen kann, wie viele kommen. Pflicht ist nur deine E-Mail.</p>
+          {/* Required fields match the live Google Form (checked Nov 1 2026). */}
+          <p className="lead">
+            Damit Tobias planen kann, wie viele kommen. Pflicht sind nur deine E-Mail-Adresse, die
+            Bestätigung, dass du mindestens 18 bist, und deine Einwilligung zu Google. Alles andere
+            ist freiwillig.
+          </p>
           <GoogleFormTwoClick />
           <div className="note gform-note" role="note">
             <p>

@@ -28,6 +28,6 @@ jobs:
           cache: npm
       - run: npm install
       - run: npm run typecheck
-      # Fails while /de/impressum or /de/datenschutz still has [placeholders].
+      # Fails if /de/datenschutz has any [placeholder] left.
       - run: npm run check:legal
       - run: npm run build

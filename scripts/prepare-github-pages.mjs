@@ -34,7 +34,7 @@ const pages = ["", "about", "consulting", "media-kit", "media", "research"];
  * but are NOT in public/sitemap.xml or the site nav yet. When Tobias says
  * to advertise Live in Bonn, add it to the sitemap and nav, and flip
  * LIVE_IN_BONN_LISTED in src/lib/clean-routes.ts. Copy from
- * src/routes/$locale/{live-in-bonn,impressum,datenschutz}.tsx.
+ * src/routes/$locale/{live-in-bonn,datenschutz}.tsx.
  */
 export const DE_ONLY_PAGES = {
   "live-in-bonn": {
@@ -42,14 +42,10 @@ export const DE_ONLY_PAGES = {
     description:
       "Der erste TeslaTobi Stammtisch zum Anfassen: Dezember 2026 in Bonn. Eckdaten, Terminvorschläge und Anmeldung.",
   },
-  impressum: {
-    title: "Impressum · TechTalkTobi",
-    description: "Impressum von techtalktobi.com, Angaben gemäß § 5 DDG.",
-  },
   datenschutz: {
     title: "Datenschutzerklärung · TechTalkTobi",
     description:
-      "Datenschutzerklärung von techtalktobi.com, unter anderem zur Anmeldung zum TeslaTobi-Stammtisch in Bonn über Google Forms.",
+      "Datenschutzerklärung für die Seite Live in Bonn und die Anmeldung zum TeslaTobi-Stammtisch in Bonn über Google Forms.",
   },
 };
 
