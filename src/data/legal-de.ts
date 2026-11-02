@@ -39,6 +39,15 @@ export const datenschutzDe: LegalPage = {
     {
       p: "Wir verarbeiten personenbezogene Daten nur, soweit dies für eine funktionsfähige Website, die Organisation des TeslaTobi-Stammtischs oder die Beantwortung deiner Anfragen erforderlich ist oder du eingewilligt hast. Die Verarbeitung richtet sich nach der DSGVO und, für den Zugriff auf dein Endgerät, nach § 25 Telekommunikation-Digitale-Dienste-Datenschutz-Gesetz (TDDDG).",
     },
+    { h3: "Empfänger" },
+    { p: "Deine Daten erhalten nur diese Empfänger:" },
+    {
+      ul: [
+        "GitHub, Inc., USA: Hosting dieser Website (siehe Abschnitt 3).",
+        "Google LLC, USA: Anmeldeformular (Google Forms), erst nach deinem Klick; die Übermittlung stützt sich auf das EU-US Data Privacy Framework (siehe Abschnitt 4).",
+        "Porkbun LLC, Tigard, Oregon, USA: unser E-Mail-Postfach tobias@techtalktobi.com, wenn du uns schreibst oder dich per E-Mail anmeldest (siehe Abschnitt 5).",
+      ],
+    },
 
     { h2: "3. Hosting über GitHub Pages", id: "hosting" },
     {
@@ -91,7 +100,7 @@ export const datenschutzDe: LegalPage = {
 
     { h2: "5. Anmeldung und Kontakt per E-Mail", id: "kontakt" },
     {
-      p: "Du kannst dich ohne Nachteil auch per E-Mail an tobias@techtalktobi.com anmelden oder uns so kontaktieren. Wir verarbeiten dann deine Angaben (E-Mail-Adresse, Name falls angegeben, Inhalt der Nachricht), um deine Anmeldung oder Anfrage zu bearbeiten. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b und f DSGVO. Unser E-Mail-Postfach liegt bei einem Anbieter in den USA. Anmelde-E-Mails löschen wir spätestens 30 Tage nach dem Stammtisch, andere Anfragen, sobald sie erledigt sind.",
+      p: "Du kannst dich ohne Nachteil auch per E-Mail an tobias@techtalktobi.com anmelden oder uns so kontaktieren. Wir verarbeiten dann deine Angaben (E-Mail-Adresse, Name falls angegeben, Inhalt der Nachricht), um deine Anmeldung oder Anfrage zu bearbeiten. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b und f DSGVO. Unser E-Mail-Postfach tobias@techtalktobi.com liegt bei Porkbun LLC, Tigard, Oregon, USA. Porkbun erhält dabei deine E-Mail und speichert sie für uns. Anmelde-E-Mails löschen wir spätestens 30 Tage nach dem Stammtisch, andere Anfragen, sobald sie erledigt sind.",
     },
 
     { h2: "6. Keine Webanalyse, keine externen Schriftarten", id: "keine-analyse" },
