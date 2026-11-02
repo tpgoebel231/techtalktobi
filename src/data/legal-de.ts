@@ -24,13 +24,13 @@ export type LegalPage = { title: string; description: string; blocks: LegalBlock
 export const datenschutzDe: LegalPage = {
   title: "Datenschutzerklärung",
   description:
-    "Datenschutzerklärung für die Seite Live in Bonn und die Anmeldung zum TeslaTobi-Stammtisch in Bonn über Google Forms.",
+    "Datenschutzerklärung für die Seite Live in Bonn und die Interessenbekundung für den TeslaTobi-Stammtisch in Bonn über Google Forms.",
   blocks: [
     { p: "Stand: 1. November 2026" },
 
     { h2: "1. Geltungsbereich und Verantwortlicher", id: "verantwortlicher" },
     {
-      p: "Diese Datenschutzerklärung gilt für die Seite techtalktobi.com/de/live-in-bonn, diese Datenschutzerklärung und die Anmeldung zum TeslaTobi-Stammtisch in Bonn. Verantwortlich im Sinne von Art. 4 Nr. 7 Datenschutz-Grundverordnung (DSGVO) ist:",
+      p: "Diese Datenschutzerklärung gilt für die Seite techtalktobi.com/de/live-in-bonn, diese Datenschutzerklärung und die Interessenbekundung für den TeslaTobi-Stammtisch in Bonn. Verantwortlich im Sinne von Art. 4 Nr. 7 Datenschutz-Grundverordnung (DSGVO) ist:",
     },
     { lines: ["Tobias Goebel", "E-Mail: tobias@techtalktobi.com"] },
     { p: "Einen Datenschutzbeauftragten haben wir nicht benannt, da hierzu keine Pflicht besteht." },
@@ -44,8 +44,8 @@ export const datenschutzDe: LegalPage = {
     {
       ul: [
         "GitHub, Inc., USA: Hosting dieser Website (siehe Abschnitt 3).",
-        "Google LLC, USA: Anmeldeformular (Google Forms), erst nach deinem Klick; die Übermittlung stützt sich auf das EU-US Data Privacy Framework (siehe Abschnitt 4).",
-        "Porkbun LLC, Tigard, Oregon, USA: unser E-Mail-Postfach tobias@techtalktobi.com, wenn du uns schreibst oder dich per E-Mail anmeldest (siehe Abschnitt 5).",
+        "Google LLC, USA: Formular zur Interessenbekundung (Google Forms), erst nach deinem Klick; die Übermittlung stützt sich auf das EU-US Data Privacy Framework (siehe Abschnitt 4).",
+        "Porkbun LLC, Tigard, Oregon, USA: unser E-Mail-Postfach tobias@techtalktobi.com, wenn du uns schreibst oder dein Interesse per E-Mail bekundest (siehe Abschnitt 5).",
       ],
     },
 
@@ -63,10 +63,10 @@ export const datenschutzDe: LegalPage = {
       p: "GitHub, Inc. ist unter dem EU-US Data Privacy Framework zertifiziert. Die Übermittlung in die USA stützt sich auf den Angemessenheitsbeschluss der Europäischen Kommission vom 10.07.2023 (Art. 45 DSGVO). Weitere Informationen: https://docs.github.com/de/site-policy/privacy-policies/github-general-privacy-statement",
     },
 
-    { h2: "4. Anmeldung zum TeslaTobi-Stammtisch Bonn über Google Forms", id: "anmeldung" },
+    { h2: "4. Interessenbekundung für den TeslaTobi-Stammtisch Bonn über Google Forms", id: "anmeldung" },
     { h3: "Laden des Formulars" },
     {
-      p: 'Das Anmeldeformular ist ein Formular von Google Forms, einem Dienst der Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA. Es wird erst geladen, wenn du auf "Formular von Google laden" klickst. Vorher werden keine Daten an Google übertragen. Nach dem Klick lädt dein Browser Inhalte von Servern von Google (u. a. docs.google.com, www.gstatic.com, ssl.gstatic.com, fonts.googleapis.com, fonts.gstatic.com und play.google.com). Google erhält dabei deine IP-Adresse, Browser- und Gerätedaten und die Adresse unserer Seite und kann Cookies und ähnliche Techniken auf deinem Gerät speichern oder auslesen (Übersicht: https://policies.google.com/technologies/cookies). Rechtsgrundlage ist deine Einwilligung durch den Klick (§ 25 Abs. 1 TDDDG, Art. 6 Abs. 1 lit. a DSGVO). Du kannst sie jederzeit für die Zukunft widerrufen, indem du die Seite schließt und die Google-Cookies in deinem Browser löschst. Unsere Website selbst speichert deine Entscheidung nicht.',
+      p: 'Das Formular zur Interessenbekundung ist ein Formular von Google Forms, einem Dienst der Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA. Es wird erst geladen, wenn du auf "Formular von Google laden" klickst. Vorher werden keine Daten an Google übertragen. Nach dem Klick lädt dein Browser Inhalte von Servern von Google (u. a. docs.google.com, www.gstatic.com, ssl.gstatic.com, fonts.googleapis.com, fonts.gstatic.com und play.google.com). Google erhält dabei deine IP-Adresse, Browser- und Gerätedaten und die Adresse unserer Seite und kann Cookies und ähnliche Techniken auf deinem Gerät speichern oder auslesen (Übersicht: https://policies.google.com/technologies/cookies). Rechtsgrundlage ist deine Einwilligung durch den Klick (§ 25 Abs. 1 TDDDG, Art. 6 Abs. 1 lit. a DSGVO). Du kannst sie jederzeit für die Zukunft widerrufen, indem du die Seite schließt und die Google-Cookies in deinem Browser löschst. Unsere Website selbst speichert deine Entscheidung nicht.',
     },
     { h3: "Zwecke und Daten" },
     {
@@ -74,8 +74,8 @@ export const datenschutzDe: LegalPage = {
     },
     {
       ul: [
-        "**Pflicht:** E-Mail-Adresse, Bestätigung, dass du mindestens 18 Jahre alt bist, und deine Einwilligung in die Verarbeitung deiner Angaben durch Google (USA).",
-        "**Freiwillig:** Vorname, Nachname, Landkreis bzw. kreisfreie Stadt, was du beitragen möchtest, ob du mit einem Tesla kommst und gegebenenfalls Modell und Baujahr, Wunschtermin.",
+        "**Pflicht:** E-Mail-Adresse, Bundesland, mindestens ein möglicher Termin (\"Mögliche Termine für mich\", Mehrfachauswahl), Bestätigung, dass du mindestens 18 Jahre alt bist, und deine Einwilligung in die Verarbeitung deiner Angaben durch Google (USA).",
+        "**Freiwillig:** Vorname, Nachname, Landkreis bzw. kreisfreie Stadt, was du beitragen möchtest (z. B. Fotos/Video vor Ort, Kontakte zu einer Location, Printshops), ob du mit einem Tesla kommst und gegebenenfalls das Modell (z. B. 2025 Model Y Performance).",
       ],
     },
     {
@@ -95,12 +95,12 @@ export const datenschutzDe: LegalPage = {
     },
     { h3: "Speicherdauer und Löschung" },
     {
-      p: "Wir schließen das Formular zum Anmeldeschluss. Spätestens 30 Tage nach dem Stammtisch löschen wir alle Antworten in Google Forms, die Google-Tabelle als ganze Datei samt Versionsverlauf und Papierkorb, Downloads und E-Mails mit deinen Anmeldedaten. Wenn du widerrufst oder dich abmeldest, löschen wir deine Angaben früher. Wie lange Google gelöschte Daten noch in Sicherungskopien hält, bestimmt Google.",
+      p: "Wir schließen das Formular zum Einsendeschluss. Spätestens 30 Tage nach dem Stammtisch löschen wir alle Antworten in Google Forms, die Google-Tabelle als ganze Datei samt Versionsverlauf und Papierkorb, Downloads und E-Mails mit deinen Angaben. Wenn du widerrufst oder dich abmeldest, löschen wir deine Angaben früher. Wie lange Google gelöschte Daten noch in Sicherungskopien hält, bestimmt Google.",
     },
 
-    { h2: "5. Anmeldung und Kontakt per E-Mail", id: "kontakt" },
+    { h2: "5. Interesse und Kontakt per E-Mail", id: "kontakt" },
     {
-      p: "Du kannst dich ohne Nachteil auch per E-Mail an tobias@techtalktobi.com anmelden oder uns so kontaktieren. Wir verarbeiten dann deine Angaben (E-Mail-Adresse, Name falls angegeben, Inhalt der Nachricht), um deine Anmeldung oder Anfrage zu bearbeiten. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b und f DSGVO. Unser E-Mail-Postfach tobias@techtalktobi.com liegt bei Porkbun LLC, Tigard, Oregon, USA. Porkbun erhält dabei deine E-Mail und speichert sie für uns. Anmelde-E-Mails löschen wir spätestens 30 Tage nach dem Stammtisch, andere Anfragen, sobald sie erledigt sind.",
+      p: "Du kannst dein Interesse ohne Nachteil auch per E-Mail an tobias@techtalktobi.com bekunden oder uns so kontaktieren. Wir verarbeiten dann deine Angaben (E-Mail-Adresse, Name falls angegeben, Inhalt der Nachricht), um deine Interessenbekundung oder Anfrage zu bearbeiten. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b und f DSGVO. Unser E-Mail-Postfach tobias@techtalktobi.com liegt bei Porkbun LLC, Tigard, Oregon, USA. Porkbun erhält dabei deine E-Mail und speichert sie für uns. E-Mails zur Interessenbekundung löschen wir spätestens 30 Tage nach dem Stammtisch, andere Anfragen, sobald sie erledigt sind.",
     },
 
     { h2: "6. Keine Webanalyse, keine externen Schriftarten", id: "keine-analyse" },
@@ -110,7 +110,7 @@ export const datenschutzDe: LegalPage = {
 
     { h2: "7. Cookies und Zugriffe auf dein Endgerät", id: "cookies" },
     {
-      p: 'Die Seiten zum Stammtisch setzen keine Cookies und greifen nicht auf Informationen in deinem Endgerät zu, die nicht für die Darstellung der Seite unbedingt erforderlich sind (§ 25 Abs. 2 Nr. 2 TDDDG). Ein Cookie-Banner ist deshalb nicht nötig. Das Anmeldeformular von Google lädt erst nach deinem Klick auf "Formular von Google laden". Erst dann kann Google (nicht wir) Cookies auf deinem Gerät speichern oder lesen, siehe Abschnitt 4.',
+      p: 'Die Seiten zum Stammtisch setzen keine Cookies und greifen nicht auf Informationen in deinem Endgerät zu, die nicht für die Darstellung der Seite unbedingt erforderlich sind (§ 25 Abs. 2 Nr. 2 TDDDG). Ein Cookie-Banner ist deshalb nicht nötig. Das Formular von Google lädt erst nach deinem Klick auf "Formular von Google laden". Erst dann kann Google (nicht wir) Cookies auf deinem Gerät speichern oder lesen, siehe Abschnitt 4.',
     },
 
     { h2: "8. Externe Links", id: "links" },
@@ -143,12 +143,12 @@ export const datenschutzDe: LegalPage = {
 
     { h2: "11. Pflicht zur Bereitstellung", id: "pflicht" },
     {
-      p: "Du bist nicht verpflichtet, uns Daten bereitzustellen. Ohne E-Mail-Adresse ist eine Anmeldung zum Stammtisch jedoch nicht möglich; im Google-Formular sind außerdem die Bestätigung, dass du mindestens 18 Jahre alt bist, und die Einwilligung zu Google nötig.",
+      p: "Du bist nicht verpflichtet, uns Daten bereitzustellen. Ohne E-Mail-Adresse können wir dein Interesse jedoch nicht berücksichtigen; im Google-Formular sind außerdem dein Bundesland, mindestens ein möglicher Termin, die Bestätigung, dass du mindestens 18 Jahre alt bist, und die Einwilligung zu Google nötig.",
     },
 
     { h2: "12. Änderungen", id: "aenderungen" },
     {
-      p: "Wir passen diese Datenschutzerklärung an, wenn sich die Seite, das Anmeldeformular oder die Rechtslage ändert. Es gilt die jeweils hier veröffentlichte Fassung.",
+      p: "Wir passen diese Datenschutzerklärung an, wenn sich die Seite, das Formular oder die Rechtslage ändert. Es gilt die jeweils hier veröffentlichte Fassung.",
     },
   ],
 };

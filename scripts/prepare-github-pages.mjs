@@ -40,12 +40,12 @@ export const DE_ONLY_PAGES = {
   "live-in-bonn": {
     title: "Live in Bonn · TeslaTobi Stammtisch",
     description:
-      "Der erste TeslaTobi Stammtisch zum Anfassen: Dezember 2026 in Bonn. Eckdaten, Terminvorschläge und Anmeldung.",
+      "Der erste TeslaTobi Stammtisch zum Anfassen: Mitte Dezember 2026 in Bonn. Eckdaten, Terminvorschläge und Interessenbekundung.",
   },
   datenschutz: {
     title: "Datenschutzerklärung · TechTalkTobi",
     description:
-      "Datenschutzerklärung für die Seite Live in Bonn und die Anmeldung zum TeslaTobi-Stammtisch in Bonn über Google Forms.",
+      "Datenschutzerklärung für die Seite Live in Bonn und die Interessenbekundung für den TeslaTobi-Stammtisch in Bonn über Google Forms.",
   },
 };
 
