@@ -139,12 +139,6 @@ export function LiveInBonnPage() {
               <p className="val">Alle drei zusammen</p>
               <p className="meta">Tobi + Zuschauer von TeslaTobi und TechTalkTobi 🙂</p>
             </div>
-            <div className="card">
-              <div className="hexicon" aria-hidden="true">4</div>
-              <p className="label">Was</p>
-              <p className="val">Stammtisch</p>
-              <p className="meta">Nicht kommerziell.</p>
-            </div>
           </div>
         </div>
       </section>
@@ -180,7 +174,7 @@ export function LiveInBonnPage() {
               width="1800"
               height="1005"
               loading="lazy"
-              alt="Tobias sitzt in einer Kneipe an einem Holztisch, umgeben von lachenden Menschen mit Biergläsern in der Hand"
+              alt="Symbolbild: Eine Gruppe lächelnder Menschen steht in einer gemütlichen Kneipe um Holztische, einige halten Biergläser."
             />
             {/* Deliberate joke by Tobias (AI image, no meetup yet). Keep as is. */}
             <figcaption>Symbolbild</figcaption>
