@@ -14,6 +14,9 @@ import { Route as LocaleRouteRouteImport } from './routes/$locale/route'
 import { Route as LocaleIndexRouteImport } from './routes/$locale/index'
 import { Route as LocaleAboutRouteImport } from './routes/$locale/about'
 import { Route as LocaleConsultingRouteImport } from './routes/$locale/consulting'
+import { Route as LocaleDatenschutzRouteImport } from './routes/$locale/datenschutz'
+import { Route as LocaleImpressumRouteImport } from './routes/$locale/impressum'
+import { Route as LocaleLiveInBonnRouteImport } from './routes/$locale/live-in-bonn'
 import { Route as LocaleMediaKitRouteImport } from './routes/$locale/media-kit'
 import { Route as LocaleMediaIndexRouteImport } from './routes/$locale/media/index'
 import { Route as LocaleMediaSlugRouteImport } from './routes/$locale/media/$slug'
@@ -48,6 +51,21 @@ const LocaleAboutRoute = LocaleAboutRouteImport.update({
 const LocaleConsultingRoute = LocaleConsultingRouteImport.update({
   id: '/consulting',
   path: '/consulting',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleDatenschutzRoute = LocaleDatenschutzRouteImport.update({
+  id: '/datenschutz',
+  path: '/datenschutz',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleImpressumRoute = LocaleImpressumRouteImport.update({
+  id: '/impressum',
+  path: '/impressum',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleLiveInBonnRoute = LocaleLiveInBonnRouteImport.update({
+  id: '/live-in-bonn',
+  path: '/live-in-bonn',
   getParentRoute: () => LocaleRouteRoute,
 } as any)
 const LocaleMediaKitRoute = LocaleMediaKitRouteImport.update({
@@ -106,6 +124,9 @@ export interface FileRoutesByFullPath {
   '/$locale': typeof LocaleRouteRouteWithChildren
   '/$locale/about': typeof LocaleAboutRoute
   '/$locale/consulting': typeof LocaleConsultingRoute
+  '/$locale/datenschutz': typeof LocaleDatenschutzRoute
+  '/$locale/impressum': typeof LocaleImpressumRoute
+  '/$locale/live-in-bonn': typeof LocaleLiveInBonnRoute
   '/$locale/media-kit': typeof LocaleMediaKitRoute
   '/$locale/': typeof LocaleIndexRoute
   '/$locale/media/$slug': typeof LocaleMediaSlugRoute
@@ -122,6 +143,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$locale/about': typeof LocaleAboutRoute
   '/$locale/consulting': typeof LocaleConsultingRoute
+  '/$locale/datenschutz': typeof LocaleDatenschutzRoute
+  '/$locale/impressum': typeof LocaleImpressumRoute
+  '/$locale/live-in-bonn': typeof LocaleLiveInBonnRoute
   '/$locale/media-kit': typeof LocaleMediaKitRoute
   '/$locale': typeof LocaleIndexRoute
   '/$locale/media/$slug': typeof LocaleMediaSlugRoute
@@ -140,6 +164,9 @@ export interface FileRoutesById {
   '/$locale': typeof LocaleRouteRouteWithChildren
   '/$locale/about': typeof LocaleAboutRoute
   '/$locale/consulting': typeof LocaleConsultingRoute
+  '/$locale/datenschutz': typeof LocaleDatenschutzRoute
+  '/$locale/impressum': typeof LocaleImpressumRoute
+  '/$locale/live-in-bonn': typeof LocaleLiveInBonnRoute
   '/$locale/media-kit': typeof LocaleMediaKitRoute
   '/$locale/': typeof LocaleIndexRoute
   '/$locale/media/$slug': typeof LocaleMediaSlugRoute
@@ -159,6 +186,9 @@ export interface FileRouteTypes {
     | '/$locale'
     | '/$locale/about'
     | '/$locale/consulting'
+    | '/$locale/datenschutz'
+    | '/$locale/impressum'
+    | '/$locale/live-in-bonn'
     | '/$locale/media-kit'
     | '/$locale/'
     | '/$locale/media/$slug'
@@ -175,6 +205,9 @@ export interface FileRouteTypes {
     | '/'
     | '/$locale/about'
     | '/$locale/consulting'
+    | '/$locale/datenschutz'
+    | '/$locale/impressum'
+    | '/$locale/live-in-bonn'
     | '/$locale/media-kit'
     | '/$locale'
     | '/$locale/media/$slug'
@@ -192,6 +225,9 @@ export interface FileRouteTypes {
     | '/$locale'
     | '/$locale/about'
     | '/$locale/consulting'
+    | '/$locale/datenschutz'
+    | '/$locale/impressum'
+    | '/$locale/live-in-bonn'
     | '/$locale/media-kit'
     | '/$locale/'
     | '/$locale/media/$slug'
@@ -250,6 +286,27 @@ declare module '@tanstack/react-router' {
       path: '/consulting'
       fullPath: '/$locale/consulting'
       preLoaderRoute: typeof LocaleConsultingRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/datenschutz': {
+      id: '/$locale/datenschutz'
+      path: '/datenschutz'
+      fullPath: '/$locale/datenschutz'
+      preLoaderRoute: typeof LocaleDatenschutzRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/impressum': {
+      id: '/$locale/impressum'
+      path: '/impressum'
+      fullPath: '/$locale/impressum'
+      preLoaderRoute: typeof LocaleImpressumRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/live-in-bonn': {
+      id: '/$locale/live-in-bonn'
+      path: '/live-in-bonn'
+      fullPath: '/$locale/live-in-bonn'
+      preLoaderRoute: typeof LocaleLiveInBonnRouteImport
       parentRoute: typeof LocaleRouteRoute
     }
     '/$locale/media-kit': {
@@ -328,6 +385,9 @@ declare module '@tanstack/react-router' {
 interface LocaleRouteRouteChildren {
   LocaleAboutRoute: typeof LocaleAboutRoute
   LocaleConsultingRoute: typeof LocaleConsultingRoute
+  LocaleDatenschutzRoute: typeof LocaleDatenschutzRoute
+  LocaleImpressumRoute: typeof LocaleImpressumRoute
+  LocaleLiveInBonnRoute: typeof LocaleLiveInBonnRoute
   LocaleMediaKitRoute: typeof LocaleMediaKitRoute
   LocaleIndexRoute: typeof LocaleIndexRoute
   LocaleMediaSlugRoute: typeof LocaleMediaSlugRoute
@@ -339,6 +399,9 @@ interface LocaleRouteRouteChildren {
 const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
   LocaleAboutRoute: LocaleAboutRoute,
   LocaleConsultingRoute: LocaleConsultingRoute,
+  LocaleDatenschutzRoute: LocaleDatenschutzRoute,
+  LocaleImpressumRoute: LocaleImpressumRoute,
+  LocaleLiveInBonnRoute: LocaleLiveInBonnRoute,
   LocaleMediaKitRoute: LocaleMediaKitRoute,
   LocaleIndexRoute: LocaleIndexRoute,
   LocaleMediaSlugRoute: LocaleMediaSlugRoute,
