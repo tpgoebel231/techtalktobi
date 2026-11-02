@@ -15,8 +15,8 @@ export const Route = createFileRoute("/$locale")({
       meta: [
         {
           title: de
-            ? "Tobias P. Goebel (TeslaTobi) | Medien & Beratung"
-            : "Tobias P. Goebel (TeslaTobi) | Media & Advisory",
+            ? "TeslaTobi (Tobias P. Goebel) | Medien & Beratung"
+            : "TeslaTobi (Tobias P. Goebel) | Media & Advisory",
         },
         {
           name: "description",
