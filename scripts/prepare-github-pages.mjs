@@ -8,7 +8,7 @@
  * hreflang/OG/JSON-LD, and copies each file to the `.html` + `/index.html`
  * pair GitHub Pages needs for HTTP 200. 404.html stays the SPA shell.
  */
-import { existsSync, mkdirSync, writeFileSync, accessSync, readFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, writeFileSync, accessSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
@@ -60,6 +60,75 @@ export const DE_ONLY_PAGES = {
  */
 export const ROOT_CLIENT_REDIRECT =
   '<script>if(location.pathname==="/")location.replace("/en");</script>';
+
+/**
+ * Locale-less page URLs that still get typed or linked. GitHub Pages has no
+ * server redirects, so prepare writes tiny HTML bounce pages to /en/*.
+ * Keep destination labels short and mechanical (no new Tobias-voice copy).
+ */
+export const LEGACY_PAGE_REDIRECTS = {
+  "/about": "/en/about",
+  "/consulting": "/en/consulting",
+  "/media": "/en/media",
+  "/media-kit": "/en/media-kit",
+  "/research": "/en/research",
+};
+
+/**
+ * Old file paths that still appear in Search Console or bookmarks.
+ * Values are paths under the publish root (usually copied from public/).
+ */
+export const LEGACY_FILE_ALIASES = {
+  "ai-robotics/Humanoid_Robotics_Stack_May2026.pdf":
+    "research/Humanoid_Robotics_Stack_May2026.pdf",
+};
+
+export function legacyRedirectHtml(toPath) {
+  const dest = `${SITE_ORIGIN}${toPath}`;
+  const safeDest = escapeHtml(dest);
+  const safePath = escapeHtml(toPath);
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Redirecting...</title>
+<link rel="canonical" href="${safeDest}"/>
+<meta http-equiv="refresh" content="0;url=${safeDest}"/>
+<script>location.replace(${JSON.stringify(toPath)});</script>
+</head>
+<body>
+<p><a href="${safePath}">Continue</a></p>
+</body>
+</html>
+`;
+}
+
+export function publishLegacyAliases(root) {
+  const pages = [];
+  for (const [fromPath, toPath] of Object.entries(LEGACY_PAGE_REDIRECTS)) {
+    const html = legacyRedirectHtml(toPath);
+    const bare = fromPath.slice(1);
+    const fileHtml = join(root, `${bare}.html`);
+    const dirIndex = join(root, bare, "index.html");
+    mkdirSync(dirname(fileHtml), { recursive: true });
+    mkdirSync(dirname(dirIndex), { recursive: true });
+    writeFileSync(fileHtml, html);
+    writeFileSync(dirIndex, html);
+    pages.push(fromPath);
+  }
+
+  const files = [];
+  for (const [alias, source] of Object.entries(LEGACY_FILE_ALIASES)) {
+    const src = join(root, source);
+    if (!existsSync(src)) throw new Error(`legacy alias missing source ${source}`);
+    const dest = join(root, alias);
+    mkdirSync(dirname(dest), { recursive: true });
+    copyFileSync(src, dest);
+    files.push(`/${alias}`);
+  }
+  return { pages, files };
+}
+
 
 /** Copy from src/routes/$locale/route.tsx */
 export const LOCALE_HEAD = {
@@ -430,6 +499,10 @@ export async function prepare(root = "dist/client") {
   }
 
   console.log(`prepare-github-pages: media kit aliases ${publishMediaKit(root).join(", ")}`);
+  const legacy = publishLegacyAliases(root);
+  console.log(
+    `prepare-github-pages: legacy page redirects ${legacy.pages.join(", ")}; file aliases ${legacy.files.join(", ")}`,
+  );
 
   writeFileSync(join(root, "CNAME"), "techtalktobi.com\n");
   writeFileSync(join(root, ".nojekyll"), "");

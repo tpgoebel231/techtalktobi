@@ -20,6 +20,10 @@ import {
   loadResearchPieces,
   prepare,
   seoForRoute,
+  LEGACY_PAGE_REDIRECTS,
+  LEGACY_FILE_ALIASES,
+  legacyRedirectHtml,
+  publishLegacyAliases,
 } from "./prepare-github-pages.mjs";
 import { loadConfig } from "./media-kit.mjs";
 
@@ -199,6 +203,8 @@ test("prepare writes unique heads, keeps 404 generic, and preserves Pages extras
   const root = mkdtempSync(join(tmpdir(), "pages-seo-"));
   writeFileSync(join(root, "_shell.html"), SAMPLE_SHELL);
   writeFileSync(join(root, loadConfig().current), "pdf");
+  mkdirSync(join(root, "research"), { recursive: true });
+  writeFileSync(join(root, "research", "Humanoid_Robotics_Stack_May2026.pdf"), "robotics-pdf");
   await seedPrerendered(root);
 
   const { routes } = await prepare(root);
@@ -247,6 +253,12 @@ test("prepare writes unique heads, keeps 404 generic, and preserves Pages extras
   const vercel = JSON.parse(readFileSync(join(root, "vercel.json"), "utf8"));
   assert.equal(vercel.git.deploymentEnabled, false);
   assert.ok(readFileSync(join(root, "media-kit.pdf")));
+  const bareKit = readFileSync(join(root, "media-kit", "index.html"), "utf8");
+  assert.match(bareKit, /rel="canonical" href="https:\/\/techtalktobi\.com\/en\/media-kit"/);
+  assert.equal(
+    readFileSync(join(root, "ai-robotics", "Humanoid_Robotics_Stack_May2026.pdf"), "utf8"),
+    "robotics-pdf",
+  );
 });
 
 test("prepare throws when a canonical route has no prerendered HTML", async () => {
@@ -326,4 +338,29 @@ test("Live in Bonn has its own social card; other routes keep og.jpg without twi
   assert.equal(ds.image, DEFAULT_OG_IMAGE);
   const home = extraHeadTags(seoForRoute("/de", pieces));
   assert.doesNotMatch(home, /twitter:image|og:image:width/);
+});
+
+test("legacyRedirectHtml points canonical and refresh at the English destination", () => {
+  const html = legacyRedirectHtml("/en/media-kit");
+  assert.match(html, /rel="canonical" href="https:\/\/techtalktobi\.com\/en\/media-kit"/);
+  assert.match(html, /http-equiv="refresh" content="0;url=https:\/\/techtalktobi\.com\/en\/media-kit"/);
+  assert.match(html, /location\.replace\("\/en\/media-kit"\)/);
+  assert.doesNotMatch(html, /\u2014/);
+});
+
+test("publishLegacyAliases writes bare page redirects and the robotics PDF alias", async () => {
+  const root = mkdtempSync(join(tmpdir(), "pages-legacy-"));
+  writeFileSync(join(root, "_shell.html"), SAMPLE_SHELL);
+  mkdirSync(join(root, "research"), { recursive: true });
+  writeFileSync(join(root, "research", "Humanoid_Robotics_Stack_May2026.pdf"), "pdf");
+  // seed current media kit so prepare's earlier step is not needed here
+  const out = publishLegacyAliases(root);
+  assert.deepEqual(out.pages.sort(), Object.keys(LEGACY_PAGE_REDIRECTS).sort());
+  assert.deepEqual(out.files, ["/" + Object.keys(LEGACY_FILE_ALIASES)[0]]);
+  const kit = readFileSync(join(root, "media-kit", "index.html"), "utf8");
+  assert.match(kit, /\/en\/media-kit/);
+  assert.equal(
+    readFileSync(join(root, "ai-robotics", "Humanoid_Robotics_Stack_May2026.pdf"), "utf8"),
+    "pdf",
+  );
 });
