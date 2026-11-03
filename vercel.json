@@ -21,6 +21,36 @@
       "source": "/TeslaTobi_MediaKit_Sep_2026.pdf",
       "destination": "/TeslaTobi_MediaKit_Oct_2026.pdf",
       "permanent": true
+    },
+    {
+      "source": "/about",
+      "destination": "/en/about",
+      "permanent": true
+    },
+    {
+      "source": "/consulting",
+      "destination": "/en/consulting",
+      "permanent": true
+    },
+    {
+      "source": "/media",
+      "destination": "/en/media",
+      "permanent": true
+    },
+    {
+      "source": "/media-kit",
+      "destination": "/en/media-kit",
+      "permanent": true
+    },
+    {
+      "source": "/research",
+      "destination": "/en/research",
+      "permanent": true
+    },
+    {
+      "source": "/ai-robotics/Humanoid_Robotics_Stack_May2026.pdf",
+      "destination": "/research/Humanoid_Robotics_Stack_May2026.pdf",
+      "permanent": true
     }
   ]
 }
