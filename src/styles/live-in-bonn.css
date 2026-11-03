@@ -91,6 +91,12 @@
 .lib .dates li { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
 .lib .dates .day { display: block; color: var(--white); font-weight: 700; }
 .lib .dates .d { display: block; color: var(--gold); font-size: 24px; font-weight: 900; line-height: 1.2; }
+/* 5 proposals: one even row of 5 on desktop; narrower widths keep auto-fill (3+2, 2+2+1, 1 column) */
+@media (min-width: 960px) {
+  .lib .dates { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+  .lib .dates li { padding: 18px 14px; }
+  .lib .dates .meta { font-size: 15px; }
+}
 /* photos */
 .lib .photo { margin: 0; }
 .lib .photo img { display: block; width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--line); }
