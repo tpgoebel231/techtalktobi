@@ -84,6 +84,30 @@ export const PAGE_TITLES = {
   research: { en: "Research · TechTalkTobi", de: "Research · TechTalkTobi" },
 };
 
+/** Existing page deks from src/data/copy.ts (never invent new Tobias-voice copy). */
+export const PAGE_DESCRIPTIONS = {
+  about: {
+    en: "Content and advisory on autonomous driving systems (robotaxis, driver assistance), AI, and robotics.",
+    de: "Content und Beratung zu autonomen Fahrsystemen (Robotaxis, Fahrerassistenz), KI und Robotik.",
+  },
+  consulting: {
+    en: "Paid, independent briefings. I drive these systems in US daily use and read the European rulebook. That gap is the work.",
+    de: "Bezahlte, unabhängige Einordnung auf Deutsch: Stand der Technik, nationales Recht, EU- und UNECE-Regelwerk: was schon gilt, was noch kommt.",
+  },
+  "media-kit": {
+    en: "Bio, channels, and contacts for producers, journalists, agencies, and partners.",
+    de: "Bio, Kanäle und Kontakt für Redaktionen, Produktionen, Agenturen und Partner.",
+  },
+  media: {
+    en: "Two commentary channels and TV-format event reports. For producers, event agencies, and press officers.",
+    de: "Zwei Kommentar-Kanäle und Eventberichte im TV-Stil. Für Produktionen, Eventagenturen und Pressestellen.",
+  },
+  research: {
+    en: "Graphics, a public FSD scorecard, and an interactive explainer.",
+    de: "Grafiken, eine öffentliche FSD-Bewertungsmatrix und ein interaktiver Rechner.",
+  },
+};
+
 export { escapeHtml };
 
 export function absoluteUrl(pathOrUrl) {
@@ -184,9 +208,15 @@ export function seoForRoute(route, pieces) {
   if (!pageTitle) {
     throw new Error(`prepare-github-pages: no title for ${route}`);
   }
+  const pageDescription = rest
+    ? PAGE_DESCRIPTIONS[rest]?.[locale]
+    : LOCALE_HEAD[locale].description;
+  if (!pageDescription) {
+    throw new Error(`prepare-github-pages: no description for ${route}`);
+  }
   return {
     title: pageTitle,
-    description: LOCALE_HEAD[locale].description,
+    description: pageDescription,
     canonical: `${SITE_ORIGIN}${route}`,
     ogUrl: `${SITE_ORIGIN}${route}`,
     image: DEFAULT_OG_IMAGE,

@@ -8,6 +8,7 @@ import {
   DEFAULT_OG_IMAGE,
   LOCALE_HEAD,
   PAGE_TITLES,
+  PAGE_DESCRIPTIONS,
   ROOT_CLIENT_REDIRECT,
   SITE_ORIGIN,
   applyRouteHead,
@@ -75,19 +76,29 @@ test("page titles and locale descriptions still exist in the route files", () =>
 
   const about = readFileSync(join(REPO, "src/routes/$locale/about.tsx"), "utf8");
   assert.ok(about.includes(PAGE_TITLES.about.en));
+  assert.ok(about.includes(PAGE_DESCRIPTIONS.about.en));
+  assert.ok(about.includes(PAGE_DESCRIPTIONS.about.de));
 
   const consulting = readFileSync(join(REPO, "src/routes/$locale/consulting.tsx"), "utf8");
   assert.ok(consulting.includes(PAGE_TITLES.consulting.en));
   assert.ok(consulting.includes(PAGE_TITLES.consulting.de));
+  assert.ok(consulting.includes(PAGE_DESCRIPTIONS.consulting.en));
+  assert.ok(consulting.includes(PAGE_DESCRIPTIONS.consulting.de));
 
   const mediaKit = readFileSync(join(REPO, "src/routes/$locale/media-kit.tsx"), "utf8");
   assert.ok(mediaKit.includes(PAGE_TITLES["media-kit"].en));
+  assert.ok(mediaKit.includes(PAGE_DESCRIPTIONS["media-kit"].en));
+  assert.ok(mediaKit.includes(PAGE_DESCRIPTIONS["media-kit"].de));
 
   const media = readFileSync(join(REPO, "src/routes/$locale/media/index.tsx"), "utf8");
   assert.ok(media.includes(PAGE_TITLES.media.en));
+  assert.ok(media.includes(PAGE_DESCRIPTIONS.media.en));
+  assert.ok(media.includes(PAGE_DESCRIPTIONS.media.de));
 
   const research = readFileSync(join(REPO, "src/routes/$locale/research/index.tsx"), "utf8");
   assert.ok(research.includes(PAGE_TITLES.research.en));
+  assert.ok(research.includes(PAGE_DESCRIPTIONS.research.en));
+  assert.ok(research.includes(PAGE_DESCRIPTIONS.research.de));
 });
 
 test("research SEO uses the piece title, dek, and image; x-default is the /en URL", async () => {
@@ -125,20 +136,25 @@ test("research SEO uses the piece title, dek, and image; x-default is the /en UR
   );
 });
 
-test("non-research pages reuse locale descriptions and route titles", async () => {
+test("non-research pages use page deks and route titles; home keeps locale description", async () => {
   const pieces = await loadResearchPieces();
   const about = seoForRoute("/en/about", pieces);
   assert.equal(about.title, "About · TechTalkTobi");
-  assert.equal(about.description, LOCALE_HEAD.en.description);
+  assert.equal(about.description, PAGE_DESCRIPTIONS.about.en);
   assert.equal(about.image, DEFAULT_OG_IMAGE);
   assert.equal(about.type, "website");
 
   const advisory = seoForRoute("/de/consulting", pieces);
   assert.equal(advisory.title, "Beratung · TechTalkTobi");
-  assert.equal(advisory.description, LOCALE_HEAD.de.description);
+  assert.equal(advisory.description, PAGE_DESCRIPTIONS.consulting.de);
+
+  const mediaKit = seoForRoute("/de/media-kit", pieces);
+  assert.equal(mediaKit.title, "Media Kit · TechTalkTobi");
+  assert.equal(mediaKit.description, PAGE_DESCRIPTIONS["media-kit"].de);
 
   const home = seoForRoute("/en", pieces);
   assert.equal(home.title, LOCALE_HEAD.en.title);
+  assert.equal(home.description, LOCALE_HEAD.en.description);
 });
 
 test("root redirect shell canonicalizes to /en", async () => {
@@ -214,7 +230,7 @@ test("prepare writes unique heads, keeps 404 generic, and preserves Pages extras
 
   const about = readFileSync(join(root, "en/about.html"), "utf8");
   assert.match(about, /<title>About · TechTalkTobi<\/title>/);
-  assert.match(about, new RegExp(LOCALE_HEAD.en.description.replaceAll(".", "\\.")));
+  assert.ok(about.includes(PAGE_DESCRIPTIONS.about.en));
   assert.match(about, /property="og:image" content="https:\/\/techtalktobi.com\/og.jpg"/);
 
   const index = readFileSync(join(root, "index.html"), "utf8");
