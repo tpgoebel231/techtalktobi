@@ -7,7 +7,6 @@ export const GOOGLE_FORM_URL =
 
 /** First date proposals from the prototype. Plain list, not confirmed, no voting. */
 const DATES = [
-  { tag: "Freitag", d: "11.12.2026", zeit: "ab 17 Uhr" },
   { tag: "Samstag", d: "12.12.2026", zeit: "ab 17 Uhr" },
   { tag: "Sonntag", d: "13.12.2026", zeit: "tagsüber, ab 14 Uhr" },
   { tag: "Freitag", d: "18.12.2026", zeit: "ab 17 Uhr" },
