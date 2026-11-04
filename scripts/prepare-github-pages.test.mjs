@@ -310,11 +310,12 @@ test("structuredData emits a schema.org graph with Article for research pages", 
   assert.equal(data["@graph"][2].headline, "X <b>");
 });
 
-test("sitemap lists the media kit and both CV PDFs", () => {
+test("sitemap lists the media kit, both CV PDFs, and the humanoid research PDF", () => {
   const sitemap = readFileSync(new URL("../public/sitemap.xml", import.meta.url), "utf8");
   assert.match(sitemap, /TeslaTobi_MediaKit_Oct_2026\.pdf/);
   assert.match(sitemap, /cv\/tobias-p-goebel-cv\.pdf/);
   assert.match(sitemap, /cv\/tobias-p-goebel-lebenslauf\.pdf/);
+  assert.match(sitemap, /research\/Humanoid_Robotics_Stack_May2026\.pdf/);
 });
 
 test("German-only pages ship as routes with de-only hreflang and stay out of the sitemap", async () => {
