@@ -30,14 +30,26 @@ export function publish(root) {
   return [cfg.alias, ...cfg.old];
 }
 
-function syncVercel(cfg) {
-  const p = join(repo, "vercel.json");
-  const v = JSON.parse(readFileSync(p, "utf8"));
-  v.redirects = [cfg.alias, ...cfg.old].map((n) => ({
+
+/** Merge media-kit redirects onto an existing vercel redirects list without dropping others. */
+export function mergeKitRedirects(existing, cfg) {
+  const kitNames = new Set([cfg.alias, cfg.current, ...cfg.old]);
+  const preserved = (existing || []).filter((r) => {
+    const src = String(r.source || "").replace(/^\//, "");
+    return !kitNames.has(src);
+  });
+  const kitRedirects = [cfg.alias, ...cfg.old].map((n) => ({
     source: `/${n}`,
     destination: `/${cfg.current}`,
     permanent: true,
   }));
+  return [...kitRedirects, ...preserved];
+}
+
+function syncVercel(cfg) {
+  const p = join(repo, "vercel.json");
+  const v = JSON.parse(readFileSync(p, "utf8"));
+  v.redirects = mergeKitRedirects(v.redirects, cfg);
   writeFileSync(p, `${JSON.stringify(v, null, 2)}\n`);
 }
 
