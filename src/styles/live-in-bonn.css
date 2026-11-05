@@ -142,3 +142,14 @@
   .lib .gform-frame.is-open { height: 1700px; }
   .lib .gform { padding: 6px; }
 }
+
+/* State-level registration map, entirely inline and local. */
+.lib .origin-map { margin: 32px 0 0; padding: 28px 24px 24px; }
+.lib .origin-map-svg { display: block; width: 100%; max-width: 420px; height: auto; max-height: 520px; margin: 0 auto; }
+.lib .origin-legend { list-style: none; display: flex; justify-content: center; flex-wrap: wrap; gap: 12px 28px; margin: 24px 0 0; padding: 0; color: var(--text); font-size: 14px; }
+.lib .origin-legend li { display: flex; align-items: center; gap: 8px; }
+.lib .origin-legend span { display: inline-block; width: 16px; height: 16px; border: 1px solid #92949b; clip-path: var(--hex); flex: 0 0 16px; }
+@media (max-width: 560px) {
+  .lib .origin-map { padding: 20px 12px; }
+  .lib .origin-legend { gap: 10px 16px; font-size: 13px; }
+}
