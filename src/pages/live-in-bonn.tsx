@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { BonnShell } from "@/components/bonn-shell";
+import { BonnOriginMap } from "@/components/bonn-origin-map";
 
 /** Google Form embed URL from the prototype (data-src). Loaded only on click. */
 export const GOOGLE_FORM_URL =
@@ -295,6 +296,7 @@ export function LiveInBonnPage() {
           </div>
         </div>
       </section>
+      <BonnOriginMap />
     </BonnShell>
   );
 }
