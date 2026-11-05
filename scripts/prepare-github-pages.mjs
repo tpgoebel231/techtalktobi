@@ -83,6 +83,32 @@ export const LEGACY_FILE_ALIASES = {
     "research/Humanoid_Robotics_Stack_May2026.pdf",
 };
 
+/**
+ * GitHub Pages has no server, so the dynamic `/__grok/manifest.webmanifest`
+ * that every page links to 404s there. Ship it as a static file with the
+ * site's own name.
+ */
+export const STATIC_WEB_MANIFEST = {
+  name: "TechTalkTobi",
+  short_name: "TechTalkTobi",
+  id: "/",
+  start_url: "/",
+  scope: "/",
+  display: "standalone",
+  background_color: "#000000",
+  theme_color: "#000000",
+  icons: [{ src: "/__grok/icon-180.png", sizes: "180x180", type: "image/png" }],
+};
+
+export function publishWebManifest(root) {
+  const dir = join(root, "__grok");
+  mkdirSync(dir, { recursive: true });
+  const body = `${JSON.stringify(STATIC_WEB_MANIFEST, null, 2)}\n`;
+  writeFileSync(join(dir, "manifest.webmanifest"), body);
+  writeFileSync(join(dir, "manifest.json"), body);
+  return ["/__grok/manifest.webmanifest", "/__grok/manifest.json"];
+}
+
 export function legacyRedirectHtml(toPath) {
   const dest = `${SITE_ORIGIN}${toPath}`;
   const safeDest = escapeHtml(dest);
@@ -507,6 +533,7 @@ export async function prepare(root = "dist/client") {
     `prepare-github-pages: legacy page redirects ${legacy.pages.join(", ")}; file aliases ${legacy.files.join(", ")}`,
   );
 
+  console.log(`prepare-github-pages: web manifest ${publishWebManifest(root).join(", ")}`);
   writeFileSync(join(root, "CNAME"), "techtalktobi.com\n");
   writeFileSync(join(root, ".nojekyll"), "");
   writeFileSync(
