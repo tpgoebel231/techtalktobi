@@ -213,7 +213,10 @@ test("prepare writes unique heads, keeps 404 generic, and preserves Pages extras
 
   const musk = readFileSync(join(root, "en/research/muskonomy.html"), "utf8");
   const muskDir = readFileSync(join(root, "en/research/muskonomy/index.html"), "utf8");
-  assert.equal(musk, muskDir);
+  assert.match(muskDir, /rel="canonical" href="https:\/\/techtalktobi\.com\/en\/research\/muskonomy"/);
+  assert.match(muskDir, /http-equiv="refresh"/);
+  assert.match(muskDir, /location\.replace\("\/en\/research\/muskonomy"\)/);
+  assert.doesNotMatch(muskDir, /<h1>/);
   assert.match(musk, /<title>SpaceXSI and Tesla: Who Needs Whom More\? · TechTalkTobi<\/title>/);
   assert.match(
     musk,
@@ -259,6 +262,27 @@ test("prepare writes unique heads, keeps 404 generic, and preserves Pages extras
     readFileSync(join(root, "ai-robotics", "Humanoid_Robotics_Stack_May2026.pdf"), "utf8"),
     "robotics-pdf",
   );
+});
+
+
+test("prepare bounces trailing-slash directory indexes to no-slash canonicals", async () => {
+  const root = mkdtempSync(join(tmpdir(), "pages-slash-"));
+  writeFileSync(join(root, "_shell.html"), SAMPLE_SHELL);
+  writeFileSync(join(root, loadConfig().current), "pdf");
+  mkdirSync(join(root, "research"), { recursive: true });
+  writeFileSync(join(root, "research", "Humanoid_Robotics_Stack_May2026.pdf"), "robotics-pdf");
+  await seedPrerendered(root);
+  await prepare(root);
+
+  const deDir = readFileSync(join(root, "de/index.html"), "utf8");
+  assert.equal(deDir, legacyRedirectHtml("/de"));
+  const dePage = readFileSync(join(root, "de.html"), "utf8");
+  assert.match(dePage, /rel="canonical" href="https:\/\/techtalktobi\.com\/de"/);
+  assert.match(dePage, /<h1>/);
+
+  const aboutDir = readFileSync(join(root, "en/about/index.html"), "utf8");
+  assert.equal(aboutDir, legacyRedirectHtml("/en/about"));
+  assert.doesNotMatch(aboutDir, /\u2014/);
 });
 
 test("prepare throws when a canonical route has no prerendered HTML", async () => {

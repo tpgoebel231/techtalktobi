@@ -493,9 +493,12 @@ export async function prepare(root = "dist/client") {
     mkdirSync(dirname(file), { recursive: true });
     writeFileSync(file, html);
     if (route === "/") continue;
+    // GitHub Pages serves both /path (path.html) and /path/ (path/index.html).
+    // Keep the full page on path.html; bounce the trailing-slash URL to the
+    // no-slash canonical so Search Console does not split signals (e.g. /de/).
     const dirIndex = join(root, route.slice(1), "index.html");
     mkdirSync(dirname(dirIndex), { recursive: true });
-    writeFileSync(dirIndex, html);
+    writeFileSync(dirIndex, legacyRedirectHtml(route));
   }
 
   console.log(`prepare-github-pages: media kit aliases ${publishMediaKit(root).join(", ")}`);
