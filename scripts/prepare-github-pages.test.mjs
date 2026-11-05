@@ -396,3 +396,18 @@ test("publishLegacyAliases writes bare page redirects and the robotics PDF alias
     "pdf",
   );
 });
+
+test("prepare ships a static TechTalkTobi web manifest for Pages", async () => {
+  const root = mkdtempSync(join(tmpdir(), "pages-manifest-"));
+  writeFileSync(join(root, "_shell.html"), SAMPLE_SHELL);
+  writeFileSync(join(root, loadConfig().current), "pdf");
+  mkdirSync(join(root, "research"), { recursive: true });
+  writeFileSync(join(root, "research", "Humanoid_Robotics_Stack_May2026.pdf"), "robotics-pdf");
+  await seedPrerendered(root);
+  await prepare(root);
+  const m = JSON.parse(readFileSync(join(root, "__grok/manifest.webmanifest"), "utf8"));
+  assert.equal(m.name, "TechTalkTobi");
+  assert.equal(m.start_url, "/");
+  assert.equal(m.icons[0].src, "/__grok/icon-180.png");
+  assert.deepEqual(JSON.parse(readFileSync(join(root, "__grok/manifest.json"), "utf8")), m);
+});
