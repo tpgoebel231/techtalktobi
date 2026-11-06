@@ -68,6 +68,7 @@ export const DE_ONLY_PAGES = {
 export const LEGACY_PAGE_REDIRECTS = {
   "/about": "/en/about",
   "/consulting": "/en/consulting",
+  "/cv": "/en/about",
   "/media": "/en/media",
   "/media-kit": "/en/media-kit",
   "/research": "/en/research",

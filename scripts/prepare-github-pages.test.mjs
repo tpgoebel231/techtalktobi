@@ -401,6 +401,9 @@ test("publishLegacyAliases writes bare page redirects and the robotics PDF alias
   assert.deepEqual(out.files, ["/" + Object.keys(LEGACY_FILE_ALIASES)[0]]);
   const kit = readFileSync(join(root, "media-kit", "index.html"), "utf8");
   assert.match(kit, /\/en\/media-kit/);
+  const cv = readFileSync(join(root, "cv", "index.html"), "utf8");
+  assert.match(cv, /\/en\/about/);
+  assert.match(readFileSync(join(root, "cv.html"), "utf8"), /\/en\/about/);
   assert.equal(
     readFileSync(join(root, "ai-robotics", "Humanoid_Robotics_Stack_May2026.pdf"), "utf8"),
     "pdf",
