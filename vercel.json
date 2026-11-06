@@ -38,6 +38,11 @@
       "permanent": true
     },
     {
+      "source": "/cv",
+      "destination": "/en/about",
+      "permanent": true
+    },
+    {
       "source": "/media",
       "destination": "/en/media",
       "permanent": true
