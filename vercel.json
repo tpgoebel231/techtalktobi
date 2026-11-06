@@ -8,6 +8,11 @@
   },
   "redirects": [
     {
+      "source": "/",
+      "destination": "/en",
+      "permanent": true
+    },
+    {
       "source": "/media-kit.pdf",
       "destination": "/TeslaTobi_MediaKit_Oct_2026.pdf",
       "permanent": true
