@@ -54,12 +54,11 @@ export const DE_ONLY_PAGES = {
 };
 
 /**
- * Instant client redirect so `/` never hydrates the `/en` payload against
- * the `/` route (which still redirects on Vercel). Crawlers that skip JS
- * still see the English home body in index.html.
+ * Root `/` on GitHub Pages is a tiny HTML bounce to `/en` (same pattern as
+ * trailing-slash and bare-page aliases). Search Console was splitting
+ * impressions across `/` and `/en` while `/` served a full English shell with
+ * only a JS redirect. Vercel gets a matching permanent redirect in vercel.json.
  */
-export const ROOT_CLIENT_REDIRECT =
-  '<script>if(location.pathname==="/")location.replace("/en");</script>';
 
 /**
  * Locale-less page URLs that still get typed or linked. GitHub Pages has no
@@ -440,7 +439,7 @@ export function canonicalRoutes(pieces) {
 /**
  * TanStack Start options for the GitHub Pages build: keep the SPA shell
  * (`_shell.html` / 404) and prerender every indexable locale route.
- * `/` stays the SPA mask so Vercel's redirect-at-`/` is unchanged.
+ * `/` is not prerendered; prepare writes an HTML bounce to `/en` instead.
  */
 export async function githubPagesStartOptions() {
   const pieces = await loadResearchPieces();
@@ -486,11 +485,6 @@ export function assertRenderableBody(html, route) {
   }
 }
 
-export function applyRootClientRedirect(html) {
-  if (html.includes(ROOT_CLIENT_REDIRECT)) return html;
-  return mustReplace(html, /<head>/, `<head>${ROOT_CLIENT_REDIRECT}`, "<head>");
-}
-
 export async function prepare(root = "dist/client") {
   // Ship guard: unfilled legal placeholders block the gh-pages snapshot.
   await assertNoLegalPlaceholders();
@@ -502,6 +496,8 @@ export async function prepare(root = "dist/client") {
 
   const htmlByRoute = new Map();
   for (const route of routes) {
+    // `/` is an HTML bounce, not a prerendered shell.
+    if (route === "/") continue;
     const html = readPrerenderedHtml(root, route);
     assertRenderableBody(html, route);
     if (GUARDED_ROUTES.includes(route) && htmlHasPlaceholder(html) && !allowPlaceholders()) {
@@ -513,12 +509,16 @@ export async function prepare(root = "dist/client") {
   writeFileSync(join(root, "404.html"), shellHtml);
 
   for (const route of routes) {
+    // Root `/` is a bounce to `/en` so GSC does not keep a soft-duplicate of the
+    // English home (same HTML-refresh pattern as trailing-slash aliases).
+    if (route === "/") {
+      writeFileSync(join(root, "index.html"), legacyRedirectHtml("/en"));
+      continue;
+    }
     let html = applyRouteHead(htmlByRoute.get(route), seoForRoute(route, pieces));
-    if (route === "/") html = applyRootClientRedirect(html);
     const file = shellDest(root, route);
     mkdirSync(dirname(file), { recursive: true });
     writeFileSync(file, html);
-    if (route === "/") continue;
     // GitHub Pages serves both /path (path.html) and /path/ (path/index.html).
     // Keep the full page on path.html; bounce the trailing-slash URL to the
     // no-slash canonical so Search Console does not split signals (e.g. /de/).

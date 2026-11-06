@@ -9,7 +9,6 @@ import {
   LOCALE_HEAD,
   PAGE_TITLES,
   PAGE_DESCRIPTIONS,
-  ROOT_CLIENT_REDIRECT,
   SITE_ORIGIN,
   applyRouteHead,
   assertRenderableBody,
@@ -243,10 +242,7 @@ test("prepare writes unique heads, keeps 404 generic, and preserves Pages extras
   assert.match(about, /property="og:image" content="https:\/\/techtalktobi.com\/og.jpg"/);
 
   const index = readFileSync(join(root, "index.html"), "utf8");
-  assert.match(index, /rel="canonical" href="https:\/\/techtalktobi.com\/en"/);
-  assert.ok(index.includes("TeslaTobi (Tobias P. Goebel) | Media &amp; Advisory"));
-  assert.match(index, /<h1>\/en<\/h1>/);
-  assert.ok(index.includes(ROOT_CLIENT_REDIRECT));
+  assert.equal(index, legacyRedirectHtml("/en"));
 
   const notFound = readFileSync(join(root, "404.html"), "utf8");
   assert.equal(notFound, SAMPLE_SHELL);
@@ -264,6 +260,20 @@ test("prepare writes unique heads, keeps 404 generic, and preserves Pages extras
   );
 });
 
+
+test("prepare bounces root index.html to /en", async () => {
+  const root = mkdtempSync(join(tmpdir(), "pages-root-"));
+  writeFileSync(join(root, "_shell.html"), SAMPLE_SHELL);
+  writeFileSync(join(root, loadConfig().current), "pdf");
+  mkdirSync(join(root, "research"), { recursive: true });
+  writeFileSync(join(root, "research", "Humanoid_Robotics_Stack_May2026.pdf"), "robotics-pdf");
+  await seedPrerendered(root);
+  await prepare(root);
+  assert.equal(readFileSync(join(root, "index.html"), "utf8"), legacyRedirectHtml("/en"));
+  const enPage = readFileSync(join(root, "en.html"), "utf8");
+  assert.match(enPage, /<h1>\/en<\/h1>/);
+  assert.equal(readFileSync(join(root, "en/index.html"), "utf8"), legacyRedirectHtml("/en"));
+});
 
 test("prepare bounces trailing-slash directory indexes to no-slash canonicals", async () => {
   const root = mkdtempSync(join(tmpdir(), "pages-slash-"));
