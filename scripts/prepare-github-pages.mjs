@@ -69,8 +69,11 @@ export const LEGACY_PAGE_REDIRECTS = {
   "/about": "/en/about",
   "/consulting": "/en/consulting",
   "/cv": "/en/about",
+  "/en/live-in-bonn": "/de/live-in-bonn",
+  "/live-in-bonn": "/de/live-in-bonn",
   "/media": "/en/media",
   "/media-kit": "/en/media-kit",
+  "/muskonomy": "/en/research/muskonomy",
   "/research": "/en/research",
 };
 

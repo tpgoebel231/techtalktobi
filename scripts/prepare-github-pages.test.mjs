@@ -404,6 +404,15 @@ test("publishLegacyAliases writes bare page redirects and the robotics PDF alias
   const cv = readFileSync(join(root, "cv", "index.html"), "utf8");
   assert.match(cv, /\/en\/about/);
   assert.match(readFileSync(join(root, "cv.html"), "utf8"), /\/en\/about/);
+  const musk = readFileSync(join(root, "muskonomy", "index.html"), "utf8");
+  assert.match(musk, /\/en\/research\/muskonomy/);
+  assert.match(readFileSync(join(root, "muskonomy.html"), "utf8"), /\/en\/research\/muskonomy/);
+  const bonn = readFileSync(join(root, "live-in-bonn", "index.html"), "utf8");
+  assert.match(bonn, /\/de\/live-in-bonn/);
+  assert.match(readFileSync(join(root, "live-in-bonn.html"), "utf8"), /\/de\/live-in-bonn/);
+  const enBonn = readFileSync(join(root, "en", "live-in-bonn", "index.html"), "utf8");
+  assert.match(enBonn, /\/de\/live-in-bonn/);
+  assert.match(readFileSync(join(root, "en", "live-in-bonn.html"), "utf8"), /\/de\/live-in-bonn/);
   assert.equal(
     readFileSync(join(root, "ai-robotics", "Humanoid_Robotics_Stack_May2026.pdf"), "utf8"),
     "pdf",

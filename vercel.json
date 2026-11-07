@@ -58,6 +58,21 @@
       "permanent": true
     },
     {
+      "source": "/en/live-in-bonn",
+      "destination": "/de/live-in-bonn",
+      "permanent": true
+    },
+    {
+      "source": "/live-in-bonn",
+      "destination": "/de/live-in-bonn",
+      "permanent": true
+    },
+    {
+      "source": "/muskonomy",
+      "destination": "/en/research/muskonomy",
+      "permanent": true
+    },
+    {
       "source": "/ai-robotics/Humanoid_Robotics_Stack_May2026.pdf",
       "destination": "/research/Humanoid_Robotics_Stack_May2026.pdf",
       "permanent": true
