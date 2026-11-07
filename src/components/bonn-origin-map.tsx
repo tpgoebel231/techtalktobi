@@ -1,5 +1,7 @@
 import { BUNDESLAND_PATHS, BUNDESLAND_VIEWBOX, type Bundesland } from "@/data/bonn-bundeslaender";
 
+export const ANMELDUNGEN_STAND = "07.11.2026";
+
 export const ANMELDUNGEN_BY_BUNDESLAND: Record<Bundesland, number> = {
   "Baden-Württemberg": 0,
   Bayern: 0,
@@ -10,9 +12,9 @@ export const ANMELDUNGEN_BY_BUNDESLAND: Record<Bundesland, number> = {
   Hessen: 1,
   "Mecklenburg-Vorpommern": 0,
   Niedersachsen: 1,
-  "Nordrhein-Westfalen": 2,
+  "Nordrhein-Westfalen": 3,
   "Rheinland-Pfalz": 0,
-  Saarland: 0,
+  Saarland: 2,
   Sachsen: 2,
   "Sachsen-Anhalt": 0,
   "Schleswig-Holstein": 0,
@@ -64,6 +66,9 @@ export function BonnOriginMap() {
               <li><span style={{ backgroundColor: ORIGIN_COLORS.one }} />1 Anmeldung</li>
               <li><span style={{ backgroundColor: ORIGIN_COLORS.multiple }} />ab 2 Anmeldungen</li>
             </ul>
+            <p className="meta" style={{ margin: "16px 0 0", textAlign: "center" }}>
+              {`Letztes Update: ${ANMELDUNGEN_STAND}`}
+            </p>
           </figcaption>
         </figure>
       </div>
