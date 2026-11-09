@@ -23,12 +23,12 @@ const { BUNDESLAND_PATHS: paths } = geometry;
 const { ANMELDUNGEN_BY_BUNDESLAND: counts, ORIGIN_COLORS: colors } = component;
 const html = renderToStaticMarkup(component.BonnOriginMap());
 
-test("map contains all 16 states and exactly seven state-level submissions", () => {
+test("map contains all 16 states and exactly ten state-level submissions", () => {
   assert.equal(Object.keys(paths).length, 16);
   assert.deepEqual(Object.keys(paths).sort(), Object.keys(counts).sort());
-  assert.equal(Object.values(counts).reduce((a, b) => a + b, 0), 7);
+  assert.equal(Object.values(counts).reduce((a, b) => a + b, 0), 10);
   assert.deepEqual(Object.entries(counts).filter(([, n]) => n > 0).sort(), [
-    ["Hamburg", 1], ["Hessen", 1], ["Niedersachsen", 1], ["Nordrhein-Westfalen", 2], ["Sachsen", 2],
+    ["Hamburg", 1], ["Hessen", 1], ["Niedersachsen", 1], ["Nordrhein-Westfalen", 3], ["Saarland", 2], ["Sachsen", 2],
   ]);
 });
 
@@ -71,14 +71,17 @@ test("neither Bremen part nor Berlin is painted by its surrounding state", () =>
 test("render uses dark zero-count fills, crisp borders and distinct gold buckets", () => {
   assert.equal((html.match(/<path /g) ?? []).length, 16);
   assert.equal((html.match(/fill-rule="evenodd"/g) ?? []).length, 16);
-  assert.equal((html.match(/fill="#2A2B2F"/g) ?? []).length, 11);
+  assert.equal((html.match(/fill="#2A2B2F"/g) ?? []).length, 10);
   assert.equal((html.match(/fill="#DDBB38"/g) ?? []).length, 3);
-  assert.equal((html.match(/fill="#9E7B10"/g) ?? []).length, 2);
-  assert.equal((html.match(/stroke="#1E1F22"/g) ?? []).length, 5);
-  assert.equal((html.match(/stroke="#92949B"/g) ?? []).length, 11);
+  assert.equal((html.match(/fill="#9E7B10"/g) ?? []).length, 3);
+  assert.equal((html.match(/stroke="#1E1F22"/g) ?? []).length, 6);
+  assert.equal((html.match(/stroke="#92949B"/g) ?? []).length, 10);
   assert.deepEqual(colors, { empty: "#2A2B2F", one: "#DDBB38", multiple: "#9E7B10" });
   assert.match(html, /Bisherige Anmeldungen/);
   assert.match(html, /Wo Ihr Herkommt/);
+  assert.match(html, /Letztes Update: 07\.11\.2026/);
+  assert.equal(component.ANMELDUNGEN_STAND, "07.11.2026");
+  assert.match(html, /fill="#9E7B10"[^>]*><title>Saarland: 2<\/title>/);
   assert.doesNotMatch(html, /https?:|<script|<image|<iframe|<use|\u2014/);
   assert.ok(Buffer.byteLength(source("src/data/bonn-bundeslaender.ts")) < 40000);
 });
