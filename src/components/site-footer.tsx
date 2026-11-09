@@ -60,6 +60,9 @@ export function SiteFooter() {
           <a href={`mailto:${links.email}`} className="text-muted no-underline hover:text-fg">
             {links.email}
           </a>
+          <a href="/privacy" className="text-muted no-underline hover:text-fg">
+            {copy.nav.privacy}
+          </a>
           <LangSwitcher />
         </div>
       </Container>

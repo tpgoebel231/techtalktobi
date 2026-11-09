@@ -17,6 +17,7 @@ import { Route as LocaleConsultingRouteImport } from './routes/$locale/consultin
 import { Route as LocaleDatenschutzRouteImport } from './routes/$locale/datenschutz'
 import { Route as LocaleLiveInBonnRouteImport } from './routes/$locale/live-in-bonn'
 import { Route as LocaleMediaKitRouteImport } from './routes/$locale/media-kit'
+import { Route as LocalePrivacyRouteImport } from './routes/$locale/privacy'
 import { Route as LocaleMediaIndexRouteImport } from './routes/$locale/media/index'
 import { Route as LocaleMediaSlugRouteImport } from './routes/$locale/media/$slug'
 import { Route as LocaleResearchIndexRouteImport } from './routes/$locale/research/index'
@@ -65,6 +66,11 @@ const LocaleLiveInBonnRoute = LocaleLiveInBonnRouteImport.update({
 const LocaleMediaKitRoute = LocaleMediaKitRouteImport.update({
   id: '/media-kit',
   path: '/media-kit',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocalePrivacyRoute = LocalePrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => LocaleRouteRoute,
 } as any)
 const LocaleMediaIndexRoute = LocaleMediaIndexRouteImport.update({
@@ -121,6 +127,7 @@ export interface FileRoutesByFullPath {
   '/$locale/datenschutz': typeof LocaleDatenschutzRoute
   '/$locale/live-in-bonn': typeof LocaleLiveInBonnRoute
   '/$locale/media-kit': typeof LocaleMediaKitRoute
+  '/$locale/privacy': typeof LocalePrivacyRoute
   '/$locale/': typeof LocaleIndexRoute
   '/$locale/media/$slug': typeof LocaleMediaSlugRoute
   '/$locale/research/$slug': typeof LocaleResearchSlugRoute
@@ -139,6 +146,7 @@ export interface FileRoutesByTo {
   '/$locale/datenschutz': typeof LocaleDatenschutzRoute
   '/$locale/live-in-bonn': typeof LocaleLiveInBonnRoute
   '/$locale/media-kit': typeof LocaleMediaKitRoute
+  '/$locale/privacy': typeof LocalePrivacyRoute
   '/$locale': typeof LocaleIndexRoute
   '/$locale/media/$slug': typeof LocaleMediaSlugRoute
   '/$locale/research/$slug': typeof LocaleResearchSlugRoute
@@ -159,6 +167,7 @@ export interface FileRoutesById {
   '/$locale/datenschutz': typeof LocaleDatenschutzRoute
   '/$locale/live-in-bonn': typeof LocaleLiveInBonnRoute
   '/$locale/media-kit': typeof LocaleMediaKitRoute
+  '/$locale/privacy': typeof LocalePrivacyRoute
   '/$locale/': typeof LocaleIndexRoute
   '/$locale/media/$slug': typeof LocaleMediaSlugRoute
   '/$locale/research/$slug': typeof LocaleResearchSlugRoute
@@ -180,6 +189,7 @@ export interface FileRouteTypes {
     | '/$locale/datenschutz'
     | '/$locale/live-in-bonn'
     | '/$locale/media-kit'
+    | '/$locale/privacy'
     | '/$locale/'
     | '/$locale/media/$slug'
     | '/$locale/research/$slug'
@@ -198,6 +208,7 @@ export interface FileRouteTypes {
     | '/$locale/datenschutz'
     | '/$locale/live-in-bonn'
     | '/$locale/media-kit'
+    | '/$locale/privacy'
     | '/$locale'
     | '/$locale/media/$slug'
     | '/$locale/research/$slug'
@@ -217,6 +228,7 @@ export interface FileRouteTypes {
     | '/$locale/datenschutz'
     | '/$locale/live-in-bonn'
     | '/$locale/media-kit'
+    | '/$locale/privacy'
     | '/$locale/'
     | '/$locale/media/$slug'
     | '/$locale/research/$slug'
@@ -297,6 +309,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocaleMediaKitRouteImport
       parentRoute: typeof LocaleRouteRoute
     }
+    '/$locale/privacy': {
+      id: '/$locale/privacy'
+      path: '/privacy'
+      fullPath: '/$locale/privacy'
+      preLoaderRoute: typeof LocalePrivacyRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
     '/$locale/media/': {
       id: '/$locale/media/'
       path: '/media'
@@ -369,6 +388,7 @@ interface LocaleRouteRouteChildren {
   LocaleDatenschutzRoute: typeof LocaleDatenschutzRoute
   LocaleLiveInBonnRoute: typeof LocaleLiveInBonnRoute
   LocaleMediaKitRoute: typeof LocaleMediaKitRoute
+  LocalePrivacyRoute: typeof LocalePrivacyRoute
   LocaleIndexRoute: typeof LocaleIndexRoute
   LocaleMediaSlugRoute: typeof LocaleMediaSlugRoute
   LocaleResearchSlugRoute: typeof LocaleResearchSlugRoute
@@ -382,6 +402,7 @@ const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
   LocaleDatenschutzRoute: LocaleDatenschutzRoute,
   LocaleLiveInBonnRoute: LocaleLiveInBonnRoute,
   LocaleMediaKitRoute: LocaleMediaKitRoute,
+  LocalePrivacyRoute: LocalePrivacyRoute,
   LocaleIndexRoute: LocaleIndexRoute,
   LocaleMediaSlugRoute: LocaleMediaSlugRoute,
   LocaleResearchSlugRoute: LocaleResearchSlugRoute,

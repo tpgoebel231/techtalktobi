@@ -27,7 +27,7 @@ export const SITE_ORIGIN = "https://techtalktobi.com";
 export const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/og.jpg`;
 
 const locales = ["en", "de"];
-const pages = ["", "about", "consulting", "media-kit", "media", "research"];
+const pages = ["", "about", "consulting", "media-kit", "media", "privacy", "research"];
 
 /**
  * German-only pages that ship as real HTML (HTTP 200) and may be indexed,
@@ -179,6 +179,7 @@ export const PAGE_TITLES = {
   consulting: { en: "Advisory · TechTalkTobi", de: "Beratung · TechTalkTobi" },
   "media-kit": { en: "Media Kit · TechTalkTobi", de: "Media Kit · TechTalkTobi" },
   media: { en: "Media · TechTalkTobi", de: "Media · TechTalkTobi" },
+  privacy: { en: "Privacy Policy · TechTalkTobi", de: "Privacy Policy · TechTalkTobi" },
   research: { en: "Research · TechTalkTobi", de: "Research · TechTalkTobi" },
 };
 
@@ -199,6 +200,10 @@ export const PAGE_DESCRIPTIONS = {
   media: {
     en: "Two commentary channels and TV-format event reports. For producers, event agencies, and press officers.",
     de: "Zwei Kommentar-Kanäle und Eventberichte im TV-Stil. Für Produktionen, Eventagenturen und Pressestellen.",
+  },
+  privacy: {
+    en: "How Tobias Goebel uses Google and YouTube API access on TechTalkTobi to manage his own YouTube channels.",
+    de: "How Tobias Goebel uses Google and YouTube API access on TechTalkTobi to manage his own YouTube channels.",
   },
   research: {
     en: "Graphics, a public FSD scorecard, and an interactive explainer.",
@@ -489,6 +494,48 @@ export function assertRenderableBody(html, route) {
   }
 }
 
+
+/**
+ * Google OAuth / Cloud Console needs a real policy page at /privacy (HTTP 200
+ * with the policy body), not a bounce to /en/privacy. Reuse the prerendered
+ * /en/privacy HTML and rewrite the head so the canonical is /privacy.
+ * Trailing-slash /privacy/ bounces to /privacy like other canonical pages.
+ * Do NOT list /privacy in LEGACY_PAGE_REDIRECTS.
+ */
+export function privacyRootSeo() {
+  const title = PAGE_TITLES.privacy.en;
+  const description = PAGE_DESCRIPTIONS.privacy.en;
+  return {
+    title,
+    description,
+    canonical: `${SITE_ORIGIN}/privacy`,
+    ogUrl: `${SITE_ORIGIN}/privacy`,
+    image: DEFAULT_OG_IMAGE,
+    type: "website",
+    locale: "en_US",
+    htmlLang: "en",
+    alternates: [
+      { hreflang: "en", href: `${SITE_ORIGIN}/privacy` },
+      { hreflang: "x-default", href: `${SITE_ORIGIN}/privacy` },
+    ],
+  };
+}
+
+export function publishRootPrivacyPage(root, prerenderedHtml) {
+  if (!prerenderedHtml) {
+    throw new Error("prepare-github-pages: missing prerendered HTML for /en/privacy");
+  }
+  assertRenderableBody(prerenderedHtml, "/privacy");
+  const html = applyRouteHead(prerenderedHtml, privacyRootSeo());
+  const fileHtml = join(root, "privacy.html");
+  const dirIndex = join(root, "privacy", "index.html");
+  mkdirSync(dirname(fileHtml), { recursive: true });
+  mkdirSync(dirname(dirIndex), { recursive: true });
+  writeFileSync(fileHtml, html);
+  writeFileSync(dirIndex, legacyRedirectHtml("/privacy"));
+  return ["/privacy"];
+}
+
 export async function prepare(root = "dist/client") {
   // Ship guard: unfilled legal placeholders block the gh-pages snapshot.
   await assertNoLegalPlaceholders();
@@ -536,6 +583,10 @@ export async function prepare(root = "dist/client") {
   console.log(
     `prepare-github-pages: legacy page redirects ${legacy.pages.join(", ")}; file aliases ${legacy.files.join(", ")}`,
   );
+
+  // Must run after legacy aliases so a future /privacy bounce cannot overwrite it.
+  const rootPrivacy = publishRootPrivacyPage(root, htmlByRoute.get("/en/privacy"));
+  console.log(`prepare-github-pages: root privacy page ${rootPrivacy.join(", ")}`);
 
   console.log(`prepare-github-pages: web manifest ${publishWebManifest(root).join(", ")}`);
   writeFileSync(join(root, "CNAME"), "techtalktobi.com\n");
