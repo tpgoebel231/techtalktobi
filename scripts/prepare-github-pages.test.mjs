@@ -23,6 +23,8 @@ import {
   LEGACY_FILE_ALIASES,
   legacyRedirectHtml,
   publishLegacyAliases,
+  privacyRootSeo,
+  publishRootPrivacyPage,
 } from "./prepare-github-pages.mjs";
 import { loadConfig } from "./media-kit.mjs";
 
@@ -102,6 +104,10 @@ test("page titles and locale descriptions still exist in the route files", () =>
   assert.ok(research.includes(PAGE_TITLES.research.en));
   assert.ok(research.includes(PAGE_DESCRIPTIONS.research.en));
   assert.ok(research.includes(PAGE_DESCRIPTIONS.research.de));
+
+  const privacy = readFileSync(join(REPO, "src/routes/$locale/privacy.tsx"), "utf8");
+  assert.ok(privacy.includes(PAGE_TITLES.privacy.en));
+  assert.ok(privacy.includes(PAGE_DESCRIPTIONS.privacy.en));
 });
 
 test("research SEO uses the piece title, dek, and image; x-default is the /en URL", async () => {
@@ -432,4 +438,43 @@ test("prepare ships a static TechTalkTobi web manifest for Pages", async () => {
   assert.equal(m.start_url, "/");
   assert.equal(m.icons[0].src, "/__grok/icon-180.png");
   assert.deepEqual(JSON.parse(readFileSync(join(root, "__grok/manifest.json"), "utf8")), m);
+});
+
+test("canonical routes include locale privacy pages", async () => {
+  const pieces = await loadResearchPieces();
+  const routes = canonicalRoutes(pieces);
+  assert.ok(routes.includes("/en/privacy"));
+  assert.ok(routes.includes("/de/privacy"));
+  const seo = seoForRoute("/en/privacy", pieces);
+  assert.equal(seo.title, PAGE_TITLES.privacy.en);
+  assert.equal(seo.canonical, `${SITE_ORIGIN}/en/privacy`);
+});
+
+test("root /privacy ships full policy HTML, not a legacy bounce", async () => {
+  assert.ok(!Object.keys(LEGACY_PAGE_REDIRECTS).includes("/privacy"));
+  const root = mkdtempSync(join(tmpdir(), "pages-privacy-"));
+  writeFileSync(join(root, "_shell.html"), SAMPLE_SHELL);
+  writeFileSync(join(root, loadConfig().current), "pdf");
+  mkdirSync(join(root, "research"), { recursive: true });
+  writeFileSync(join(root, "research", "Humanoid_Robotics_Stack_May2026.pdf"), "robotics-pdf");
+  await seedPrerendered(root);
+  await prepare(root);
+  const html = readFileSync(join(root, "privacy.html"), "utf8");
+  assert.match(html, /<title>Privacy Policy · TechTalkTobi<\/title>/);
+  assert.match(html, /rel="canonical" href="https:\/\/techtalktobi\.com\/privacy"/);
+  assert.doesNotMatch(html, /http-equiv="refresh"/);
+  const bounce = readFileSync(join(root, "privacy", "index.html"), "utf8");
+  assert.match(bounce, /location\.replace\("\/privacy"\)/);
+  const rootSeo = privacyRootSeo();
+  assert.equal(rootSeo.canonical, `${SITE_ORIGIN}/privacy`);
+  assert.equal(rootSeo.htmlLang, "en");
+});
+
+test("sitemap lists /privacy with lastmod 2026-11-09", () => {
+  const sitemap = readFileSync(new URL("../public/sitemap.xml", import.meta.url), "utf8");
+  assert.match(sitemap, /<loc>https:\/\/techtalktobi\.com\/privacy<\/loc>/);
+  assert.match(
+    sitemap,
+    /<loc>https:\/\/techtalktobi\.com\/privacy<\/loc>\s*<lastmod>2026-11-09<\/lastmod>/,
+  );
 });
