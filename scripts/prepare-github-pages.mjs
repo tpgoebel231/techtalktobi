@@ -75,6 +75,7 @@ export const LEGACY_PAGE_REDIRECTS = {
   "/media-kit": "/en/media-kit",
   "/muskonomy": "/en/research/muskonomy",
   "/research": "/en/research",
+  "/research/tesla-gruenheide": "/de/research/tesla-gruenheide",
 };
 
 /**
