@@ -8,6 +8,7 @@ export const RESEARCH_SLUGS = [
   "fsd-matrix",
   "waymo",
   "muskonomy",
+  "tesla-gruenheide",
 ] as const;
 
 export type ResearchSlug = (typeof RESEARCH_SLUGS)[number];
@@ -207,6 +208,27 @@ export const research: ResearchPiece[] = [
     tags: [
       { en: "Muskonomy", de: "Muskonomy" },
       { en: "Dependencies", de: "Abhängigkeiten" },
+    ],
+    paragraphs: [],
+  },
+  {
+    slug: "tesla-gruenheide",
+    kind: "tool",
+    date: "2026-11",
+    image: "/images/research-tesla-gruenheide.jpg",
+    noBanner: true,
+    // Title/dek from Tobias's dashboard file (Nov 10 2026); EN is a translation.
+    title: {
+      en: "Giga Berlin: Workforce & Optimus 10-Year Projection",
+      de: "Giga Berlin: Belegschaft & Optimus 10-Jahres-Projektion",
+    },
+    dek: {
+      en: "Workforce milestones at Tesla's Gigafactory Berlin-Brandenburg since 2022, and three scenarios for how Optimus could reshape staffing in Grünheide through 2036.",
+      de: "Meilensteine der Belegschaft in Teslas Gigafactory Berlin-Brandenburg seit 2022 und drei Zukunfts-Szenarien, wie Optimus den Personalbedarf in Grünheide bis 2036 verändern könnte.",
+    },
+    tags: [
+      { en: "Giga Berlin", de: "Giga Berlin" },
+      { en: "Optimus", de: "Optimus" },
     ],
     paragraphs: [],
   },

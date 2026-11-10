@@ -73,6 +73,11 @@
       "permanent": true
     },
     {
+      "source": "/research/tesla-gruenheide",
+      "destination": "/de/research/tesla-gruenheide",
+      "permanent": true
+    },
+    {
       "source": "/ai-robotics/Humanoid_Robotics_Stack_May2026.pdf",
       "destination": "/research/Humanoid_Robotics_Stack_May2026.pdf",
       "permanent": true
