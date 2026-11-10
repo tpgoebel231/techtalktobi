@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://techtalktobi.com/de/research/tesla-gruenheide">
+  <title>TeslaTobi Dashboard: Giga Berlin Belegschaft & Optimus 10-Jahres-Projektion</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandYellow: '#DDBB38',
+            brandRed: '#A11D20',
+            brandNavy: '#1F3A5F',
+            brandDark: '#2C2C2C',
+            brandBg: '#F4F6F8',
+            brandWhite: '#FFFFFF'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #F4F6F8;
+      color: #2C2C2C;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: #DDBB38;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #e2e8f0;
+    }
+    .recording-mode header,
+    .recording-mode .nav-tabs,
+    .recording-mode footer,
+    .recording-mode .screen-controls-banner {
+      display: none !important;
+    }
+    .pulse-glow {
+      box-shadow: 0 0 15px rgba(221, 187, 56, 0.4);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-brandYellow selection:text-brandDark">
+
+  <!-- TOP HEADER -->
+  <header class="bg-brandDark text-brandWhite border-b-4 border-brandYellow shadow-lg sticky top-0 z-50 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+      
+      <!-- Brand & Channel Info -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-brandRed flex items-center justify-center text-brandWhite font-black text-xl shadow-md border border-brandYellow/40">
+          T
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs uppercase tracking-widest font-extrabold text-brandYellow bg-brandNavy/60 px-2 py-0.5 rounded border border-brandYellow/30">
+              <i class="fa-brands fa-youtube mr-1 text-brandRed"></i> TeslaTobi YouTube Channel
+            </span>
+            <span class="text-xs text-brandYellow font-bold bg-white/10 px-2 py-0.5 rounded border border-brandYellow/30">
+              © @tpgoebel
+            </span>
+          </div>
+          <h1 class="text-lg sm:text-xl font-black text-brandWhite leading-tight mt-0.5 tracking-tight">
+            Giga Berlin: Belegschaft & Optimus 10-Jahres-Projektion
+          </h1>
+        </div>
+      </div>
+
+      <!-- Quick Action Utilities -->
+      <div class="flex items-center space-x-2">
+        <button id="toggle-record-btn" onclick="toggleRecordingMode()" title="Blendet Leisten für Videoaufnahme aus" class="px-3 py-2 rounded-xl text-xs font-bold bg-brandNavy text-brandWhite hover:brightness-125 border border-white/20 transition-all flex items-center gap-1.5 shadow-sm">
+          <i class="fa-solid fa-video text-brandYellow"></i> <span id="record-btn-text">Studio-Modus (Clean)</span>
+        </button>
+        <button onclick="exportDataCSV()" title="CSV-Daten der Modellrechnungen herunterladen" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-brandYellow text-brandDark hover:brightness-105 transition-all flex items-center gap-1.5 shadow-sm">
+          <i class="fa-solid fa-file-csv text-brandDark"></i> <span>Export CSV</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- MAIN NAVIGATION TABS -->
+    <div class="nav-tabs max-w-7xl mx-auto px-4 sm:px-6 pt-1 flex gap-2 overflow-x-auto custom-scrollbar">
+      <button id="tab-btn-history" onclick="switchTab('history')" class="px-5 py-2.5 font-black text-sm tracking-wide rounded-t-xl transition-all border-b-2 flex items-center gap-2 bg-brandWhite text-brandNavy border-brandYellow shadow shrink-0">
+        <i class="fa-solid fa-chart-line text-brandRed"></i>
+        <span>1. Historie & Meilensteine (Klick-für-Klick)</span>
+      </button>
+      <button id="tab-btn-optimus" onclick="switchTab('optimus')" class="px-5 py-2.5 font-black text-sm tracking-wide rounded-t-xl transition-all border-b-2 flex items-center gap-2 bg-brandDark/70 text-gray-300 hover:text-white border-transparent shrink-0">
+        <i class="fa-solid fa-robot text-brandYellow"></i>
+        <span>2. 10-Jahres-Projektion: Der Optimus-Effekt (2026–2036)</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- EXIT CLEAN MODE FLOATING BUTTON -->
+  <div id="exit-clean-btn-container" class="hidden fixed top-4 right-4 z-50">
+    <button onclick="toggleRecordingMode()" class="bg-brandRed text-white px-5 py-2.5 rounded-full font-black shadow-2xl border-2 border-brandYellow text-sm flex items-center gap-2 hover:scale-105 transition">
+      <i class="fa-solid fa-xmark"></i> Studio-Modus beenden
+    </button>
+  </div>
+
+  <!-- MAIN WRAPPER -->
+  <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 flex-1 flex flex-col">
+
+    <!-- ========================================================================= -->
+    <!-- TAB 1: HISTORIE & MEILENSTEINE (KLICK-FÜR-KLICK PRÄSENTATION)             -->
+    <!-- ========================================================================= -->
+    <section id="tab-content-history" class="space-y-6">
+
+      <!-- Presentation Controls Bar -->
+      <div class="bg-brandWhite p-4 rounded-2xl shadow-sm border border-gray-200 flex flex-wrap items-center justify-between gap-4">
+        
+        <!-- Controls Buttons -->
+        <div class="flex items-center flex-wrap gap-2">
+          <button onclick="prevStep()" id="prev-btn" class="px-4 py-2 rounded-xl font-bold text-sm bg-gray-100 text-brandDark hover:bg-gray-200 border border-gray-300 flex items-center gap-2 transition disabled:opacity-40 disabled:cursor-not-allowed">
+            <i class="fa-solid fa-backward-step"></i> Zurück
+          </button>
+          
+          <button onclick="nextStep()" id="next-btn" class="px-5 py-2 rounded-xl font-black text-sm bg-brandYellow text-brandDark hover:brightness-105 border-2 border-brandYellow shadow-md flex items-center gap-2 transition disabled:opacity-40 disabled:cursor-not-allowed">
+            <span>Nächster Meilenstein</span> <i class="fa-solid fa-forward-step text-brandRed"></i>
+          </button>
+
+          <button onclick="togglePlay()" id="play-btn" class="px-4 py-2 rounded-xl font-bold text-sm bg-brandNavy text-brandWhite hover:brightness-110 flex items-center gap-2 transition shadow-sm">
+            <i class="fa-solid fa-play text-brandYellow" id="play-icon"></i> <span id="play-text">Auto-Play</span>
+          </button>
+
+          <button onclick="resetTimeline()" class="px-3 py-2 rounded-xl font-medium text-xs text-gray-500 hover:text-brandRed hover:bg-red-50 transition">
+            <i class="fa-solid fa-rotate-left mr-1"></i> Reset
+          </button>
+        </div>
+
+        <!-- Hotkey helper pill -->
+        <div class="text-xs text-gray-500 hidden sm:flex items-center gap-2 bg-brandBg px-3 py-1.5 rounded-xl border border-gray-200 font-semibold">
+          <span>Shortcuts:</span>
+          <kbd class="bg-white px-2 py-0.5 rounded shadow text-xs font-mono">Leertaste</kbd> oder
+          <kbd class="bg-white px-2 py-0.5 rounded shadow text-xs font-mono">→</kbd>
+        </div>
+
+        <!-- Step Indicator Pills -->
+        <div class="w-full flex items-center gap-1.5 overflow-x-auto py-1 custom-scrollbar" id="step-indicator-bar">
+          <!-- Populated by JS -->
+        </div>
+
+      </div>
+
+      <!-- Main Presentation Screen (Chart & Detail Card) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Chart Canvas Container (8 Cols) -->
+        <div class="lg:col-span-8 bg-brandWhite p-4 sm:p-6 rounded-2xl shadow-md border border-gray-200 relative flex flex-col justify-between">
+          <div class="flex justify-between items-center mb-3 border-b border-gray-100 pb-2">
+            <div>
+              <span class="text-xs uppercase font-extrabold text-brandRed tracking-wider">Visualisierung Belegschaftsentwicklung</span>
+              <h2 class="text-lg sm:text-2xl font-black text-brandNavy">Gigafactory Berlin-Brandenburg (2022–2027)</h2>
+            </div>
+            <div class="text-right text-xs text-gray-400 font-semibold">
+              HD Video Optimized (16:9 ready)
+            </div>
+          </div>
+
+          <div class="w-full relative h-[380px] sm:h-[450px]">
+            <canvas id="historyChart"></canvas>
+          </div>
+
+          <!-- Bottom Micro Legend -->
+          <div class="mt-4 pt-3 border-t border-gray-100 flex flex-wrap items-center justify-between text-xs text-gray-600 gap-3">
+            <div class="flex items-center gap-4">
+              <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-[#1F3A5F] inline-block shadow-sm"></span> <b>Stammbelegschaft (Navy)</b></span>
+              <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-[#DDBB38] border border-yellow-600 inline-block shadow-sm"></span> <b>Leiharbeit (Senfgelb #DDBB38)</b></span>
+              <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-[#A11D20] inline-block shadow-sm"></span> <b>Gesamtbelegschaft (Rot)</b></span>
+            </div>
+            <span class="text-gray-400 font-medium">Analyse & Visualisierung: © @tpgoebel</span>
+          </div>
+        </div>
+
+        <!-- Spotlight Milestone Detail Card (4 Cols) -->
+        <div class="lg:col-span-4 bg-brandWhite rounded-2xl shadow-md border-2 border-brandYellow overflow-hidden flex flex-col">
+          <div class="bg-brandDark px-5 py-4 border-b border-brandYellow/40 flex justify-between items-center">
+            <div>
+              <span class="text-[11px] uppercase tracking-widest font-black text-brandYellow">Aktiver Meilenstein</span>
+              <div class="text-xs text-gray-300 font-mono" id="card-step-counter">Schritt 1 von 9</div>
+            </div>
+            <div class="w-9 h-9 rounded-full bg-brandRed text-white flex items-center justify-center font-black text-base shadow" id="card-badge-num">
+              1
+            </div>
+          </div>
+
+          <div class="p-5 sm:p-6 space-y-4 flex-1">
+            
+            <div>
+              <div class="inline-block text-xs font-black uppercase tracking-wider text-brandRed bg-red-50 border border-brandRed/20 px-2 py-0.5 rounded mb-1" id="card-date">
+                22.03.2022
+              </div>
+              <h3 class="text-xl sm:text-2xl font-black text-brandNavy leading-tight" id="card-title">
+                Offizieller Produktionsstart
+              </h3>
+            </div>
+
+            <!-- Stats Grid for Highlight -->
+            <div class="grid grid-cols-2 gap-3 bg-brandBg p-3 rounded-xl border border-gray-200">
+              <div>
+                <span class="text-[11px] uppercase tracking-wider text-gray-500 font-bold block">Gesamt</span>
+                <span class="text-2xl font-black text-brandDark" id="card-total">~2.500</span>
+              </div>
+              <div>
+                <span class="text-[11px] uppercase tracking-wider text-gray-500 font-bold block">Stamm / Leih</span>
+                <span class="text-sm font-bold text-brandNavy" id="card-split">2.000 / 500</span>
+              </div>
+            </div>
+
+            <!-- Detailed Narrative -->
+            <div>
+              <h4 class="text-xs uppercase font-extrabold text-gray-400 tracking-wider mb-1">Hintergrund & Kontext</h4>
+              <p class="text-sm text-gray-700 leading-relaxed font-medium" id="card-desc">
+                Elon Musk übergibt die ersten 30 Tesla Model Y Performance an Kunden. Die Belegschaft wächst rasant an und startet im Zweischichtbetrieb.
+              </p>
+            </div>
+
+            <!-- Factory Key Metrics Tag -->
+            <div class="bg-yellow-50 border border-brandYellow/30 p-3 rounded-xl">
+              <span class="text-[11px] uppercase tracking-wider font-extrabold text-brandDark block mb-0.5">
+                <i class="fa-solid fa-gauge-high text-brandYellow mr-1"></i> Produktionsrate & Fokus:
+              </span>
+              <span class="text-xs font-bold text-brandDark" id="card-metric">
+                Ramp-Up Model Y Performance (4680 Gebäude im Rohbau)
+              </span>
+            </div>
+
+          </div>
+
+          <div class="bg-gray-50 px-5 py-3 border-t border-gray-200 text-xs text-gray-500 flex justify-between items-center">
+            <span>Quelle: <b id="card-source">Werksmitteilung / Tesla</b></span>
+            <button onclick="goToNextOrLoop()" class="text-xs font-black text-brandNavy hover:text-brandRed flex items-center gap-1">
+              <span>Weiter</span> <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footnote Source Banner -->
+      <div class="bg-white p-4 rounded-xl border border-gray-200 text-xs text-gray-600 flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+        <div>
+          <b>Quellen & Methodik:</b> Mitteilungen der Tesla Inc., Betriebsrat Grünheide (Wählerlisten & Informationsschreiben), Bundesanzeiger/Jahresabschlüsse. Werte vor 2024 teilweise Schätzwerte.
+        </div>
+        <div class="font-bold text-brandRed shrink-0">
+          © @tpgoebel
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 2: DIE 10-JAHRES-PROJEKTION: DER OPTIMUS-EFFEKT (2026–2036)           -->
+    <!-- ========================================================================= -->
+    <section id="tab-content-optimus" class="hidden space-y-6">
+
+      <!-- HERO SECTION: DIE 3 ZUKUNFTS-MODELLE GANZ OBEN (NARRATIVER EINSTIEG) -->
+      <div class="bg-brandWhite p-5 sm:p-6 rounded-2xl shadow-sm border border-gray-200 space-y-4">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 border-b border-gray-200 pb-3">
+          <div>
+            <span class="text-xs uppercase font-extrabold text-brandRed tracking-wider">Strategischer Video-Einstieg</span>
+            <h2 class="text-xl sm:text-2xl font-black text-brandNavy">
+              Drei Zukunfts-Szenarien für Grünheide (2026–2036)
+            </h2>
+            <p class="text-xs sm:text-sm text-gray-500 font-medium">
+              Wähle ein Modell per Klick, um die gesamte interaktive Simulation und Kennzahlen darauf auszurichten:
+            </p>
+          </div>
+          <div id="scenario-pill-active" class="text-xs font-black uppercase tracking-wider bg-brandNavy text-brandYellow border border-brandYellow px-3 py-1 rounded-full shadow-sm">
+            Aktiv: Wahrscheinlich
+          </div>
+        </div>
+
+        <!-- 3 Interactive Hero Cards at Top -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          
+          <!-- Modell 1: Konservativ -->
+          <div id="card-scen-1" class="p-5 rounded-2xl border-2 border-gray-200 bg-brandBg hover:border-gray-400 transition cursor-pointer flex flex-col justify-between" onclick="setScenario('konservativ')">
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-black uppercase tracking-wider text-gray-500">Modell 1</span>
+                <span class="text-[11px] font-bold text-gray-700 bg-white border border-gray-200 px-2 py-0.5 rounded">Assistenz-Stufe</span>
+              </div>
+              <h4 class="text-lg font-black text-brandNavy mb-1">Konservativ</h4>
+              <p class="text-xs text-gray-600 mb-4 leading-relaxed font-medium">
+                Klassische Großfabrik. Roboter übernehmen nur isolierte Logistikschritte. Deutsche Kündigungsschutzgesetze und Betriebsrat verhindern schnelle Substitution.
+              </p>
+            </div>
+            <div class="space-y-1.5 border-t border-gray-200 pt-3">
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-gray-500 font-semibold">Menschliche Belegschaft 2036:</span>
+                <span class="text-brandNavy font-black text-sm">~14.500 Köpfe</span>
+              </div>
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-gray-500 font-semibold">Optimus Flotte im Werk:</span>
+                <span class="text-brandDark font-black text-sm">~3.500 Roboter</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modell 2: Wahrscheinlich (Featured) -->
+          <div id="card-scen-2" class="p-5 rounded-2xl border-2 border-brandNavy bg-white shadow-md hover:border-brandNavy transition cursor-pointer flex flex-col justify-between relative" onclick="setScenario('wahrscheinlich')">
+            <div class="absolute -top-3 right-4 bg-brandYellow text-brandDark text-[10px] font-black uppercase px-2 py-0.5 rounded-full border border-yellow-600 shadow">
+              Empfohlene Baseline
+            </div>
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-black uppercase tracking-wider text-brandNavy">Modell 2</span>
+                <span class="text-[11px] font-bold text-brandRed bg-red-50 px-2 py-0.5 rounded">Reale Transition</span>
+              </div>
+              <h4 class="text-lg font-black text-brandNavy mb-1">Wahrscheinlich (Symbiose)</h4>
+              <p class="text-xs text-gray-600 mb-4 leading-relaxed font-medium">
+                Peak um 2029 bei rund 15.300 Mitarbeitern für Cybercab- und Zellausbau. Ab 2030 setzt natürlicher Abbau durch Optimus Gen 3/4 ein bis zu einer festen Kernmannschaft.
+              </p>
+            </div>
+            <div class="space-y-1.5 border-t border-gray-200 pt-3">
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-gray-500 font-semibold">Menschliche Belegschaft 2036:</span>
+                <span class="text-brandRed font-black text-sm">~4.900 Köpfe</span>
+              </div>
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-gray-500 font-semibold">Optimus Flotte im Werk:</span>
+                <span class="text-brandDark font-black text-sm">~19.000 Roboter</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modell 3: Optimistisch / Aggressive Robotik -->
+          <div id="card-scen-3" class="p-5 rounded-2xl border-2 border-gray-200 bg-brandBg hover:border-brandRed transition cursor-pointer flex flex-col justify-between" onclick="setScenario('optimistisch')">
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-black uppercase tracking-wider text-brandRed">Modell 3</span>
+                <span class="text-[11px] font-bold text-white bg-brandRed px-2 py-0.5 rounded">Lights-Out Fabrik</span>
+              </div>
+              <h4 class="text-lg font-black text-brandNavy mb-1">Optimistisch (Aggressiv)</h4>
+              <p class="text-xs text-gray-600 mb-4 leading-relaxed font-medium">
+                Musks Maximalvision: Roboter kommen viel & schnell. Roboter montieren Roboter, Zellen und Cybercabs. Belegschaft schrumpft auf reine Leitstand-Besatzung.
+              </p>
+            </div>
+            <div class="space-y-1.5 border-t border-gray-200 pt-3">
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-gray-500 font-semibold">Menschliche Belegschaft 2036:</span>
+                <span class="text-brandRed font-black text-sm">~1.750 Spezialisten</span>
+              </div>
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-gray-500 font-semibold">Optimus Flotte im Werk:</span>
+                <span class="text-brandDark font-black text-sm">~34.000 Roboter</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Projection Parameters Dashboard (Sliders & Expansion Toggles) -->
+      <div class="bg-brandWhite p-5 rounded-2xl shadow-sm border border-gray-200 space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
+          
+          <!-- Speed Slider (5 Cols) -->
+          <div class="md:col-span-5 bg-brandBg p-4 rounded-xl border border-gray-200">
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-xs font-black text-brandNavy uppercase tracking-wider">
+                <i class="fa-solid fa-bolt text-brandYellow mr-1"></i> Optimus Adoptions-Tempo
+              </label>
+              <span id="speed-factor-label" class="text-xs font-black text-brandRed bg-white px-2 py-0.5 rounded border border-gray-200">1.0x (Standard)</span>
+            </div>
+            <input type="range" id="speed-slider" min="0.6" max="1.5" step="0.1" value="1.0" oninput="updateProjectionParameters()" class="w-full accent-brandNavy cursor-pointer">
+            <div class="flex justify-between text-[10px] text-gray-500 mt-1 font-semibold">
+              <span>Träge Skalierung</span>
+              <span>Baseline</span>
+              <span>Exponentieller Rollout</span>
+            </div>
+          </div>
+
+          <!-- Future Product Expansions in Grünheide (7 Cols) -->
+          <div class="md:col-span-7 bg-brandBg p-4 rounded-xl border border-gray-200">
+            <span class="text-xs font-black text-brandNavy uppercase tracking-wider block mb-2">
+              <i class="fa-solid fa-industry text-brandRed mr-1"></i> Produkt-Ausbau in Grünheide aktivieren:
+            </span>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              
+              <label class="flex items-center gap-2 p-2 bg-white rounded-lg border border-gray-200 cursor-pointer hover:border-brandYellow transition text-xs font-bold">
+                <input type="checkbox" id="toggle-cells" checked onchange="updateProjectionParameters()" class="accent-brandNavy">
+                <span>4680 Zellen</span>
+              </label>
+
+              <label class="flex items-center gap-2 p-2 bg-white rounded-lg border border-gray-200 cursor-pointer hover:border-brandYellow transition text-xs font-bold">
+                <input type="checkbox" id="toggle-cybercab" checked onchange="updateProjectionParameters()" class="accent-brandNavy">
+                <span>Cybercab</span>
+              </label>
+
+              <label class="flex items-center gap-2 p-2 bg-white rounded-lg border border-gray-200 cursor-pointer hover:border-brandYellow transition text-xs font-bold">
+                <input type="checkbox" id="toggle-optimus-line" checked onchange="updateProjectionParameters()" class="accent-brandNavy">
+                <span>Optimus Bau</span>
+              </label>
+
+              <label class="flex items-center gap-2 p-2 bg-white rounded-lg border border-gray-200 cursor-pointer hover:border-brandYellow transition text-xs font-bold">
+                <input type="checkbox" id="toggle-semi" onchange="updateProjectionParameters()" class="accent-brandNavy">
+                <span>Tesla Semi EU</span>
+              </label>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Main Visualizations: Curve Comparison & Optimus Fleet Size -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Projection Chart (8 Cols) -->
+        <div class="lg:col-span-8 bg-brandWhite p-5 rounded-2xl shadow-md border border-gray-200 flex flex-col justify-between">
+          <div class="flex justify-between items-center mb-2">
+            <div>
+              <span class="text-xs uppercase font-extrabold text-brandRed tracking-wider">10-Jahres-Perspektive</span>
+              <h3 class="text-lg font-black text-brandNavy">Mitarbeiter vs. Optimus-Roboterflotte (2026–2036)</h3>
+            </div>
+            <div class="text-right text-xs text-gray-400 font-semibold">
+              © @tpgoebel
+            </div>
+          </div>
+
+          <div class="relative w-full h-[380px] sm:h-[420px]">
+            <canvas id="projectionChart"></canvas>
+          </div>
+
+          <!-- Annotations under Chart -->
+          <div class="mt-3 p-3 bg-brandBg rounded-xl border border-gray-200 flex flex-wrap justify-between items-center text-xs text-gray-600 gap-2">
+            <span><b class="text-brandNavy">Kernaussage:</b> Trotz steigender Fabrikausbringung sinkt der Personalbedarf durch Optimus drastisch.</span>
+            <span class="text-brandRed font-black text-sm" id="stat-peak-to-core">-59% Personal bis 2036</span>
+          </div>
+        </div>
+
+        <!-- 2036 Core Team Composition (4 Cols) -->
+        <div class="lg:col-span-4 bg-brandWhite p-5 rounded-2xl shadow-md border border-gray-200 flex flex-col justify-between">
+          <div>
+            <span class="text-xs uppercase font-extrabold text-brandRed tracking-wider">Kernmannschaft 2036</span>
+            <h3 class="text-lg font-black text-brandNavy leading-tight mb-1">
+              Wer arbeitet 2036 noch in Grünheide?
+            </h3>
+            <p class="text-xs text-gray-500 mb-3">
+              Aufteilung der verbleibenden menschlichen Belegschaft nach Aufgabengebieten:
+            </p>
+            <div class="relative w-full h-[240px]">
+              <canvas id="compositionChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Explanatory Core Team Box -->
+          <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-200 mt-3 space-y-1.5">
+            <h4 class="text-xs font-black uppercase tracking-wider text-brandNavy">
+              <i class="fa-solid fa-user-astronaut text-brandYellow mr-1"></i> Profil der Kernmannschaft
+            </h4>
+            <p class="text-xs text-gray-700 leading-relaxed font-medium">
+              Fließbandtätigkeiten und manuelle Logistik entfallen vollständig. Die verbleibende Mannschaft besteht primär aus <b>Flotten-Ingenieuren</b>, <b>AI-Supervisorn</b>, <b>Mechatronikern für Roboter-Instandhaltung</b> und gesetzlichen Prüfinstanzen.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Fact Checking Banner: Optimus in Grünheide -->
+      <div class="bg-brandDark text-brandWhite p-5 rounded-2xl border-l-8 border-brandYellow shadow-md">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-brandNavy flex items-center justify-center text-brandYellow text-2xl shrink-0 border border-brandYellow/30">
+            <i class="fa-solid fa-robot"></i>
+          </div>
+          <div class="space-y-1">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="bg-brandRed text-white text-[11px] font-black uppercase px-2 py-0.5 rounded tracking-wide">Faktencheck Berichterstattung</span>
+              <span class="text-xs text-gray-300 font-mono">Status: Juli/Herbst 2026 verifiziert</span>
+            </div>
+            <h3 class="text-base sm:text-lg font-black text-brandWhite">
+              Trainiert Tesla Optimus wirklich schon in der Gigafactory Berlin?
+            </h3>
+            <p class="text-xs sm:text-sm text-gray-300 leading-relaxed font-normal">
+              <b>Ja:</b> Laut internen Schreiben (u.a. berichtet von Golem & Branchenmedien im Juli 2026) wurden Teams in Grünheide mit <b>Kamerarucksäcken</b> ausgestattet, um Arbeitsschritte hochauflösend für das KI-Training von Optimus aufzuzeichnen. Parallel pilotieren Vorserien-Einheiten (Gen 2/3) einfache Logistik- und Zell-Handling-Aufgaben im 4680-Batteriegebäude. Grünheide fungiert damit als aktiver Daten-Hub für das <i>Optimus Fleet Learning</i>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footnote Source Banner -->
+      <div class="bg-white p-4 rounded-xl border border-gray-200 text-xs text-gray-600 flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+        <div>
+          <b>Projektionsmodell:</b> Berechnet auf Basis von Substitutionsraten humanoider Robotik, Hallenausbau Phase 2 und Produktlinienerweiterungen in Grünheide.
+        </div>
+        <div class="font-bold text-brandRed shrink-0">
+          © @tpgoebel
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-brandDark text-brandWhite border-t border-gray-700 py-5 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-gray-400">
+      <div class="flex items-center space-x-2">
+        <span class="w-3 h-3 rounded-full bg-brandYellow"></span>
+        <span class="text-brandWhite font-bold">TeslaTobi Interactive Analytics Suite</span>
+        <span>•</span>
+        <span>Exklusiv für YouTube-Content & Screen-Recordings</span>
+      </div>
+      <div class="font-bold text-gray-300">
+        © @tpgoebel
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT LOGIC & SIMULATION ENGINE                                      -->
+  <!-- ========================================================================= -->
+  <script>
+    // --- 1. HISTORICAL DATASET (GIGA BERLIN) ---
+    const historicalMilestones = [
+      {
+        id: 1,
+        dateStr: "22.03.2022",
+        label: "Produktionsstart",
+        stamm: 2000,
+        leih: 500,
+        total: 2500,
+        title: "Offizieller Produktionsstart",
+        desc: "Elon Musk übergibt die ersten 30 Tesla Model Y Performance an Kunden. Die Belegschaft startet mit rund 2.000 Festangestellten plus 500 Leiharbeitern im anfänglichen 2-Schichtbetrieb.",
+        metric: "Start Ramp-Up (Model Y Performance)",
+        source: "Offizielle Werkseröffnung / Tesla"
+      },
+      {
+        id: 2,
+        dateStr: "30.06.2022",
+        label: "Mitte 2022",
+        stamm: 4200,
+        leih: 800,
+        total: 5000,
+        title: "Phase-1 Hochlauf (5.000 Mitarbeiter)",
+        desc: "Einführung der dritten Schicht und schrittweiser Ausbau der Fertigungslinien. Das Werk erreicht die Marke von 5.000 Beschäftigten.",
+        metric: "Ziel: 1.000 Autos/Woche geknackt",
+        source: "Unternehmensmitteilung Sommer 2022"
+      },
+      {
+        id: 3,
+        dateStr: "30.06.2023",
+        label: "Mitte 2023",
+        stamm: 8800,
+        leih: 1200,
+        total: 10000,
+        title: "10.000er-Marke & 5k/Woche Meilenstein",
+        desc: "Nachdem im März 2023 erstmals 5.000 Fahrzeuge in einer Woche gefertigt wurden, überschreitet die Gesamtbelegschaft zur Jahresmitte die 10.000er-Grenze.",
+        metric: "5.000 Fz/Woche Produktionsrunrate",
+        source: "Betriebsversammlung / Tesla Grünheide"
+      },
+      {
+        id: 4,
+        dateStr: "15.02.2024",
+        label: "Feb 2024",
+        stamm: 12415,
+        leih: 1350,
+        total: 13765,
+        title: "Allzeithoch (Peak vor Restrukturierung)",
+        desc: "Höchster Beschäftigungsstand der Fabrikgeschichte: Der Betriebsrat zählt exakt 12.415 Stammkräfte, die Gesamtbelegschaft inkl. Zeitarbeit nähert sich knapp 14.000 Köpfen.",
+        metric: "Volle Schichtbesetzung aller Linien",
+        source: "Betriebsratsaufstellung Feb 2024"
+      },
+      {
+        id: 5,
+        dateStr: "31.12.2025",
+        label: "Ende 2025",
+        stamm: 10100,
+        leih: 983,
+        total: 11083,
+        title: "Konsolidierung nach Stellenabbau",
+        desc: "Nach den globalen Kürzungen von April 2024 (~400 Feststellenabbau in Grünheide, Nichtverlängerung von Leiharbeitsverträgen) stabilisiert sich die Belegschaft bei ca. 11.080 Mitarbeitern.",
+        metric: "Effizienzfokus & Taktzeitverkürzung",
+        source: "Jahresabschlussbericht 2025"
+      },
+      {
+        id: 6,
+        dateStr: "15.03.2026",
+        label: "März 2026",
+        stamm: 9950,
+        leih: 753,
+        total: 10703,
+        title: "Betriebsratswahl 2026 (Wählerlisten-Zahl)",
+        desc: "Die offiziellen Wählerlisten zur BR-Wahl weisen exakt 10.703 stimmberechtigte Mitarbeiter aus. Die Talsohle des Personalstands ist erreicht.",
+        metric: "10.703 wahlberechtigte Belegschaft",
+        source: "Offizielle Wählerliste Betriebsrat 2026"
+      },
+      {
+        id: 7,
+        dateStr: "31.07.2026",
+        label: "Ende Juli 2026",
+        stamm: 10800,
+        leih: 900,
+        total: 11700,
+        title: "1. Neueinstellungs-Tranche (+1.000 Stellen)",
+        desc: "Wie am 23.04.2026 angekündigt, stellt Tesla 1.000 neue Mitarbeiter ein, um die Produktionsrate auf 6.200 Autos/Woche zu heben. Erste Optimus-Kamerarucksäcke für KI-Training im Werk.",
+        metric: "Ziel: 6.200 Fz/Woche Hochlauf",
+        source: "Tesla-Ankündigung 23.04.2026"
+      },
+      {
+        id: 8,
+        dateStr: "10.11.2026",
+        label: "Nov 2026",
+        stamm: 11100,
+        leih: 900,
+        total: 12000,
+        title: "Herbst-Hochlauf & 7.000 Fz/Woche Meilenstein",
+        desc: "Am 23.10.2026 feiert Grünheide den Meilenstein von 7.000 gebauten Fahrzeugen in einer Kalenderwoche. Die Belegschaft wächst auf 12.000 Mitarbeiter an.",
+        metric: "7.000 Fz/Woche Rekordmarke",
+        source: "Werksleitung André Thierig / Herbst 2026"
+      },
+      {
+        id: 9,
+        dateStr: "30.06.2027",
+        label: "Mitte 2027 (P)",
+        stamm: 13200,
+        leih: 1000,
+        total: 14200,
+        title: "Projektion: Ausbau 4680-Zellfertigung",
+        desc: "Geplante Fertigstellung der Phase-2-Erweiterung und voller Anlauf der hauseigenen 4680-Batteriezellfertigung (+1.500 Spezialisten). Geplantes Belegschaftsziel: rund 14.200 Beschäftigte.",
+        metric: "18 GWh Batteriezellen + 8.500 Fz/Woche",
+        source: "Tesla Projektion / Genehmigungsantrag"
+      }
+    ];
+
+    let currentStepIndex = 0;
+    let isPlaying = false;
+    let playTimer = null;
+    let historyChart = null;
+
+    // --- 2. INITIALIZE STEP BUTTONS & HISTORY CHART ---
+    function initStepIndicators() {
+      const bar = document.getElementById('step-indicator-bar');
+      bar.innerHTML = '';
+      historicalMilestones.forEach((m, idx) => {
+        const btn = document.createElement('button');
+        btn.id = `step-pill-${idx}`;
+        btn.onclick = () => jumpToStep(idx);
+        btn.className = `px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 shrink-0 ${
+          idx === currentStepIndex 
+            ? 'bg-brandNavy text-white shadow' 
+            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+        }`;
+        btn.innerHTML = `<span class="w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-bold ${idx === currentStepIndex ? 'bg-brandYellow text-brandDark' : 'bg-gray-300 text-gray-700'}">${idx + 1}</span> ${m.label}`;
+        bar.appendChild(btn);
+      });
+    }
+
+    function initHistoryChart() {
+      const ctx = document.getElementById('historyChart').getContext('2d');
+      const allLabels = historicalMilestones.map(m => m.dateStr.slice(0, 6) + m.dateStr.slice(-2));
+
+      historyChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: allLabels,
+          datasets: [
+            {
+              // Dataset 0: Stammbelegschaft (Unterkante)
+              label: 'Stammbelegschaft (Festangestellt)',
+              data: [historicalMilestones[0].stamm],
+              borderColor: '#1F3A5F',
+              backgroundColor: 'rgba(31, 58, 95, 0.05)',
+              borderWidth: 3.5,
+              pointBackgroundColor: '#1F3A5F',
+              pointBorderColor: '#FFFFFF',
+              pointBorderWidth: 2,
+              pointRadius: 6,
+              pointHoverRadius: 8,
+              tension: 0.25,
+              fill: false
+            },
+            {
+              // Dataset 1: Gesamtbelegschaft (Oberkante)
+              // Fill '+1' bzw. '-1' füllt genau den Bereich zur Stammbelegschaft (Dataset 0)
+              label: 'Gesamtbelegschaft (inkl. Leiharbeit)',
+              data: [historicalMilestones[0].total],
+              borderColor: '#A11D20',
+              // Sattes, deutlich sichtbares Senfgelb (#DDBB38) für die Leiharbeitsfläche
+              backgroundColor: 'rgba(221, 187, 56, 0.55)',
+              borderWidth: 4,
+              pointBackgroundColor: '#A11D20',
+              pointBorderColor: '#FFFFFF',
+              pointBorderWidth: 2,
+              pointRadius: 6,
+              pointHoverRadius: 9,
+              tension: 0.25,
+              fill: '-1' // Füllt den Bereich zwischen Gesamt- und Stammbelegschaft in Senfgelb
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: {
+            duration: 650,
+            easing: 'easeInOutCubic'
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: '#1F3A5F',
+              titleFont: { size: 14, weight: 'bold' },
+              bodyFont: { size: 13 },
+              padding: 12,
+              cornerRadius: 10,
+              callbacks: {
+                label: function(context) {
+                  return ` ${context.dataset.label}: ${context.parsed.y.toLocaleString('de-DE')} Personen`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              min: 0,
+              max: 16000,
+              ticks: {
+                stepSize: 2000,
+                font: { size: 12, weight: '600' },
+                color: '#4B5563',
+                callback: (val) => val.toLocaleString('de-DE')
+              },
+              grid: {
+                color: '#E5E7EB',
+                borderDash: [4, 4]
+              }
+            },
+            x: {
+              ticks: {
+                font: { size: 12, weight: 'bold' },
+                color: '#1F3A5F'
+              },
+              grid: {
+                display: false
+              }
+            }
+          }
+        }
+      });
+      updateCard(0);
+    }
+
+    function updateCard(index) {
+      const data = historicalMilestones[index];
+      document.getElementById('card-step-counter').innerText = `Meilenstein ${index + 1} von ${historicalMilestones.length}`;
+      document.getElementById('card-badge-num').innerText = index + 1;
+      document.getElementById('card-date').innerText = data.dateStr;
+      document.getElementById('card-title').innerText = data.title;
+      document.getElementById('card-total').innerText = data.total.toLocaleString('de-DE');
+      document.getElementById('card-split').innerText = `${data.stamm.toLocaleString('de-DE')} / ${data.leih.toLocaleString('de-DE')}`;
+      document.getElementById('card-desc').innerText = data.desc;
+      document.getElementById('card-metric').innerText = data.metric;
+      document.getElementById('card-source').innerText = data.source;
+
+      // Update indicator pills
+      historicalMilestones.forEach((_, i) => {
+        const pill = document.getElementById(`step-pill-${i}`);
+        if (pill) {
+          if (i === index) {
+            pill.className = "px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 shrink-0 bg-brandNavy text-white shadow";
+            pill.querySelector('span').className = "w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-bold bg-brandYellow text-brandDark";
+          } else if (i < index) {
+            pill.className = "px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 shrink-0 bg-yellow-50 text-brandDark border border-brandYellow/40";
+            pill.querySelector('span').className = "w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-bold bg-brandYellow/30 text-brandDark";
+          } else {
+            pill.className = "px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 shrink-0 bg-gray-100 text-gray-500 hover:bg-gray-200";
+            pill.querySelector('span').className = "w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-bold bg-gray-200 text-gray-600";
+          }
+        }
+      });
+
+      // Disable/Enable buttons
+      document.getElementById('prev-btn').disabled = (index === 0);
+      document.getElementById('next-btn').disabled = (index === historicalMilestones.length - 1);
+    }
+
+    function renderStep(index) {
+      currentStepIndex = index;
+      
+      const stammSlice = historicalMilestones.slice(0, index + 1).map(m => m.stamm);
+      const totalSlice = historicalMilestones.slice(0, index + 1).map(m => m.total);
+
+      historyChart.data.datasets[0].data = stammSlice;
+      historyChart.data.datasets[1].data = totalSlice;
+
+      // Stylize projected point (index 8)
+      if (index === 8) {
+        historyChart.data.datasets[1].borderDash = [6, 4];
+      } else {
+        historyChart.data.datasets[1].borderDash = [];
+      }
+
+      historyChart.update();
+      updateCard(index);
+    }
+
+    function nextStep() {
+      if (currentStepIndex < historicalMilestones.length - 1) {
+        renderStep(currentStepIndex + 1);
+      } else if (isPlaying) {
+        togglePlay();
+      }
+    }
+
+    function prevStep() {
+      if (currentStepIndex > 0) {
+        renderStep(currentStepIndex - 1);
+      }
+    }
+
+    function jumpToStep(idx) {
+      renderStep(idx);
+    }
+
+    function resetTimeline() {
+      if (isPlaying) togglePlay();
+      renderStep(0);
+    }
+
+    function goToNextOrLoop() {
+      if (currentStepIndex < historicalMilestones.length - 1) {
+        nextStep();
+      } else {
+        renderStep(0);
+      }
+    }
+
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      const btnIcon = document.getElementById('play-icon');
+      const btnText = document.getElementById('play-text');
+      const playBtn = document.getElementById('play-btn');
+
+      if (isPlaying) {
+        btnIcon.className = "fa-solid fa-pause text-brandYellow";
+        btnText.innerText = "Pause";
+        playBtn.classList.replace('bg-brandNavy', 'bg-brandRed');
+        
+        playTimer = setInterval(() => {
+          if (currentStepIndex < historicalMilestones.length - 1) {
+            nextStep();
+          } else {
+            togglePlay();
+          }
+        }, 3200);
+      } else {
+        btnIcon.className = "fa-solid fa-play text-brandYellow";
+        btnText.innerText = "Auto-Play";
+        playBtn.classList.replace('bg-brandRed', 'bg-brandNavy');
+        clearInterval(playTimer);
+      }
+    }
+
+    // --- 3. TAB 2: 10-YEAR OPTIMUS PROJECTION MODEL ---
+    let projectionChart = null;
+    let compositionChart = null;
+    let activeScenario = 'wahrscheinlich';
+
+    const projectionYears = [
+      '2026', '2027', '2028', '2029', '2030', 
+      '2031', '2032', '2033', '2034', '2035', '2036'
+    ];
+
+    // Baseline workforce projections per scenario
+    const baseScenarios = {
+      konservativ: {
+        title: "Szenario 1: Konservative Automatisierung",
+        pillText: "Szenario: Konservativ",
+        workforce: [12000, 14200, 15500, 16800, 17500, 17200, 16800, 16200, 15500, 15000, 14500],
+        optimus:   [   50,    200,    600,   1200,   1800,   2200,   2600,   2900,   3100,   3300,   3500],
+        composition2036: [4500, 3000, 2500, 1500, 1000, 2000],
+        dropText: "+20% Wachstum, begrenzte Robotik"
+      },
+      wahrscheinlich: {
+        title: "Szenario 2: Mensch-KI Symbiose & Substitution",
+        pillText: "Szenario: Wahrscheinlich",
+        workforce: [12000, 14200, 15100, 15300, 13800, 11500,  9200,  7600,  6300,  5500,  4900],
+        optimus:   [   80,    450,   1500,   3500,   6500,  10000, 13000, 15500, 17000, 18000, 19000],
+        composition2036: [900, 800, 950, 650, 400, 1200],
+        dropText: "-59% Personal bis 2036 bei 3x Output"
+      },
+      optimistisch: {
+        title: "Szenario 3: Aggressive Robotik ('Lights-Out' Gigafactory)",
+        pillText: "Szenario: Aggressive Robotik",
+        workforce: [12000, 13800, 12500, 10000,  7200,  4800,  3200,  2400,  2000,  1850,  1750],
+        optimus:   [  120,   1000,   3500,   8000,  15000, 22000, 26000, 29000, 31000, 32500, 34000],
+        composition2036: [250, 200, 300, 250, 150, 600],
+        dropText: "-85% Kernmannschaft (1.750 Spezialisten)"
+      }
+    };
+
+    function initProjectionCharts() {
+      // 1. Line / Area Chart for 10-Year Path
+      const ctxProj = document.getElementById('projectionChart').getContext('2d');
+      
+      projectionChart = new Chart(ctxProj, {
+        type: 'line',
+        data: {
+          labels: projectionYears,
+          datasets: [
+            {
+              label: 'Menschliche Belegschaft (Köpfe)',
+              data: [...baseScenarios[activeScenario].workforce],
+              borderColor: '#1F3A5F',
+              backgroundColor: 'rgba(31, 58, 95, 0.12)',
+              borderWidth: 4,
+              fill: true,
+              tension: 0.3,
+              pointRadius: 5,
+              pointBackgroundColor: '#1F3A5F',
+              yAxisID: 'y'
+            },
+            {
+              label: 'Aktive Optimus-Einheiten im Werk',
+              data: [...baseScenarios[activeScenario].optimus],
+              borderColor: '#DDBB38',
+              backgroundColor: 'rgba(221, 187, 56, 0.2)',
+              borderWidth: 3,
+              borderDash: [5, 4],
+              pointRadius: 4,
+              pointBackgroundColor: '#DDBB38',
+              yAxisID: 'y1'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false,
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                font: { size: 12, weight: 'bold' },
+                color: '#1F3A5F'
+              }
+            },
+            tooltip: {
+              backgroundColor: '#1F3A5F',
+              titleFont: { size: 13, weight: 'bold' },
+              padding: 10,
+              cornerRadius: 8
+            }
+          },
+          scales: {
+            y: {
+              type: 'linear',
+              display: true,
+              position: 'left',
+              min: 0,
+              max: 20000,
+              title: {
+                display: true,
+                text: 'Menschliche Beschäftigte',
+                font: { size: 12, weight: 'bold' },
+                color: '#1F3A5F'
+              },
+              ticks: {
+                stepSize: 4000,
+                font: { size: 11, weight: '600' }
+              },
+              grid: {
+                color: '#E5E7EB'
+              }
+            },
+            y1: {
+              type: 'linear',
+              display: true,
+              position: 'right',
+              min: 0,
+              max: 40000,
+              title: {
+                display: true,
+                text: 'Optimus Roboter (Einheiten)',
+                font: { size: 12, weight: 'bold' },
+                color: '#B59416'
+              },
+              ticks: {
+                stepSize: 10000,
+                font: { size: 11, weight: '600' }
+              },
+              grid: {
+                drawOnChartArea: false
+              }
+            },
+            x: {
+              ticks: {
+                font: { size: 12, weight: 'bold' },
+                color: '#2C2C2C'
+              }
+            }
+          }
+        }
+      });
+
+      // 2. Composition Donut Chart for 2036
+      const ctxComp = document.getElementById('compositionChart').getContext('2d');
+      compositionChart = new Chart(ctxComp, {
+        type: 'doughnut',
+        data: {
+          labels: [
+            'Model Y & Pkw-Montage',
+            '4680 Zellfertigung',
+            'Cybercab / Robotaxi',
+            'Optimus Eigenmontage',
+            'Semi Fertigung',
+            'AI-Ops & Instandhaltung'
+          ],
+          datasets: [{
+            data: [...baseScenarios[activeScenario].composition2036],
+            backgroundColor: [
+              '#1F3A5F',
+              '#DDBB38',
+              '#A11D20',
+              '#5A6B7C',
+              '#E59A35',
+              '#2C2C2C'
+            ],
+            borderWidth: 2,
+            borderColor: '#FFFFFF'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                boxWidth: 10,
+                font: { size: 10, weight: '600' }
+              }
+            }
+          },
+          cutout: '60%'
+        }
+      });
+    }
+
+    function setScenario(scenName) {
+      activeScenario = scenName;
+
+      // Update hero cards at top
+      ['konservativ', 'wahrscheinlich', 'optimistisch'].forEach(name => {
+        const card = document.getElementById(`card-scen-${name === 'konservativ' ? 1 : name === 'wahrscheinlich' ? 2 : 3}`);
+        if (name === scenName) {
+          card.classList.remove('border-gray-200', 'bg-brandBg');
+          card.classList.add(name === 'optimistisch' ? 'border-brandRed' : 'border-brandNavy', 'bg-white', 'shadow-md');
+        } else {
+          card.classList.remove('border-brandNavy', 'border-brandRed', 'bg-white', 'shadow-md');
+          card.classList.add('border-gray-200', 'bg-brandBg');
+        }
+      });
+
+      document.getElementById('scenario-pill-active').innerText = `Aktiv: ${baseScenarios[scenName].pillText.replace('Szenario: ', '')}`;
+      updateProjectionParameters();
+    }
+
+    function updateProjectionParameters() {
+      const speed = parseFloat(document.getElementById('speed-slider').value);
+      document.getElementById('speed-factor-label').innerText = `${speed.toFixed(1)}x (${speed === 1.0 ? 'Standard' : speed > 1.0 ? 'Schnell' : 'Träge'})`;
+
+      const hasCells = document.getElementById('toggle-cells').checked;
+      const hasCybercab = document.getElementById('toggle-cybercab').checked;
+      const hasOptimus = document.getElementById('toggle-optimus-line').checked;
+      const hasSemi = document.getElementById('toggle-semi').checked;
+
+      let expansionModifier = 1.0;
+      if (hasCells) expansionModifier += 0.08;
+      if (hasCybercab) expansionModifier += 0.07;
+      if (hasOptimus) expansionModifier += 0.05;
+      if (hasSemi) expansionModifier += 0.10;
+
+      const base = baseScenarios[activeScenario];
+
+      const recalculatedWorkforce = base.workforce.map((val, idx) => {
+        if (idx === 0) return val;
+        const substitutionFactor = 1 + (idx * 0.06 * (speed - 1.0));
+        let adjusted = Math.round((val * expansionModifier) / substitutionFactor);
+        return Math.max(1200, adjusted);
+      });
+
+      const recalculatedOptimus = base.optimus.map((val, idx) => {
+        if (idx === 0) return val;
+        let adjusted = Math.round(val * speed * (expansionModifier > 1 ? expansionModifier * 1.05 : 1));
+        return Math.min(38000, adjusted);
+      });
+
+      projectionChart.data.datasets[0].data = recalculatedWorkforce;
+      projectionChart.data.datasets[1].data = recalculatedOptimus;
+      projectionChart.update();
+
+      const finalWF = recalculatedWorkforce[recalculatedWorkforce.length - 1];
+      const comp = [
+        Math.round(finalWF * 0.22),
+        hasCells ? Math.round(finalWF * 0.20) : 0,
+        hasCybercab ? Math.round(finalWF * 0.20) : 0,
+        hasOptimus ? Math.round(finalWF * 0.14) : 0,
+        hasSemi ? Math.round(finalWF * 0.10) : 0,
+        Math.round(finalWF * 0.14)
+      ];
+      
+      compositionChart.data.datasets[0].data = comp;
+      compositionChart.update();
+
+      const dropPct = Math.round(((recalculatedWorkforce[0] - finalWF) / recalculatedWorkforce[0]) * 100);
+      document.getElementById('stat-peak-to-core').innerText = dropPct > 0 
+        ? `-${dropPct}% Personal bis 2036 (${finalWF.toLocaleString('de-DE')} Köpfe)` 
+        : `+${Math.abs(dropPct)}% Personal bis 2036 (${finalWF.toLocaleString('de-DE')} Köpfe)`;
+    }
+
+    // --- 4. TAB NAVIGATION & VIEW SWITCHING ---
+    function switchTab(tabId) {
+      const histTab = document.getElementById('tab-content-history');
+      const optTab = document.getElementById('tab-content-optimus');
+      const btnHist = document.getElementById('tab-btn-history');
+      const btnOpt = document.getElementById('tab-btn-optimus');
+
+      if (tabId === 'history') {
+        histTab.classList.remove('hidden');
+        optTab.classList.add('hidden');
+        btnHist.className = "px-5 py-2.5 font-black text-sm tracking-wide rounded-t-xl transition-all border-b-2 flex items-center gap-2 bg-brandWhite text-brandNavy border-brandYellow shadow shrink-0";
+        btnOpt.className = "px-5 py-2.5 font-black text-sm tracking-wide rounded-t-xl transition-all border-b-2 flex items-center gap-2 bg-brandDark/70 text-gray-300 hover:text-white border-transparent shrink-0";
+      } else {
+        histTab.classList.add('hidden');
+        optTab.classList.remove('hidden');
+        btnOpt.className = "px-5 py-2.5 font-black text-sm tracking-wide rounded-t-xl transition-all border-b-2 flex items-center gap-2 bg-brandWhite text-brandNavy border-brandYellow shadow shrink-0";
+        btnHist.className = "px-5 py-2.5 font-black text-sm tracking-wide rounded-t-xl transition-all border-b-2 flex items-center gap-2 bg-brandDark/70 text-gray-300 hover:text-white border-transparent shrink-0";
+        
+        if (!projectionChart) {
+          initProjectionCharts();
+        }
+      }
+    }
+
+    // Clean Studio Recording Mode (hides navigation bars for screen recordings)
+    let isRecordingMode = false;
+    function toggleRecordingMode() {
+      isRecordingMode = !isRecordingMode;
+      const body = document.body;
+      const exitBtn = document.getElementById('exit-clean-btn-container');
+
+      if (isRecordingMode) {
+        body.classList.add('recording-mode');
+        exitBtn.classList.remove('hidden');
+      } else {
+        body.classList.remove('recording-mode');
+        exitBtn.classList.add('hidden');
+      }
+    }
+
+    // CSV Data Exporter
+    function exportDataCSV() {
+      let csvContent = "data:text/csv;charset=utf-8,";
+      csvContent += "Bereich,Datum_Jahr,Label,Stammbelegschaft,Leiharbeit,Gesamtbelegschaft,Optimus_Einheiten\n";
+
+      historicalMilestones.forEach(m => {
+        csvContent += `Historie,${m.dateStr},"${m.label}",${m.stamm},${m.leih},${m.total},0\n`;
+      });
+
+      const base = baseScenarios[activeScenario];
+      projectionYears.forEach((yr, i) => {
+        csvContent += `Projektion_${activeScenario},${yr},"Projektionsjahr",${Math.round(base.workforce[i] * 0.9)},${Math.round(base.workforce[i] * 0.1)},${base.workforce[i]},${base.optimus[i]}\n`;
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `TeslaTobi_GigaBerlin_Optimus_Projektion_${activeScenario}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Keyboard Shortcuts for easy video recording presentations
+    document.addEventListener('keydown', (e) => {
+      if (document.getElementById('tab-content-history').classList.contains('hidden')) return;
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        nextStep();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevStep();
+      }
+    });
+
+    // --- WINDOW ONLOAD INITIALIZATION ---
+    window.onload = function() {
+      initStepIndicators();
+      initHistoryChart();
+    };
+  </script>
+</body>
+</html>
