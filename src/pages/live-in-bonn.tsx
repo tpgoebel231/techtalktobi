@@ -1,72 +1,16 @@
-import { useState } from "react";
 import { BonnShell } from "@/components/bonn-shell";
 import { BonnOriginMap } from "@/components/bonn-origin-map";
 
-/** Google Form embed URL from the prototype (data-src). Loaded only on click. */
-export const GOOGLE_FORM_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSchGzla4kg2ynSqsMcxgu7vbR7Ly7NfMNJtC_1qc_MEoE9tRw/viewform?embedded=true";
-
-/** First date proposals from the prototype. Plain list, not confirmed, no voting. */
-const DATES = [
-  { tag: "Samstag", d: "12.12.2026", zeit: "ab 18 Uhr" },
-  { tag: "Sonntag", d: "13.12.2026", zeit: "tagsüber, ab 14 Uhr" },
-  { tag: "Freitag", d: "18.12.2026", zeit: "ab 18 Uhr" },
-  { tag: "Samstag", d: "19.12.2026", zeit: "ab 18 Uhr" },
-  { tag: "Sonntag", d: "20.12.2026", zeit: "tagsüber, ab 14 Uhr" },
-];
+/** Fixed date, announced Nov 15 2026. */
+const TERMIN_TEXT =
+  "Der Termin steht: Samstag, 19.12.2026, ab 18 Uhr in Bonn. Die meisten von Euch können an diesem Tag. Den genauen Ort geben wir bald hier bekannt.";
 
 const SECTIONS = [
   { href: "#eckdaten", label: "Eckdaten" },
   { href: "#worum", label: "Worum es geht" },
   { href: "#about", label: "Über uns" },
   { href: "#termin", label: "Termin" },
-  { href: "#anmeldung", label: "Interesse bekunden" },
 ];
-
-const MAILTO = "mailto:tobias@techtalktobi.com?subject=Interesse%20Stammtisch%20Bonn";
-
-/**
- * Two-click Google Form. The iframe src stays about:blank until the visitor
- * clicks, so no request goes to Google before that (§ 25 TDDDG).
- */
-function GoogleFormTwoClick() {
-  const [open, setOpen] = useState(false);
-  const load = () => {
-    if (/^https:\/\/docs\.google\.com\/forms\//.test(GOOGLE_FORM_URL)) setOpen(true);
-  };
-  return (
-    <div className="gform card" id="signup">
-      <div className={open ? "gform-frame is-open" : "gform-frame"}>
-        <iframe
-          id="gform"
-          title="Formular zur Interessenbekundung (Google Forms)"
-          hidden={!open}
-          src={open ? GOOGLE_FORM_URL : "about:blank"}
-          data-src={GOOGLE_FORM_URL}
-        >
-          Wird geladen…
-        </iframe>
-        <div className="gform-ph" id="gform-ph" hidden={open}>
-          <div>
-            <p style={{ margin: "0 0 12px" }}>
-              <strong>Das Formular läuft bei Google (Server in den USA).</strong>
-            </p>
-            <p style={{ margin: "0 0 16px", fontWeight: 400 }}>
-              Erst wenn du auf den Knopf klickst, wird das Formular von Google geladen und deine
-              IP-Adresse geht an Google. Vorher passiert nichts. Mehr dazu in der{" "}
-              <a href="/de/datenschutz#anmeldung">Datenschutzerklärung</a>. Lieber ohne Google?
-              Schreib an <a href={MAILTO}>tobias@techtalktobi.com</a>.
-            </p>
-            {/* Label matches the wording quoted in /de/datenschutz. */}
-            <button type="button" id="gform-load" className="btn btn-gold" onClick={load}>
-              Formular von Google laden
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export function LiveInBonnPage() {
   return (
@@ -81,13 +25,10 @@ export function LiveInBonnPage() {
             <h1>
               TeslaTobi <span>Stammtisch</span>
             </h1>
-            <p className="sub">Mitte Dezember 2026 · Bonn</p>
+            <p className="sub">Samstag, 19.12.2026, ab 18 Uhr · Bonn</p>
             <div className="btns">
-              <a className="btn btn-gold" href="#anmeldung">
-                INTERESSE BEKUNDEN
-              </a>
-              <a className="btn btn-ghost" href="#termin">
-                Terminvorschläge
+              <a className="btn btn-gold" href="#termin">
+                Zum Termin
               </a>
             </div>
           </div>
@@ -122,8 +63,8 @@ export function LiveInBonnPage() {
             <div className="card">
               <div className="hexicon" aria-hidden="true">1</div>
               <p className="label">Wann</p>
-              <p className="val">Dezember 2026</p>
-              <p className="meta">Erste Terminvorschläge siehe unten. Dauer mindestens 4 bis 5 Stunden.</p>
+              <p className="val">19.12.2026</p>
+              <p className="meta">Samstag, 19.12.2026, ab 18 Uhr. Dauer mindestens 4 bis 5 Stunden.</p>
             </div>
             <div className="card">
               <div className="hexicon" aria-hidden="true">2</div>
@@ -238,13 +179,13 @@ export function LiveInBonnPage() {
             </li>
             <li>
               <h3>2. Termin</h3>
-              <p>Erste Vorschläge stehen unten. Danach legen wir das Datum fest.</p>
-              <span className="status s-run">Läuft</span>
+              <p>Der Termin steht: Samstag, 19.12.2026, ab 18 Uhr in Bonn.</p>
+              <span className="status s-run">Steht fest</span>
             </li>
             <li>
               <h3>3. Interesse bekunden</h3>
-              <p>Geht schon jetzt, siehe unten. Ort und Termin folgen.</p>
-              <span className="status s-run">Läuft</span>
+              <p>Die Interessenbekundung ist geschlossen. Danke an alle, die mitgemacht haben!</p>
+              <span className="status s-run">Geschlossen</span>
             </li>
           </ol>
         </div>
@@ -253,20 +194,8 @@ export function LiveInBonnPage() {
       <section id="termin" aria-labelledby="h-termin">
         <div className="wrap">
           <p className="label">Termin</p>
-          <h2 id="h-termin">Terminvorschläge</h2>
-          <p className="lead">
-            <strong>Die Termine sind erste Vorschläge</strong>, noch nicht bestätigt. Uhrzeiten
-            ungefähr.
-          </p>
-          <ul className="dates">
-            {DATES.map((x) => (
-              <li key={x.d}>
-                <span className="day">{x.tag}</span>
-                <span className="d">{x.d}</span>
-                <span className="meta">{x.zeit}</span>
-              </li>
-            ))}
-          </ul>
+          <h2 id="h-termin">Termin</h2>
+          <p className="lead">{TERMIN_TEXT}</p>
         </div>
       </section>
 
@@ -274,26 +203,9 @@ export function LiveInBonnPage() {
         <div className="wrap">
           <p className="label">Dabei sein</p>
           <h2 id="h-anm">Interesse bekunden</h2>
-          {/* Required fields: Google Form as specified by Tobias on Nov 2 2026. */}
           <p className="lead">
-            Damit Tobias eine Vorstellung davon bekommt, wie groß er planen muss. Pflicht sind nur
-            dein Vorname, dein Nachname, deine E-Mail-Adresse, dein Bundesland, mindestens ein
-            möglicher Termin, die Bestätigung, dass du mindestens 18 bist, und deine Einwilligung zu
-            Google. Alles andere ist
-            freiwillig.
+            Die Interessenbekundung ist geschlossen. Danke an alle, die mitgemacht haben!
           </p>
-          <GoogleFormTwoClick />
-          <div className="note gform-note" role="note">
-            <p>
-              <strong>Hinweis zum Datenschutz:</strong> Das Formular wird erst nach deinem Klick von
-              Google geladen und läuft bei Google. Deine Angaben werden auf Servern in den USA
-              gespeichert. Zweck: nur die Interessenbekundung. Löschung spätestens 30 Tage nach dem Event.
-            </p>
-            <p>
-              <strong>Lieber ohne Google?</strong> Schreib einfach eine E-Mail an{" "}
-              <a href={MAILTO}>tobias@techtalktobi.com</a> mit Name und ob du mit Tesla kommst.
-            </p>
-          </div>
         </div>
       </section>
       <BonnOriginMap />

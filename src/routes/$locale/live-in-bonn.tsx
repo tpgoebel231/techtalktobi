@@ -9,7 +9,7 @@ export const Route = createFileRoute("/$locale/live-in-bonn")({
   head: () =>
     bonnHead(
       "Live in Bonn · TeslaTobi Stammtisch",
-      "Der erste TeslaTobi Stammtisch zum Anfassen: Mitte Dezember 2026 in Bonn. Eckdaten, Terminvorschläge und Interessenbekundung.",
+      "Der erste TeslaTobi Stammtisch zum Anfassen: Samstag, 19.12.2026, ab 18 Uhr in Bonn. Eckdaten und Termin.",
     ),
   component: LiveInBonnPage,
 });

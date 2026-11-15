@@ -1,6 +1,6 @@
 import { BUNDESLAND_PATHS, BUNDESLAND_VIEWBOX, type Bundesland } from "@/data/bonn-bundeslaender";
 
-export const ANMELDUNGEN_STAND = "10.11.2026";
+export const ANMELDUNGEN_STAND = "15.11.2026";
 
 export const ANMELDUNGEN_BY_BUNDESLAND: Record<Bundesland, number> = {
   "Baden-Württemberg": 0,
@@ -9,10 +9,10 @@ export const ANMELDUNGEN_BY_BUNDESLAND: Record<Bundesland, number> = {
   Brandenburg: 0,
   Bremen: 0,
   Hamburg: 1,
-  Hessen: 1,
+  Hessen: 2,
   "Mecklenburg-Vorpommern": 0,
   Niedersachsen: 2,
-  "Nordrhein-Westfalen": 3,
+  "Nordrhein-Westfalen": 4,
   "Rheinland-Pfalz": 0,
   Saarland: 2,
   Sachsen: 2,

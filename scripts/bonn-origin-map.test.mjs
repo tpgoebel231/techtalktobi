@@ -23,12 +23,12 @@ const { BUNDESLAND_PATHS: paths } = geometry;
 const { ANMELDUNGEN_BY_BUNDESLAND: counts, ORIGIN_COLORS: colors } = component;
 const html = renderToStaticMarkup(component.BonnOriginMap());
 
-test("map contains all 16 states and exactly eleven state-level submissions", () => {
+test("map contains all 16 states and exactly thirteen state-level submissions", () => {
   assert.equal(Object.keys(paths).length, 16);
   assert.deepEqual(Object.keys(paths).sort(), Object.keys(counts).sort());
-  assert.equal(Object.values(counts).reduce((a, b) => a + b, 0), 11);
+  assert.equal(Object.values(counts).reduce((a, b) => a + b, 0), 13);
   assert.deepEqual(Object.entries(counts).filter(([, n]) => n > 0).sort(), [
-    ["Hamburg", 1], ["Hessen", 1], ["Niedersachsen", 2], ["Nordrhein-Westfalen", 3], ["Saarland", 2], ["Sachsen", 2],
+    ["Hamburg", 1], ["Hessen", 2], ["Niedersachsen", 2], ["Nordrhein-Westfalen", 4], ["Saarland", 2], ["Sachsen", 2],
   ]);
 });
 
@@ -72,24 +72,27 @@ test("render uses dark zero-count fills, crisp borders and distinct gold buckets
   assert.equal((html.match(/<path /g) ?? []).length, 16);
   assert.equal((html.match(/fill-rule="evenodd"/g) ?? []).length, 16);
   assert.equal((html.match(/fill="#2A2B2F"/g) ?? []).length, 10);
-  assert.equal((html.match(/fill="#DDBB38"/g) ?? []).length, 2);
-  assert.equal((html.match(/fill="#9E7B10"/g) ?? []).length, 4);
+  assert.equal((html.match(/fill="#DDBB38"/g) ?? []).length, 1);
+  assert.equal((html.match(/fill="#9E7B10"/g) ?? []).length, 5);
   assert.equal((html.match(/stroke="#1E1F22"/g) ?? []).length, 6);
   assert.equal((html.match(/stroke="#92949B"/g) ?? []).length, 10);
   assert.deepEqual(colors, { empty: "#2A2B2F", one: "#DDBB38", multiple: "#9E7B10" });
   assert.match(html, /Bisherige Anmeldungen/);
   assert.match(html, /Wo Ihr Herkommt/);
-  assert.match(html, /Letztes Update: 10\.11\.2026/);
-  assert.equal(component.ANMELDUNGEN_STAND, "10.11.2026");
+  assert.match(html, /Letztes Update: 15\.11\.2026/);
+  assert.equal(component.ANMELDUNGEN_STAND, "15.11.2026");
   assert.match(html, /fill="#9E7B10"[^>]*><title>Saarland: 2<\/title>/);
   assert.doesNotMatch(html, /https?:|<script|<image|<iframe|<use|\u2014/);
   assert.ok(Buffer.byteLength(source("src/data/bonn-bundeslaender.ts")) < 40000);
 });
 
-test("page adds only one local map below the unchanged registration section", () => {
+test("page adds only one local map below the registration section", () => {
   const page = source("src/pages/live-in-bonn.tsx");
   assert.ok(page.indexOf("<BonnOriginMap />") > page.indexOf('id="anmeldung"'));
   assert.ok(page.indexOf("<BonnOriginMap />") < page.indexOf("</BonnShell>"));
   assert.match(page, /Alle drei ssusamme/);
   assert.match(page, /Erzeugt von Grok Bot, wem sonst\./);
+  assert.doesNotMatch(page, /docs\.google\.com\/forms|forms\.gle|12\.12\.2026|20\.12\.2026/);
+  assert.match(page, /Die Interessenbekundung ist geschlossen\. Danke an alle, die mitgemacht haben!/);
+  assert.match(page, /Der Termin steht: Samstag, 19\.12\.2026, ab 18 Uhr in Bonn\. Die meisten von Euch können an diesem Tag\. Den genauen Ort geben wir bald hier bekannt\./);
 });
