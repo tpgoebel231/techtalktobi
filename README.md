@@ -106,3 +106,7 @@ When a new kit is ready:
 2. Run `node scripts/media-kit.mjs new TeslaTobi_MediaKit_Nov_2026.pdf`. This retires the previous kit to the `old` list in `scripts/media-kit.json`, removes its PDF from `public/`, updates `src/data/media.ts` and the Vercel redirects.
 3. Update the `mediaKitCta` month labels in `src/data/copy.ts`.
 4. Build and publish as usual. `prepare-github-pages.mjs` copies the current kit onto every old path and onto `/media-kit.pdf` (GitHub Pages has no redirects).
+
+## Private comment review page (`/internal`)
+
+`public/internal/index.html` is a standalone static page (not a TanStack route) for reviewing YouTube reply drafts. It contains no data and no password. After sign-in it talks to the separate Vercel project `t3-mc/techtalktobi-review` (`https://techtalktobi-review.vercel.app`), which checks the password server-side, issues a short-lived signed session token and stores batches and decisions in a private Blob store. `/internal` is `noindex`, disallowed in `robots.txt`, not in the sitemap and not linked from anywhere. The backend code and the box scripts live outside this repo, in `/workspace/web/comment-review/` on the box.
