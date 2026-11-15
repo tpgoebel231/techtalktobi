@@ -40,7 +40,7 @@ export const DE_ONLY_PAGES = {
   "live-in-bonn": {
     title: "Live in Bonn · TeslaTobi Stammtisch",
     description:
-      "Der erste TeslaTobi Stammtisch zum Anfassen: Mitte Dezember 2026 in Bonn. Eckdaten, Terminvorschläge und Interessenbekundung.",
+      "Der erste TeslaTobi Stammtisch zum Anfassen: Samstag, 19.12.2026, ab 18 Uhr in Bonn. Eckdaten und Termin.",
     // Own social card (Rhonda, picked by Tobias Nov 2 2026). Main og.jpg unchanged.
     image: `${SITE_ORIGIN}/live-in-bonn/og-live-in-bonn-v2.jpg`,
     imageWidth: 1200,
