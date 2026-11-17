@@ -8,6 +8,8 @@ import { useCopy, useLocale } from "@/lib/i18n";
 export function ResearchCard({ piece }: { piece: ResearchPiece }) {
   const locale = useLocale();
   const copy = useCopy();
+  const title = piece.cardTitle?.[locale] ?? piece.title[locale];
+  const dek = piece.cardDek?.[locale] ?? piece.dek[locale];
 
   return (
     <Link
@@ -31,10 +33,10 @@ export function ResearchCard({ piece }: { piece: ResearchPiece }) {
           </span>
         </div>
         <h3 className="font-display text-2xl leading-snug text-fg">
-          {piece.title[locale]}
+          {title}
         </h3>
         <p className="line-clamp-3 flex-1 text-sm leading-relaxed text-muted">
-          {piece.dek[locale]}
+          {dek}
         </p>
         <span className="inline-flex items-center gap-1 text-sm text-accent">
           {copy.research.read}

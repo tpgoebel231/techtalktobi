@@ -28,6 +28,9 @@ export type ResearchPiece = {
   paragraphs: LocalizedText[];
   /** Skip the full-width image band on the detail page (image is card-only). */
   noBanner?: boolean;
+  /** Shorter title/dek for index and related cards. Detail page and SEO keep title/dek. */
+  cardTitle?: LocalizedText;
+  cardDek?: LocalizedText;
 };
 
 export const research: ResearchPiece[] = [
@@ -239,7 +242,8 @@ export const research: ResearchPiece[] = [
     date: "2026-11",
     image: "/images/research-mercedes-mb-drive-assist-pro.jpg",
     noBanner: true,
-    // Title from Interactive Slides / Tobias (Nov 17 2026). Dek from the deck meta description; EN is a translation.
+    // Page title from Interactive Slides / Tobias (Nov 17 2026). Dek from the deck meta description; EN is a translation.
+    // Card title/dek from Tobias (Nov 17 2026); EN is a translation. Detail page and SEO keep title/dek.
     title: {
       en: "Mercedes MB.DRIVE ASSIST PRO: What's New in November?",
       de: "Mercedes MB.DRIVE ASSIST PRO: Was ist neu im November?",
@@ -247,6 +251,14 @@ export const research: ResearchPiece[] = [
     dek: {
       en: "The eight key points of the Mercedes-Benz press release of November 16, 2026 on MB.DRIVE ASSIST PRO.",
       de: "Die acht Kernpunkte der Mercedes-Benz Pressemitteilung vom 16. November 2026 zu MB.DRIVE ASSIST PRO.",
+    },
+    cardTitle: {
+      en: "Mercedes MB.DRIVE ASSIST PRO",
+      de: "Mercedes MB.DRIVE ASSIST PRO",
+    },
+    cardDek: {
+      en: "An ongoing analysis of Mercedes's announced L2++ system",
+      de: "Eine fortlaufende Analyse des angekündigten L2++-Systems von Mercedes",
     },
     tags: [
       { en: "Mercedes", de: "Mercedes" },
