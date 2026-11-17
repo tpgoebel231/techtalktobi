@@ -1,11 +1,12 @@
 import { BonnShell } from "@/components/bonn-shell";
 import { BonnOriginMap } from "@/components/bonn-origin-map";
 
-/** Fixed date, announced Nov 15 2026. */
+/** Date and location are both fixed (Nov 17 2026). Venue stays off this page. */
 const TERMIN_TEXT =
-  "Der Termin steht: Samstag, 19.12.2026, ab 18 Uhr in Bonn. Die meisten von Euch können an diesem Tag. Den genauen Ort geben wir bald hier bekannt.";
+  "Termin und Ort stehen fest: Samstag, 19.12.2026, ab 18 Uhr in Bonn. Die meisten von Euch können an diesem Tag. Die genaue Adresse findet Ihr in den Event-Details.";
 
 const SECTIONS = [
+  { href: "#event-details", label: "Event-Details" },
   { href: "#eckdaten", label: "Eckdaten" },
   { href: "#worum", label: "Worum es geht" },
   { href: "#about", label: "Über uns" },
@@ -25,9 +26,12 @@ export function LiveInBonnPage() {
             <h1>
               TeslaTobi <span>Stammtisch</span>
             </h1>
-            <p className="sub">Samstag, 19.12.2026, ab 18 Uhr · Bonn</p>
+            <p className="sub">Samstag, 19.12.2026, ab 18 Uhr in Bonn · Ort steht fest</p>
             <div className="btns">
-              <a className="btn btn-gold" href="#termin">
+              <a className="btn btn-gold" href="/de/live-in-bonn/details">
+                Zu den Event-Details
+              </a>
+              <a className="btn btn-ghost" href="#termin">
                 Zum Termin
               </a>
             </div>
@@ -55,6 +59,22 @@ export function LiveInBonnPage() {
         </svg>
       </div>
 
+      <section id="event-details" aria-labelledby="h-details">
+        <div className="wrap">
+          <p className="label">Event-Details</p>
+          <h2 id="h-details">Event-Details</h2>
+          <p className="lead">
+            Termin und Ort stehen fest: Samstag, 19.12.2026, ab 18 Uhr in Bonn. Die genaue Adresse und
+            weitere Hinweise findet Ihr in den Event-Details.
+          </p>
+          <p>
+            <a className="btn btn-gold" href="/de/live-in-bonn/details">
+              Zu den Event-Details
+            </a>
+          </p>
+        </div>
+      </section>
+
       <section id="eckdaten" aria-labelledby="h-eck">
         <div className="wrap">
           <p className="label">Auf einen Blick</p>
@@ -70,9 +90,7 @@ export function LiveInBonnPage() {
               <div className="hexicon" aria-hidden="true">2</div>
               <p className="label">Wo</p>
               <p className="val">Bonn</p>
-              <p className="meta">
-                Location wird noch gesucht. <span className="tbd">noch offen</span>
-              </p>
+              <p className="meta">Ort steht fest. Die genaue Adresse steht in den Event-Details.</p>
             </div>
             <div className="card">
               <div className="hexicon" aria-hidden="true">3</div>
@@ -172,10 +190,10 @@ export function LiveInBonnPage() {
             <li>
               <h3>1. Location</h3>
               <p>
-                Suche nach einem Nebenraum in einer Kneipe oder einem Restaurant in Bonn. Tipps aus
-                der Community sind willkommen.
+                Der Ort steht fest: in Bonn. Die genaue Adresse und weitere Hinweise findet Ihr in den
+                Event-Details.
               </p>
-              <span className="status s-run">Läuft</span>
+              <span className="status s-run">Steht fest</span>
             </li>
             <li>
               <h3>2. Termin</h3>

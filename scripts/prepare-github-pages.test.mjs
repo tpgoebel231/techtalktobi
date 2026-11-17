@@ -362,13 +362,20 @@ test("sitemap lists the media kit, both CV PDFs, and the humanoid research PDF",
 test("German-only pages ship as routes with de-only hreflang and stay out of the sitemap", async () => {
   const pieces = await loadResearchPieces();
   const routes = canonicalRoutes(pieces);
-  for (const r of ["/de/live-in-bonn", "/de/datenschutz"]) {
+  for (const r of ["/de/live-in-bonn", "/de/live-in-bonn/details", "/de/datenschutz"]) {
     assert.ok(routes.includes(r), r);
     const seo = seoForRoute(r, pieces);
     assert.deepEqual(seo.alternates.map((a) => a.hreflang), ["de"]);
     assert.equal(seo.htmlLang, "de");
   }
   assert.ok(!routes.includes("/en/live-in-bonn"));
+  assert.ok(!routes.includes("/en/live-in-bonn/details"));
+  const detailsSeo = seoForRoute("/de/live-in-bonn/details", pieces);
+  assert.equal(detailsSeo.robots, "noindex, nofollow");
+  assert.match(extraHeadTags(detailsSeo), /name="robots" content="noindex, nofollow"/);
+  const mainSeo = seoForRoute("/de/live-in-bonn", pieces);
+  assert.equal(mainSeo.robots, undefined);
+  assert.doesNotMatch(extraHeadTags(mainSeo), /name="robots"/);
   assert.ok(!routes.some((r) => r.includes("impressum")));
   const sitemap = readFileSync(new URL("../public/sitemap.xml", import.meta.url), "utf8");
   assert.ok(!/live-in-bonn|datenschutz/.test(sitemap));
@@ -420,6 +427,10 @@ test("publishLegacyAliases writes bare page redirects and the robotics PDF alias
   const enBonn = readFileSync(join(root, "en", "live-in-bonn", "index.html"), "utf8");
   assert.match(enBonn, /\/de\/live-in-bonn/);
   assert.match(readFileSync(join(root, "en", "live-in-bonn.html"), "utf8"), /\/de\/live-in-bonn/);
+  const detailsBounce = readFileSync(join(root, "live-in-bonn", "details", "index.html"), "utf8");
+  assert.match(detailsBounce, /\/de\/live-in-bonn\/details/);
+  assert.match(readFileSync(join(root, "live-in-bonn", "details.html"), "utf8"), /\/de\/live-in-bonn\/details/);
+  assert.match(readFileSync(join(root, "en", "live-in-bonn", "details", "index.html"), "utf8"), /\/de\/live-in-bonn\/details/);
   assert.equal(
     readFileSync(join(root, "ai-robotics", "Humanoid_Robotics_Stack_May2026.pdf"), "utf8"),
     "pdf",

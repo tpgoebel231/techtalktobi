@@ -6,6 +6,7 @@
  */
 export const CLEAN_ROUTE_PATHS = [
   "/de/live-in-bonn",
+  "/de/live-in-bonn/details",
   "/de/datenschutz",
 ] as const;
 

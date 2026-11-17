@@ -68,6 +68,16 @@
       "permanent": true
     },
     {
+      "source": "/en/live-in-bonn/details",
+      "destination": "/de/live-in-bonn/details",
+      "permanent": true
+    },
+    {
+      "source": "/live-in-bonn/details",
+      "destination": "/de/live-in-bonn/details",
+      "permanent": true
+    },
+    {
       "source": "/muskonomy",
       "destination": "/en/research/muskonomy",
       "permanent": true

@@ -16,6 +16,7 @@ import { Route as LocaleAboutRouteImport } from './routes/$locale/about'
 import { Route as LocaleConsultingRouteImport } from './routes/$locale/consulting'
 import { Route as LocaleDatenschutzRouteImport } from './routes/$locale/datenschutz'
 import { Route as LocaleLiveInBonnRouteImport } from './routes/$locale/live-in-bonn'
+import { Route as LocaleLiveInBonnDetailsRouteImport } from './routes/$locale/live-in-bonn.details'
 import { Route as LocaleMediaKitRouteImport } from './routes/$locale/media-kit'
 import { Route as LocalePrivacyRouteImport } from './routes/$locale/privacy'
 import { Route as LocaleMediaIndexRouteImport } from './routes/$locale/media/index'
@@ -61,6 +62,11 @@ const LocaleDatenschutzRoute = LocaleDatenschutzRouteImport.update({
 const LocaleLiveInBonnRoute = LocaleLiveInBonnRouteImport.update({
   id: '/live-in-bonn',
   path: '/live-in-bonn',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleLiveInBonnDetailsRoute = LocaleLiveInBonnDetailsRouteImport.update({
+  id: '/live-in-bonn/details',
+  path: '/live-in-bonn/details',
   getParentRoute: () => LocaleRouteRoute,
 } as any)
 const LocaleMediaKitRoute = LocaleMediaKitRouteImport.update({
@@ -126,6 +132,7 @@ export interface FileRoutesByFullPath {
   '/$locale/consulting': typeof LocaleConsultingRoute
   '/$locale/datenschutz': typeof LocaleDatenschutzRoute
   '/$locale/live-in-bonn': typeof LocaleLiveInBonnRoute
+  '/$locale/live-in-bonn/details': typeof LocaleLiveInBonnDetailsRoute
   '/$locale/media-kit': typeof LocaleMediaKitRoute
   '/$locale/privacy': typeof LocalePrivacyRoute
   '/$locale/': typeof LocaleIndexRoute
@@ -145,6 +152,7 @@ export interface FileRoutesByTo {
   '/$locale/consulting': typeof LocaleConsultingRoute
   '/$locale/datenschutz': typeof LocaleDatenschutzRoute
   '/$locale/live-in-bonn': typeof LocaleLiveInBonnRoute
+  '/$locale/live-in-bonn/details': typeof LocaleLiveInBonnDetailsRoute
   '/$locale/media-kit': typeof LocaleMediaKitRoute
   '/$locale/privacy': typeof LocalePrivacyRoute
   '/$locale': typeof LocaleIndexRoute
@@ -166,6 +174,7 @@ export interface FileRoutesById {
   '/$locale/consulting': typeof LocaleConsultingRoute
   '/$locale/datenschutz': typeof LocaleDatenschutzRoute
   '/$locale/live-in-bonn': typeof LocaleLiveInBonnRoute
+  '/$locale/live-in-bonn/details': typeof LocaleLiveInBonnDetailsRoute
   '/$locale/media-kit': typeof LocaleMediaKitRoute
   '/$locale/privacy': typeof LocalePrivacyRoute
   '/$locale/': typeof LocaleIndexRoute
@@ -188,6 +197,7 @@ export interface FileRouteTypes {
     | '/$locale/consulting'
     | '/$locale/datenschutz'
     | '/$locale/live-in-bonn'
+    | '/$locale/live-in-bonn/details'
     | '/$locale/media-kit'
     | '/$locale/privacy'
     | '/$locale/'
@@ -207,6 +217,7 @@ export interface FileRouteTypes {
     | '/$locale/consulting'
     | '/$locale/datenschutz'
     | '/$locale/live-in-bonn'
+    | '/$locale/live-in-bonn/details'
     | '/$locale/media-kit'
     | '/$locale/privacy'
     | '/$locale'
@@ -227,6 +238,7 @@ export interface FileRouteTypes {
     | '/$locale/consulting'
     | '/$locale/datenschutz'
     | '/$locale/live-in-bonn'
+    | '/$locale/live-in-bonn/details'
     | '/$locale/media-kit'
     | '/$locale/privacy'
     | '/$locale/'
@@ -300,6 +312,13 @@ declare module '@tanstack/react-router' {
       path: '/live-in-bonn'
       fullPath: '/$locale/live-in-bonn'
       preLoaderRoute: typeof LocaleLiveInBonnRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/live-in-bonn/details': {
+      id: '/$locale/live-in-bonn/details'
+      path: '/live-in-bonn/details'
+      fullPath: '/$locale/live-in-bonn/details'
+      preLoaderRoute: typeof LocaleLiveInBonnDetailsRouteImport
       parentRoute: typeof LocaleRouteRoute
     }
     '/$locale/media-kit': {
@@ -387,6 +406,7 @@ interface LocaleRouteRouteChildren {
   LocaleConsultingRoute: typeof LocaleConsultingRoute
   LocaleDatenschutzRoute: typeof LocaleDatenschutzRoute
   LocaleLiveInBonnRoute: typeof LocaleLiveInBonnRoute
+  LocaleLiveInBonnDetailsRoute: typeof LocaleLiveInBonnDetailsRoute
   LocaleMediaKitRoute: typeof LocaleMediaKitRoute
   LocalePrivacyRoute: typeof LocalePrivacyRoute
   LocaleIndexRoute: typeof LocaleIndexRoute
@@ -401,6 +421,7 @@ const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
   LocaleConsultingRoute: LocaleConsultingRoute,
   LocaleDatenschutzRoute: LocaleDatenschutzRoute,
   LocaleLiveInBonnRoute: LocaleLiveInBonnRoute,
+  LocaleLiveInBonnDetailsRoute: LocaleLiveInBonnDetailsRoute,
   LocaleMediaKitRoute: LocaleMediaKitRoute,
   LocalePrivacyRoute: LocalePrivacyRoute,
   LocaleIndexRoute: LocaleIndexRoute,

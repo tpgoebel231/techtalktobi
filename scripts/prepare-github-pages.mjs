@@ -40,11 +40,20 @@ export const DE_ONLY_PAGES = {
   "live-in-bonn": {
     title: "Live in Bonn · TeslaTobi Stammtisch",
     description:
-      "Der erste TeslaTobi Stammtisch zum Anfassen: Samstag, 19.12.2026, ab 18 Uhr in Bonn. Eckdaten und Termin.",
+      "Der erste TeslaTobi Stammtisch zum Anfassen: Samstag, 19.12.2026, ab 18 Uhr in Bonn. Termin und Ort stehen fest.",
     // Own social card (Rhonda, picked by Tobias Nov 2 2026). Main og.jpg unchanged.
     image: `${SITE_ORIGIN}/live-in-bonn/og-live-in-bonn-v2.jpg`,
     imageWidth: 1200,
     imageHeight: 630,
+  },
+  "live-in-bonn/details": {
+    title: "Event-Details · Live in Bonn",
+    description:
+      "Event-Details zum TeslaTobi Stammtisch in Bonn. Passwort erforderlich.",
+    image: `${SITE_ORIGIN}/live-in-bonn/og-live-in-bonn-v2.jpg`,
+    imageWidth: 1200,
+    imageHeight: 630,
+    robots: "noindex, nofollow",
   },
   datenschutz: {
     title: "Datenschutzerklärung · TechTalkTobi",
@@ -71,6 +80,8 @@ export const LEGACY_PAGE_REDIRECTS = {
   "/cv": "/en/about",
   "/en/live-in-bonn": "/de/live-in-bonn",
   "/live-in-bonn": "/de/live-in-bonn",
+  "/en/live-in-bonn/details": "/de/live-in-bonn/details",
+  "/live-in-bonn/details": "/de/live-in-bonn/details",
   "/media": "/en/media",
   "/media-kit": "/en/media-kit",
   "/muskonomy": "/en/research/muskonomy",
@@ -398,6 +409,9 @@ export function extraHeadTags(seo) {
       : []),
     `<meta name="twitter:card" content="summary_large_image"/>`,
     ...(seo.imageWidth ? [`<meta name="twitter:image" content="${escapeHtml(seo.image)}"/>`] : []),
+    ...(seo.robots
+      ? [`<meta name="robots" content="${escapeHtml(seo.robots)}"/>`]
+      : []),
     structuredData(seo),
   ].join("");
 }
