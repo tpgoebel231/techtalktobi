@@ -15,10 +15,10 @@ import { Route as LocaleIndexRouteImport } from './routes/$locale/index'
 import { Route as LocaleAboutRouteImport } from './routes/$locale/about'
 import { Route as LocaleConsultingRouteImport } from './routes/$locale/consulting'
 import { Route as LocaleDatenschutzRouteImport } from './routes/$locale/datenschutz'
-import { Route as LocaleLiveInBonnRouteImport } from './routes/$locale/live-in-bonn'
-import { Route as LocaleLiveInBonnDetailsRouteImport } from './routes/$locale/live-in-bonn.details'
 import { Route as LocaleMediaKitRouteImport } from './routes/$locale/media-kit'
 import { Route as LocalePrivacyRouteImport } from './routes/$locale/privacy'
+import { Route as LocaleLiveInBonnIndexRouteImport } from './routes/$locale/live-in-bonn/index'
+import { Route as LocaleLiveInBonnDetailsRouteImport } from './routes/$locale/live-in-bonn/details'
 import { Route as LocaleMediaIndexRouteImport } from './routes/$locale/media/index'
 import { Route as LocaleMediaSlugRouteImport } from './routes/$locale/media/$slug'
 import { Route as LocaleResearchIndexRouteImport } from './routes/$locale/research/index'
@@ -59,16 +59,6 @@ const LocaleDatenschutzRoute = LocaleDatenschutzRouteImport.update({
   path: '/datenschutz',
   getParentRoute: () => LocaleRouteRoute,
 } as any)
-const LocaleLiveInBonnRoute = LocaleLiveInBonnRouteImport.update({
-  id: '/live-in-bonn',
-  path: '/live-in-bonn',
-  getParentRoute: () => LocaleRouteRoute,
-} as any)
-const LocaleLiveInBonnDetailsRoute = LocaleLiveInBonnDetailsRouteImport.update({
-  id: '/live-in-bonn/details',
-  path: '/live-in-bonn/details',
-  getParentRoute: () => LocaleRouteRoute,
-} as any)
 const LocaleMediaKitRoute = LocaleMediaKitRouteImport.update({
   id: '/media-kit',
   path: '/media-kit',
@@ -77,6 +67,16 @@ const LocaleMediaKitRoute = LocaleMediaKitRouteImport.update({
 const LocalePrivacyRoute = LocalePrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleLiveInBonnIndexRoute = LocaleLiveInBonnIndexRouteImport.update({
+  id: '/live-in-bonn/',
+  path: '/live-in-bonn/',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleLiveInBonnDetailsRoute = LocaleLiveInBonnDetailsRouteImport.update({
+  id: '/live-in-bonn/details',
+  path: '/live-in-bonn/details',
   getParentRoute: () => LocaleRouteRoute,
 } as any)
 const LocaleMediaIndexRoute = LocaleMediaIndexRouteImport.update({
@@ -131,11 +131,10 @@ export interface FileRoutesByFullPath {
   '/$locale/about': typeof LocaleAboutRoute
   '/$locale/consulting': typeof LocaleConsultingRoute
   '/$locale/datenschutz': typeof LocaleDatenschutzRoute
-  '/$locale/live-in-bonn': typeof LocaleLiveInBonnRoute
-  '/$locale/live-in-bonn/details': typeof LocaleLiveInBonnDetailsRoute
   '/$locale/media-kit': typeof LocaleMediaKitRoute
   '/$locale/privacy': typeof LocalePrivacyRoute
   '/$locale/': typeof LocaleIndexRoute
+  '/$locale/live-in-bonn/details': typeof LocaleLiveInBonnDetailsRoute
   '/$locale/media/$slug': typeof LocaleMediaSlugRoute
   '/$locale/research/$slug': typeof LocaleResearchSlugRoute
   '/api/helga/authorize': typeof ApiHelgaAuthorizeRoute
@@ -143,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/api/helga/listen-link': typeof ApiHelgaListenLinkRoute
   '/api/helga/recording': typeof ApiHelgaRecordingRoute
   '/api/helga/webhook': typeof ApiHelgaWebhookRoute
+  '/$locale/live-in-bonn/': typeof LocaleLiveInBonnIndexRoute
   '/$locale/media/': typeof LocaleMediaIndexRoute
   '/$locale/research/': typeof LocaleResearchIndexRoute
 }
@@ -151,11 +151,10 @@ export interface FileRoutesByTo {
   '/$locale/about': typeof LocaleAboutRoute
   '/$locale/consulting': typeof LocaleConsultingRoute
   '/$locale/datenschutz': typeof LocaleDatenschutzRoute
-  '/$locale/live-in-bonn': typeof LocaleLiveInBonnRoute
-  '/$locale/live-in-bonn/details': typeof LocaleLiveInBonnDetailsRoute
   '/$locale/media-kit': typeof LocaleMediaKitRoute
   '/$locale/privacy': typeof LocalePrivacyRoute
   '/$locale': typeof LocaleIndexRoute
+  '/$locale/live-in-bonn/details': typeof LocaleLiveInBonnDetailsRoute
   '/$locale/media/$slug': typeof LocaleMediaSlugRoute
   '/$locale/research/$slug': typeof LocaleResearchSlugRoute
   '/api/helga/authorize': typeof ApiHelgaAuthorizeRoute
@@ -163,6 +162,7 @@ export interface FileRoutesByTo {
   '/api/helga/listen-link': typeof ApiHelgaListenLinkRoute
   '/api/helga/recording': typeof ApiHelgaRecordingRoute
   '/api/helga/webhook': typeof ApiHelgaWebhookRoute
+  '/$locale/live-in-bonn': typeof LocaleLiveInBonnIndexRoute
   '/$locale/media': typeof LocaleMediaIndexRoute
   '/$locale/research': typeof LocaleResearchIndexRoute
 }
@@ -173,11 +173,10 @@ export interface FileRoutesById {
   '/$locale/about': typeof LocaleAboutRoute
   '/$locale/consulting': typeof LocaleConsultingRoute
   '/$locale/datenschutz': typeof LocaleDatenschutzRoute
-  '/$locale/live-in-bonn': typeof LocaleLiveInBonnRoute
-  '/$locale/live-in-bonn/details': typeof LocaleLiveInBonnDetailsRoute
   '/$locale/media-kit': typeof LocaleMediaKitRoute
   '/$locale/privacy': typeof LocalePrivacyRoute
   '/$locale/': typeof LocaleIndexRoute
+  '/$locale/live-in-bonn/details': typeof LocaleLiveInBonnDetailsRoute
   '/$locale/media/$slug': typeof LocaleMediaSlugRoute
   '/$locale/research/$slug': typeof LocaleResearchSlugRoute
   '/api/helga/authorize': typeof ApiHelgaAuthorizeRoute
@@ -185,6 +184,7 @@ export interface FileRoutesById {
   '/api/helga/listen-link': typeof ApiHelgaListenLinkRoute
   '/api/helga/recording': typeof ApiHelgaRecordingRoute
   '/api/helga/webhook': typeof ApiHelgaWebhookRoute
+  '/$locale/live-in-bonn/': typeof LocaleLiveInBonnIndexRoute
   '/$locale/media/': typeof LocaleMediaIndexRoute
   '/$locale/research/': typeof LocaleResearchIndexRoute
 }
@@ -196,11 +196,10 @@ export interface FileRouteTypes {
     | '/$locale/about'
     | '/$locale/consulting'
     | '/$locale/datenschutz'
-    | '/$locale/live-in-bonn'
-    | '/$locale/live-in-bonn/details'
     | '/$locale/media-kit'
     | '/$locale/privacy'
     | '/$locale/'
+    | '/$locale/live-in-bonn/details'
     | '/$locale/media/$slug'
     | '/$locale/research/$slug'
     | '/api/helga/authorize'
@@ -208,6 +207,7 @@ export interface FileRouteTypes {
     | '/api/helga/listen-link'
     | '/api/helga/recording'
     | '/api/helga/webhook'
+    | '/$locale/live-in-bonn/'
     | '/$locale/media/'
     | '/$locale/research/'
   fileRoutesByTo: FileRoutesByTo
@@ -216,11 +216,10 @@ export interface FileRouteTypes {
     | '/$locale/about'
     | '/$locale/consulting'
     | '/$locale/datenschutz'
-    | '/$locale/live-in-bonn'
-    | '/$locale/live-in-bonn/details'
     | '/$locale/media-kit'
     | '/$locale/privacy'
     | '/$locale'
+    | '/$locale/live-in-bonn/details'
     | '/$locale/media/$slug'
     | '/$locale/research/$slug'
     | '/api/helga/authorize'
@@ -228,6 +227,7 @@ export interface FileRouteTypes {
     | '/api/helga/listen-link'
     | '/api/helga/recording'
     | '/api/helga/webhook'
+    | '/$locale/live-in-bonn'
     | '/$locale/media'
     | '/$locale/research'
   id:
@@ -237,11 +237,10 @@ export interface FileRouteTypes {
     | '/$locale/about'
     | '/$locale/consulting'
     | '/$locale/datenschutz'
-    | '/$locale/live-in-bonn'
-    | '/$locale/live-in-bonn/details'
     | '/$locale/media-kit'
     | '/$locale/privacy'
     | '/$locale/'
+    | '/$locale/live-in-bonn/details'
     | '/$locale/media/$slug'
     | '/$locale/research/$slug'
     | '/api/helga/authorize'
@@ -249,6 +248,7 @@ export interface FileRouteTypes {
     | '/api/helga/listen-link'
     | '/api/helga/recording'
     | '/api/helga/webhook'
+    | '/$locale/live-in-bonn/'
     | '/$locale/media/'
     | '/$locale/research/'
   fileRoutesById: FileRoutesById
@@ -307,20 +307,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocaleDatenschutzRouteImport
       parentRoute: typeof LocaleRouteRoute
     }
-    '/$locale/live-in-bonn': {
-      id: '/$locale/live-in-bonn'
-      path: '/live-in-bonn'
-      fullPath: '/$locale/live-in-bonn'
-      preLoaderRoute: typeof LocaleLiveInBonnRouteImport
-      parentRoute: typeof LocaleRouteRoute
-    }
-    '/$locale/live-in-bonn/details': {
-      id: '/$locale/live-in-bonn/details'
-      path: '/live-in-bonn/details'
-      fullPath: '/$locale/live-in-bonn/details'
-      preLoaderRoute: typeof LocaleLiveInBonnDetailsRouteImport
-      parentRoute: typeof LocaleRouteRoute
-    }
     '/$locale/media-kit': {
       id: '/$locale/media-kit'
       path: '/media-kit'
@@ -333,6 +319,20 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/$locale/privacy'
       preLoaderRoute: typeof LocalePrivacyRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/live-in-bonn/': {
+      id: '/$locale/live-in-bonn/'
+      path: '/live-in-bonn'
+      fullPath: '/$locale/live-in-bonn/'
+      preLoaderRoute: typeof LocaleLiveInBonnIndexRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/live-in-bonn/details': {
+      id: '/$locale/live-in-bonn/details'
+      path: '/live-in-bonn/details'
+      fullPath: '/$locale/live-in-bonn/details'
+      preLoaderRoute: typeof LocaleLiveInBonnDetailsRouteImport
       parentRoute: typeof LocaleRouteRoute
     }
     '/$locale/media/': {
@@ -405,13 +405,13 @@ interface LocaleRouteRouteChildren {
   LocaleAboutRoute: typeof LocaleAboutRoute
   LocaleConsultingRoute: typeof LocaleConsultingRoute
   LocaleDatenschutzRoute: typeof LocaleDatenschutzRoute
-  LocaleLiveInBonnRoute: typeof LocaleLiveInBonnRoute
-  LocaleLiveInBonnDetailsRoute: typeof LocaleLiveInBonnDetailsRoute
   LocaleMediaKitRoute: typeof LocaleMediaKitRoute
   LocalePrivacyRoute: typeof LocalePrivacyRoute
   LocaleIndexRoute: typeof LocaleIndexRoute
+  LocaleLiveInBonnDetailsRoute: typeof LocaleLiveInBonnDetailsRoute
   LocaleMediaSlugRoute: typeof LocaleMediaSlugRoute
   LocaleResearchSlugRoute: typeof LocaleResearchSlugRoute
+  LocaleLiveInBonnIndexRoute: typeof LocaleLiveInBonnIndexRoute
   LocaleMediaIndexRoute: typeof LocaleMediaIndexRoute
   LocaleResearchIndexRoute: typeof LocaleResearchIndexRoute
 }
@@ -420,13 +420,13 @@ const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
   LocaleAboutRoute: LocaleAboutRoute,
   LocaleConsultingRoute: LocaleConsultingRoute,
   LocaleDatenschutzRoute: LocaleDatenschutzRoute,
-  LocaleLiveInBonnRoute: LocaleLiveInBonnRoute,
-  LocaleLiveInBonnDetailsRoute: LocaleLiveInBonnDetailsRoute,
   LocaleMediaKitRoute: LocaleMediaKitRoute,
   LocalePrivacyRoute: LocalePrivacyRoute,
   LocaleIndexRoute: LocaleIndexRoute,
+  LocaleLiveInBonnDetailsRoute: LocaleLiveInBonnDetailsRoute,
   LocaleMediaSlugRoute: LocaleMediaSlugRoute,
   LocaleResearchSlugRoute: LocaleResearchSlugRoute,
+  LocaleLiveInBonnIndexRoute: LocaleLiveInBonnIndexRoute,
   LocaleMediaIndexRoute: LocaleMediaIndexRoute,
   LocaleResearchIndexRoute: LocaleResearchIndexRoute,
 }

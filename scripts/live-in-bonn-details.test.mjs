@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
@@ -67,6 +67,14 @@ test("repo source and the ciphertext file do not contain the venue name or stree
     }
   }
   assert.deepEqual(hits, []);
+  const details = join(REPO, "dist/client/de/live-in-bonn/details.html");
+  if (existsSync(details)) {
+    const html = readFileSync(details, "utf8");
+    assert.match(html, /name="robots" content="noindex, nofollow"/);
+    assert.match(html, /pw-form/);
+    assert.match(html, /Anzeigen/);
+    assert.doesNotMatch(html, /Eckdaten/);
+  }
 });
 
 test("password 42 decrypts a complete details object; a wrong password fails", async () => {
@@ -103,7 +111,7 @@ test("details route is German-only, noindex, not in the sitemap, and bounces fro
   assert.ok(
     vercel.redirects.some((r) => r.source === "/live-in-bonn/details" && r.destination === route && r.permanent),
   );
-  const page = source("src/routes/$locale/live-in-bonn.details.tsx");
+  const page = source("src/routes/$locale/live-in-bonn/details.tsx");
   assert.match(page, /noindex, nofollow/);
   assert.match(page, /Event-Details · Live in Bonn/);
   const clean = source("src/lib/clean-routes.ts");
@@ -112,7 +120,7 @@ test("details route is German-only, noindex, not in the sitemap, and bounces fro
 
 test("main Live in Bonn page does not name the venue and points to the details page", () => {
   const page = source("src/pages/live-in-bonn.tsx");
-  const route = source("src/routes/$locale/live-in-bonn.tsx");
+  const route = source("src/routes/$locale/live-in-bonn/index.tsx");
   for (const word of BANNED) {
     assert.ok(!page.includes(word), word);
     assert.ok(!route.includes(word), word);
