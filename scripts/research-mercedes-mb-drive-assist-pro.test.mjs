@@ -73,6 +73,10 @@ test("research piece, SEO, sitemap and the /research/mercedes-mb-drive-assist-pr
   assert.equal(piece.kind, "tool");
   assert.equal(piece.title.en, "Mercedes MB.DRIVE ASSIST PRO: What's New in November?");
   assert.equal(piece.title.de, "Mercedes MB.DRIVE ASSIST PRO: Was ist neu im November?");
+  assert.equal(piece.cardTitle.en, "Mercedes MB.DRIVE ASSIST PRO");
+  assert.equal(piece.cardTitle.de, "Mercedes MB.DRIVE ASSIST PRO");
+  assert.equal(piece.cardDek.en, "An ongoing analysis of Mercedes's announced L2++ system");
+  assert.equal(piece.cardDek.de, "Eine fortlaufende Analyse des angekündigten L2++-Systems von Mercedes");
   assert.ok(canonicalRoutes(pieces).includes(`/de/research/${SLUG}`));
   assert.ok(canonicalRoutes(pieces).includes(`/en/research/${SLUG}`));
   const seoDe = seoForRoute(`/de/research/${SLUG}`, pieces);
@@ -89,6 +93,10 @@ test("research piece, SEO, sitemap and the /research/mercedes-mb-drive-assist-pr
   );
   const seoEn = seoForRoute(`/en/research/${SLUG}`, pieces);
   assert.equal(seoEn.title, `${piece.title.en} · TechTalkTobi`);
+  assert.equal(seoDe.description, piece.dek.de);
+  assert.equal(seoEn.description, piece.dek.en);
+  assert.notEqual(seoDe.title, `${piece.cardTitle.de} · TechTalkTobi`);
+  assert.notEqual(seoDe.description, piece.cardDek.de);
   readFileSync(new URL("../public/images/research-mercedes-mb-drive-assist-pro.jpg", import.meta.url));
 
   const sitemap = source("public/sitemap.xml");
@@ -116,6 +124,12 @@ test("detail page frames the per-locale deck file", () => {
   assert.ok(component.includes('"/research/embed/mercedes-mb-drive-assist-pro.en.html"'));
   assert.ok(component.includes("Dashboard im Vollbild öffnen"));
   assert.ok(component.includes("Open the dashboard full screen"));
+  const card = source("src/components/research-card.tsx");
+  assert.ok(card.includes("piece.cardTitle?.[locale] ?? piece.title[locale]"));
+  assert.ok(card.includes("piece.cardDek?.[locale] ?? piece.dek[locale]"));
+  assert.ok(detail.includes("piece.title[locale]"));
+  assert.ok(detail.includes("piece.dek[locale]"));
+  assert.ok(!detail.includes("cardTitle"));
 });
 
 test("German UI uses Recherche, not Forschung, for site section labels", () => {
