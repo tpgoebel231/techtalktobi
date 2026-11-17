@@ -15,7 +15,7 @@ export function MediaKitPage() {
 
   const long =
     locale === "de"
-      ? "Tobias P. Goebel (Tobi) ist in Deutschland aufgewachsen und lebt in Boston. Zwei Jahrzehnte Enterprise-Software (Forschung, Produkt, Sales Engineering, technisches Produktmarketing). Seit Jahren fährt er Tesla FSD Supervised im US-Alltag und veröffentlicht die Befunde. TeslaTobi ist der deutsche Kommentar-Kanal; TechTalkTobi der englische; techtalktobi.com die öffentliche Forschungsseite. Online überall: tpgoebel. Sein Thema: die Lücke zwischen US-Technikrealität und europäischer Regulierung (StVG, UNECE, EU)."
+      ? "Tobias P. Goebel (Tobi) ist in Deutschland aufgewachsen und lebt in Boston. Zwei Jahrzehnte Enterprise-Software (Forschung, Produkt, Sales Engineering, technisches Produktmarketing). Seit Jahren fährt er Tesla FSD Supervised im US-Alltag und veröffentlicht die Befunde. TeslaTobi ist der deutsche Kommentar-Kanal; TechTalkTobi der englische; techtalktobi.com die öffentliche Rechercheseite. Online überall: tpgoebel. Sein Thema: die Lücke zwischen US-Technikrealität und europäischer Regulierung (StVG, UNECE, EU)."
       : "Tobias P. Goebel (Tobi) grew up in Germany and lives in Boston. Two decades in enterprise software spanning R&D, product, sales engineering, and technical product marketing. For years he has driven Tesla FSD Supervised as a US daily driver and published what he finds. TeslaTobi is the German commentary channel; TechTalkTobi the English one; techtalktobi.com the public research site. Online everywhere: tpgoebel. The beat is the gap between US technical reality and European regulation (StVG, UNECE, EU).";
 
   const topics =

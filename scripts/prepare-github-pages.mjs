@@ -76,6 +76,7 @@ export const LEGACY_PAGE_REDIRECTS = {
   "/muskonomy": "/en/research/muskonomy",
   "/research": "/en/research",
   "/research/tesla-gruenheide": "/de/research/tesla-gruenheide",
+  "/research/mercedes-mb-drive-assist-pro": "/de/research/mercedes-mb-drive-assist-pro",
 };
 
 /**
@@ -181,7 +182,7 @@ export const PAGE_TITLES = {
   "media-kit": { en: "Media Kit · TechTalkTobi", de: "Media Kit · TechTalkTobi" },
   media: { en: "Media · TechTalkTobi", de: "Media · TechTalkTobi" },
   privacy: { en: "Privacy Policy · TechTalkTobi", de: "Privacy Policy · TechTalkTobi" },
-  research: { en: "Research · TechTalkTobi", de: "Research · TechTalkTobi" },
+  research: { en: "Research · TechTalkTobi", de: "Recherche · TechTalkTobi" },
 };
 
 /** Existing page deks from src/data/copy.ts (never invent new Tobias-voice copy). */
