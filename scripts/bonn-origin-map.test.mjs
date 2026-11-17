@@ -100,3 +100,11 @@ test("page adds only one local map below the registration section", () => {
   assert.match(page, /Ort steht fest/);
   assert.doesNotMatch(page, /noch offen|wird noch gesucht|geben wir bald hier bekannt/);
 });
+
+test("Live in Bonn footer says the interest form is closed", () => {
+  const shell = source("src/components/bonn-shell.tsx");
+  assert.match(shell, /Die Interessenbekundung ist abgeschlossen\./);
+  assert.doesNotMatch(shell, /l[äa]uft über Google\s*Forms \(Server in den USA\)/);
+  assert.match(shell, /Ohne Tracking/);
+  assert.match(shell, /href="\/de\/datenschutz"/);
+});
