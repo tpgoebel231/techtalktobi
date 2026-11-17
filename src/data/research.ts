@@ -9,6 +9,7 @@ export const RESEARCH_SLUGS = [
   "waymo",
   "muskonomy",
   "tesla-gruenheide",
+  "mercedes-mb-drive-assist-pro",
 ] as const;
 
 export type ResearchSlug = (typeof RESEARCH_SLUGS)[number];
@@ -229,6 +230,27 @@ export const research: ResearchPiece[] = [
     tags: [
       { en: "Giga Berlin", de: "Giga Berlin" },
       { en: "Optimus", de: "Optimus" },
+    ],
+    paragraphs: [],
+  },
+  {
+    slug: "mercedes-mb-drive-assist-pro",
+    kind: "tool",
+    date: "2026-11",
+    image: "/images/research-mercedes-mb-drive-assist-pro.jpg",
+    noBanner: true,
+    // Title from Interactive Slides / Tobias (Nov 17 2026). Dek from the deck meta description; EN is a translation.
+    title: {
+      en: "Mercedes MB.DRIVE ASSIST PRO: What's New in November?",
+      de: "Mercedes MB.DRIVE ASSIST PRO: Was ist neu im November?",
+    },
+    dek: {
+      en: "The eight key points of the Mercedes-Benz press release of November 16, 2026 on MB.DRIVE ASSIST PRO.",
+      de: "Die acht Kernpunkte der Mercedes-Benz Pressemitteilung vom 16. November 2026 zu MB.DRIVE ASSIST PRO.",
+    },
+    tags: [
+      { en: "Mercedes", de: "Mercedes" },
+      { en: "Driver assistance", de: "Fahrerassistenz" },
     ],
     paragraphs: [],
   },

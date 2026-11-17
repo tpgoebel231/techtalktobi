@@ -167,7 +167,7 @@ export const copy = {
       handle: "tpgoebel",
     },
     nav: {
-      research: "Forschung",
+      research: "Recherche",
       media: "Medien",
       about: "Über mich",
       consulting: "Beratung",
@@ -189,7 +189,7 @@ export const copy = {
       dek: "Journalist und Berater für autonome Systeme: KI, Robotik, selbstfahrende Fahrzeuge und das Tesla-Ökosystem samt Wettbewerb.",
       ctaMedia: "Für Medien & PR",
       ctaAdvisory: "Zur Beratung",
-      ctaResearch: "Forschung",
+      ctaResearch: "Recherche",
       doorsKicker: "Zusammenarbeit",
       mediaDoorTitle: "Medien & PR",
       mediaDoorDek:
@@ -199,7 +199,7 @@ export const copy = {
       advisoryDoorDek:
         "Unabhängige Einordnung: was diese Systeme wirklich können, und was nationales, EU- und UNECE-Recht schon erlaubt. Aus Boston, auf Deutsch oder Englisch.",
       advisoryDoorCta: "Beratung",
-      featured: "Forschung",
+      featured: "Recherche",
       featuredDek:
         "Veröffentlichte Grafiken, eine öffentliche FSD-Bewertungsmatrix und ein interaktives Tool.",
       mediaTitle: "TeslaTobi und TechTalkTobi",
@@ -210,8 +210,8 @@ export const copy = {
       aboutCta: "Über mich und Kontakt",
     },
     research: {
-      eyebrow: "Forschung",
-      title: "Forschung",
+      eyebrow: "Recherche",
+      title: "Recherche",
       dek: "Grafiken, eine öffentliche FSD-Bewertungsmatrix und ein interaktiver Rechner.",
       read: "Öffnen",
       related: "Weitere Beiträge",

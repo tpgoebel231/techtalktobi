@@ -102,6 +102,7 @@ test("page titles and locale descriptions still exist in the route files", () =>
 
   const research = readFileSync(join(REPO, "src/routes/$locale/research/index.tsx"), "utf8");
   assert.ok(research.includes(PAGE_TITLES.research.en));
+  assert.ok(research.includes(PAGE_TITLES.research.de));
   assert.ok(research.includes(PAGE_DESCRIPTIONS.research.en));
   assert.ok(research.includes(PAGE_DESCRIPTIONS.research.de));
 

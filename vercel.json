@@ -78,6 +78,11 @@
       "permanent": true
     },
     {
+      "source": "/research/mercedes-mb-drive-assist-pro",
+      "destination": "/de/research/mercedes-mb-drive-assist-pro",
+      "permanent": true
+    },
+    {
       "source": "/ai-robotics/Humanoid_Robotics_Stack_May2026.pdf",
       "destination": "/research/Humanoid_Robotics_Stack_May2026.pdf",
       "permanent": true
