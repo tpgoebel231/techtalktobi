@@ -40,8 +40,7 @@ export function BonnShell({
       <footer>
         <div className="wrap">
           <p>
-            TeslaTobi Stammtisch · Live in Bonn · Ohne Tracking. Die Interessenbekundung läuft über Google
-            Forms (Server in den USA).
+            TeslaTobi Stammtisch · Live in Bonn · Ohne Tracking. Die Interessenbekundung ist abgeschlossen.
           </p>
           <p>
             {/* No Impressum link: the main site footer has none to point to. */}
