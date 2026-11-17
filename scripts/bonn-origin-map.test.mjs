@@ -94,5 +94,9 @@ test("page adds only one local map below the registration section", () => {
   assert.match(page, /Erzeugt von Grok Bot, wem sonst\./);
   assert.doesNotMatch(page, /docs\.google\.com\/forms|forms\.gle|12\.12\.2026|20\.12\.2026/);
   assert.match(page, /Die Interessenbekundung ist geschlossen\. Danke an alle, die mitgemacht haben!/);
-  assert.match(page, /Der Termin steht: Samstag, 19\.12\.2026, ab 18 Uhr in Bonn\. Die meisten von Euch können an diesem Tag\. Den genauen Ort geben wir bald hier bekannt\./);
+  assert.match(page, /Termin und Ort stehen fest: Samstag, 19\.12\.2026, ab 18 Uhr in Bonn\. Die meisten von Euch können an diesem Tag\. Die genaue Adresse findet Ihr in den Event-Details\./);
+  assert.match(page, /Zu den Event-Details/);
+  assert.match(page, /href="\/de\/live-in-bonn\/details"/);
+  assert.match(page, /Ort steht fest/);
+  assert.doesNotMatch(page, /noch offen|wird noch gesucht|geben wir bald hier bekannt/);
 });
