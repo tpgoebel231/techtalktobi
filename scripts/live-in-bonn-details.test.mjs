@@ -95,7 +95,7 @@ test("password 42 decrypts a complete details object; a wrong password fails", a
     assert.equal(typeof section.text, "string");
     assert.ok(section.text.length > 0);
     assert.ok(Array.isArray(section.photos));
-    assert.ok(section.photos.length >= 3, "gallery");
+    assert.ok(section.photos.length >= 1, "gallery");
     for (const photo of section.photos) {
       assert.match(photo.src, /^data:image\/webp;base64,/);
       assert.match(photo.href, /^https:\/\/commons\.wikimedia\.org\/wiki\/File:/);
@@ -106,6 +106,9 @@ test("password 42 decrypts a complete details object; a wrong password fails", a
   }
   assert.equal(details.lokal.title, "Das Lokal");
   assert.equal(details.markt.title, "Bonner Weihnachtsmarkt");
+  assert.equal(details.lokal.photos.length, 1);
+  assert.ok(details.lokal.photos[0].hero);
+  assert.ok(details.markt.photos.length >= 5);
   const hero = details.lokal.photos.filter((photo) => photo.hero);
   assert.equal(hero.length, 1);
   assert.match(hero[0].src, /^data:image\/webp;base64,/);
