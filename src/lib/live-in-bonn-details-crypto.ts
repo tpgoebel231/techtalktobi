@@ -13,6 +13,19 @@ export type EncryptedPayload = {
   ct: string;
 };
 
+export type EventPhoto = {
+  src: string;
+  alt: string;
+  credit: string;
+  href: string;
+};
+
+export type EventSection = {
+  title: string;
+  text: string;
+  photos: EventPhoto[];
+};
+
 export type EventDetails = {
   datum: string;
   ort: string;
@@ -20,6 +33,8 @@ export type EventDetails = {
   parken: string;
   kueche: string;
   mehr: string;
+  lokal: EventSection;
+  markt: EventSection;
 };
 
 function b64ToBytes(value: string): Uint8Array<ArrayBuffer> {
@@ -70,10 +85,40 @@ export async function decryptEventDetails(
   return parsed;
 }
 
+function isPhoto(value: unknown): value is EventPhoto {
+  if (!value || typeof value !== "object") return false;
+  const rec = value as Record<string, unknown>;
+  return (
+    typeof rec.src === "string" &&
+    rec.src.startsWith("data:image/webp") &&
+    typeof rec.alt === "string" &&
+    rec.alt.length > 0 &&
+    typeof rec.credit === "string" &&
+    rec.credit.length > 0 &&
+    typeof rec.href === "string" &&
+    rec.href.startsWith("https://commons.wikimedia.org/wiki/File:")
+  );
+}
+
+function isSection(value: unknown): value is EventSection {
+  if (!value || typeof value !== "object") return false;
+  const rec = value as Record<string, unknown>;
+  return (
+    typeof rec.title === "string" &&
+    rec.title.length > 0 &&
+    typeof rec.text === "string" &&
+    rec.text.length > 0 &&
+    Array.isArray(rec.photos) &&
+    rec.photos.length > 0 &&
+    rec.photos.every(isPhoto)
+  );
+}
+
 function isEventDetails(value: unknown): value is EventDetails {
   if (!value || typeof value !== "object") return false;
   const rec = value as Record<string, unknown>;
-  return ["datum", "ort", "maps", "parken", "kueche", "mehr"].every(
+  const strings = ["datum", "ort", "maps", "parken", "kueche", "mehr"].every(
     (key) => typeof rec[key] === "string" && (rec[key] as string).length > 0,
   );
+  return strings && isSection(rec.lokal) && isSection(rec.markt);
 }

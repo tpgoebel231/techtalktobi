@@ -5,6 +5,8 @@ import {
   decryptEventDetails,
   type EncryptedPayload,
   type EventDetails,
+  type EventPhoto,
+  type EventSection,
 } from "@/lib/live-in-bonn-details-crypto";
 
 const STORAGE_KEY = "ttt-lib-details-pw";
@@ -57,7 +59,7 @@ export function LiveInBonnDetailsPage() {
           <p>
             <a href="/de/live-in-bonn">Zurück zur Übersichtsseite</a>
           </p>
-          {details ? <Unlocked details={details} /> : (
+          {details ? <Facts details={details} /> : (
             <>
               <p className="lead">
                 Termin und Ort stehen fest. Die genaue Adresse und weitere Hinweise sind
@@ -86,11 +88,17 @@ export function LiveInBonnDetailsPage() {
           )}
         </div>
       </section>
+      {details ? (
+        <>
+          <DetailSection section={details.lokal} anchor="das-lokal" />
+          <DetailSection section={details.markt} anchor="weihnachtsmarkt" />
+        </>
+      ) : null}
     </BonnShell>
   );
 }
 
-function Unlocked({ details }: { details: EventDetails }) {
+function Facts({ details }: { details: EventDetails }) {
   return (
     <dl className="event-facts">
       <div>
@@ -118,5 +126,36 @@ function Unlocked({ details }: { details: EventDetails }) {
         <dd>{details.mehr}</dd>
       </div>
     </dl>
+  );
+}
+
+function DetailSection({ section, anchor }: { section: EventSection; anchor: string }) {
+  const headingId = `h-${anchor}`;
+  return (
+    <section className="event-extra" id={anchor} aria-labelledby={headingId}>
+      <div className="wrap">
+        <p className="label">{section.title}</p>
+        <h2 id={headingId}>{section.title}</h2>
+        <p className="lead">{section.text}</p>
+        <div className="event-gallery">
+          {section.photos.map((photo) => (
+            <GalleryFigure key={photo.href} photo={photo} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function GalleryFigure({ photo }: { photo: EventPhoto }) {
+  return (
+    <figure>
+      <img src={photo.src} alt={photo.alt} />
+      <figcaption>
+        <a href={photo.href} target="_blank" rel="noopener noreferrer">
+          {photo.credit}
+        </a>
+      </figcaption>
+    </figure>
   );
 }
