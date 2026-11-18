@@ -154,25 +154,60 @@
   .lib .origin-legend { gap: 10px 16px; font-size: 13px; }
 }
 
-/* password gate + unlocked facts on /de/live-in-bonn/details */
+/* password gate + unlocked details layout */
+.lib .details-gate { padding: 88px 0 96px; border-bottom: 1px solid var(--line); }
+.lib .details-gate h1 { font-size: clamp(44px, 7vw, 80px); margin-bottom: 20px; }
+.lib .details-gate .lead { max-width: 640px; }
 .lib .pw-form { max-width: 420px; margin-top: 32px; display: grid; gap: 12px; }
 .lib .pw-form label { font-weight: 700; color: var(--white); }
 .lib .pw-form input { min-height: 56px; padding: 0 16px; border-radius: 10px; border: 2px solid var(--line); background: var(--card); color: var(--white); font: inherit; }
 .lib .pw-form .btn { width: fit-content; }
 .lib .pw-error { color: var(--crimson-t); font-weight: 700; margin: 0; }
-.lib .event-facts { margin: 32px 0 0; padding: 0; display: grid; gap: 20px; }
+
+.lib .details-hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 420px;
+  border-bottom: 1px solid var(--line);
+}
+.lib .details-hero-media { position: absolute; inset: 0; }
+.lib .details-hero-media img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 60%; }
+.lib .details-hero-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, #1e1f22f5 0%, #1e1f22e6 38%, #1e1f22a6 70%, #1e1f2270 100%);
+}
+.lib .details-hero .wrap { position: relative; z-index: 1; padding-top: 88px; padding-bottom: 96px; }
+.lib .details-hero h1 { font-size: clamp(44px, 7vw, 80px); margin-bottom: 20px; }
+.lib .details-hero .sub { margin-bottom: 12px; }
+.lib .details-hero-venue { font-size: 22px; font-weight: 700; margin: 0 0 28px; }
+.lib .details-hero-venue a { color: var(--gold); text-decoration: none; }
+.lib .details-hero-venue a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.lib .details-back { color: var(--ice); }
+.lib .details-hero-credit { margin: 28px 0 0; font-size: 13px; color: var(--meta); }
+.lib .details-hero-credit a { color: var(--meta); text-decoration: underline; text-underline-offset: 2px; }
+
+.lib .details-facts { padding: 64px 0; }
+.lib .event-facts {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
 .lib .event-facts div { background: var(--card); border: 1px solid var(--line); clip-path: var(--cut); padding: 24px; }
 .lib .event-facts dt { font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--gold); font-size: 16px; margin: 0 0 6px; }
 .lib .event-facts dd { margin: 0; color: var(--white); font-weight: 600; }
+.lib .event-facts a { color: var(--ice); }
 
-/* extra unlocked sections on the details page */
-.lib .event-extra { padding: 64px 0 72px; }
-.lib .event-extra .lead { max-width: 820px; }
+.lib .event-extra { padding: 88px 0; }
+.lib .event-extra .lead { max-width: 720px; }
 .lib .event-gallery {
   margin: 32px 0 0;
   display: grid;
   gap: 20px;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 .lib .event-gallery figure {
   margin: 0;
@@ -184,6 +219,8 @@
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
 }
 .lib .event-gallery figcaption {
   padding: 10px 14px 14px;
@@ -192,6 +229,22 @@
   line-height: 1.4;
 }
 .lib .event-gallery figcaption a { color: var(--meta); text-decoration: underline; text-underline-offset: 2px; }
-@media (max-width: 700px) {
+
+.lib .details-more { padding: 56px 0 72px; border-bottom: 0; }
+.lib .details-more p { margin: 0; color: var(--meta); font-weight: 600; font-size: 18px; }
+
+@media (max-width: 900px) {
+  .lib .event-facts { grid-template-columns: 1fr 1fr; }
+  .lib .details-hero .wrap { padding-top: 56px; padding-bottom: 72px; }
+  .lib .details-hero-media::after {
+    background: linear-gradient(180deg, #1e1f22f0 0%, #1e1f22d0 42%, #1e1f2299 100%);
+  }
+  .lib .details-gate { padding: 56px 0 72px; }
+}
+@media (max-width: 560px) {
+  .lib .event-facts { grid-template-columns: 1fr; gap: 12px; }
+  .lib .event-facts div { padding: 20px 18px; }
   .lib .event-gallery { grid-template-columns: 1fr; }
+  .lib .details-hero { min-height: 0; }
+  .lib .details-hero-venue { font-size: 18px; }
 }

@@ -18,6 +18,7 @@ export type EventPhoto = {
   alt: string;
   credit: string;
   href: string;
+  hero?: boolean;
 };
 
 export type EventSection = {
@@ -96,7 +97,8 @@ function isPhoto(value: unknown): value is EventPhoto {
     typeof rec.credit === "string" &&
     rec.credit.length > 0 &&
     typeof rec.href === "string" &&
-    rec.href.startsWith("https://commons.wikimedia.org/wiki/File:")
+    rec.href.startsWith("https://commons.wikimedia.org/wiki/File:") &&
+    (rec.hero === undefined || rec.hero === true)
   );
 }
 
