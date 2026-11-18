@@ -98,20 +98,20 @@ test("password 42 decrypts a complete details object; a wrong password fails", a
     assert.ok(section.photos.length >= 1, "gallery");
     for (const photo of section.photos) {
       assert.match(photo.src, /^data:image\/webp;base64,/);
-      assert.match(photo.href, /^https:\/\/commons\.wikimedia\.org\/wiki\/File:/);
-      assert.match(photo.credit, /Wikimedia Commons/);
-      assert.match(photo.credit, /CC BY/);
+      assert.match(photo.href, /^https:\/\//);
+      assert.match(photo.credit, /^Foto: /);
       assert.ok(photo.alt.length > 0);
     }
   }
   assert.equal(details.lokal.title, "Das Lokal");
   assert.equal(details.markt.title, "Bonner Weihnachtsmarkt");
-  assert.equal(details.lokal.photos.length, 1);
+  assert.equal(details.lokal.photos.length, 6);
   assert.ok(details.lokal.photos[0].hero);
-  assert.ok(details.markt.photos.length >= 5);
+  assert.equal(details.markt.photos.length, 6);
   const hero = details.lokal.photos.filter((photo) => photo.hero);
   assert.equal(hero.length, 1);
   assert.match(hero[0].src, /^data:image\/webp;base64,/);
+  assert.match(hero[0].credit, /Franganillo/);
   await assert.rejects(() => decrypt("wrong", payload));
 });
 
