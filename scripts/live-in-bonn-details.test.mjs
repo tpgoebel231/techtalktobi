@@ -106,6 +106,9 @@ test("password 42 decrypts a complete details object; a wrong password fails", a
   }
   assert.equal(details.lokal.title, "Das Lokal");
   assert.equal(details.markt.title, "Bonner Weihnachtsmarkt");
+  const hero = details.lokal.photos.filter((photo) => photo.hero);
+  assert.equal(hero.length, 1);
+  assert.match(hero[0].src, /^data:image\/webp;base64,/);
   await assert.rejects(() => decrypt("wrong", payload));
 });
 

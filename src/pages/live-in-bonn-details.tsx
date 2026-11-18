@@ -50,82 +50,111 @@ export function LiveInBonnDetailsPage() {
     }
   }
 
+  if (!details) {
+    return (
+      <BonnShell>
+        <section className="details-gate" aria-labelledby="h-details">
+          <div className="wrap">
+            <p className="label">Live in Bonn</p>
+            <h1 id="h-details">Event-Details</h1>
+            <p>
+              <a href="/de/live-in-bonn">Zurück zur Übersichtsseite</a>
+            </p>
+            <p className="lead">
+              Termin und Ort stehen fest. Die genaue Adresse und weitere Hinweise sind
+              passwortgeschützt.
+            </p>
+            <form className="pw-form" onSubmit={onSubmit}>
+              <label htmlFor="lib-password">Passwort</label>
+              <input
+                id="lib-password"
+                name="password"
+                type="password"
+                autoComplete="off"
+                required
+                disabled={busy}
+              />
+              <button className="btn btn-gold" type="submit" disabled={busy}>
+                Anzeigen
+              </button>
+              {error ? (
+                <p className="pw-error" role="alert">
+                  {error}
+                </p>
+              ) : null}
+            </form>
+          </div>
+        </section>
+      </BonnShell>
+    );
+  }
+
+  const hero = details.lokal.photos.find((photo) => photo.hero) ?? details.lokal.photos[0];
+
   return (
     <BonnShell>
-      <section className="legal" aria-labelledby="h-details">
+      <section className="details-hero" aria-labelledby="h-details">
+        <div className="details-hero-media" aria-hidden="true">
+          <img src={hero.src} alt="" />
+        </div>
         <div className="wrap">
           <p className="label">Live in Bonn</p>
           <h1 id="h-details">Event-Details</h1>
-          <p>
-            <a href="/de/live-in-bonn">Zurück zur Übersichtsseite</a>
+          <p className="sub">{details.datum}</p>
+          <p className="details-hero-venue">
+            <a href={details.maps} target="_blank" rel="noopener noreferrer">
+              {details.ort}
+            </a>
           </p>
-          {details ? <Facts details={details} /> : (
-            <>
-              <p className="lead">
-                Termin und Ort stehen fest. Die genaue Adresse und weitere Hinweise sind
-                passwortgeschützt.
-              </p>
-              <form className="pw-form" onSubmit={onSubmit}>
-                <label htmlFor="lib-password">Passwort</label>
-                <input
-                  id="lib-password"
-                  name="password"
-                  type="password"
-                  autoComplete="off"
-                  required
-                  disabled={busy}
-                />
-                <button className="btn btn-gold" type="submit" disabled={busy}>
-                  Anzeigen
-                </button>
-                {error ? (
-                  <p className="pw-error" role="alert">
-                    {error}
-                  </p>
-                ) : null}
-              </form>
-            </>
-          )}
+          <p>
+            <a className="details-back" href="/de/live-in-bonn">
+              Zurück zur Übersichtsseite
+            </a>
+          </p>
+          <p className="details-hero-credit">
+            <a href={hero.href} target="_blank" rel="noopener noreferrer">
+              {hero.credit}
+            </a>
+          </p>
         </div>
       </section>
-      {details ? (
-        <>
-          <DetailSection section={details.lokal} anchor="das-lokal" />
-          <DetailSection section={details.markt} anchor="weihnachtsmarkt" />
-        </>
-      ) : null}
-    </BonnShell>
-  );
-}
 
-function Facts({ details }: { details: EventDetails }) {
-  return (
-    <dl className="event-facts">
-      <div>
-        <dt>Datum</dt>
-        <dd>{details.datum}</dd>
-      </div>
-      <div>
-        <dt>Ort</dt>
-        <dd>
-          <a href={details.maps} target="_blank" rel="noopener noreferrer">
-            {details.ort}
-          </a>
-        </dd>
-      </div>
-      <div>
-        <dt>Parken</dt>
-        <dd>{details.parken}</dd>
-      </div>
-      <div>
-        <dt>Küche</dt>
-        <dd>{details.kueche}</dd>
-      </div>
-      <div>
-        <dt>Hinweis</dt>
-        <dd>{details.mehr}</dd>
-      </div>
-    </dl>
+      <section className="details-facts" aria-label="Eckdaten">
+        <div className="wrap">
+          <dl className="event-facts">
+            <div>
+              <dt>Datum</dt>
+              <dd>{details.datum}</dd>
+            </div>
+            <div>
+              <dt>Ort</dt>
+              <dd>
+                <a href={details.maps} target="_blank" rel="noopener noreferrer">
+                  {details.ort}
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt>Parken</dt>
+              <dd>{details.parken}</dd>
+            </div>
+            <div>
+              <dt>Küche</dt>
+              <dd>{details.kueche}</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <DetailSection section={details.lokal} anchor="das-lokal" />
+      <DetailSection section={details.markt} anchor="weihnachtsmarkt" />
+
+      <section className="details-more">
+        <div className="wrap">
+          <p>{details.mehr}</p>
+        </div>
+      </section>
+    </BonnShell>
   );
 }
 
