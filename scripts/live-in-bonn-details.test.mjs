@@ -63,7 +63,7 @@ test("repo source and the ciphertext file do not contain the venue name or stree
     if (text.includes(0)) continue;
     const body = text.toString("utf8");
     for (const word of BANNED) {
-      if (body.includes(word)) hits.push(`${file.replace(REPO, "")}: ${word}`);
+      if (body.toLowerCase().includes(word.toLowerCase())) hits.push(`${file.replace(REPO, "")}: ${word}`);
     }
   }
   assert.deepEqual(hits, []);
@@ -89,6 +89,23 @@ test("password 42 decrypts a complete details object; a wrong password fails", a
   assert.match(details.datum, /19\.12\.2026/);
   assert.match(details.maps, /^https:\/\/www\.google\.com\/maps\//);
   assert.equal(details.mehr, "Weitere Details folgen.");
+  for (const section of [details.lokal, details.markt]) {
+    assert.equal(typeof section.title, "string");
+    assert.ok(section.title.length > 0);
+    assert.equal(typeof section.text, "string");
+    assert.ok(section.text.length > 0);
+    assert.ok(Array.isArray(section.photos));
+    assert.ok(section.photos.length >= 3, "gallery");
+    for (const photo of section.photos) {
+      assert.match(photo.src, /^data:image\/webp;base64,/);
+      assert.match(photo.href, /^https:\/\/commons\.wikimedia\.org\/wiki\/File:/);
+      assert.match(photo.credit, /Wikimedia Commons/);
+      assert.match(photo.credit, /CC BY/);
+      assert.ok(photo.alt.length > 0);
+    }
+  }
+  assert.equal(details.lokal.title, "Das Lokal");
+  assert.equal(details.markt.title, "Bonner Weihnachtsmarkt");
   await assert.rejects(() => decrypt("wrong", payload));
 });
 
@@ -155,7 +172,7 @@ test("built snapshot stays free of the venue name when dist/client exists", () =
         if (buf.includes(0) && !name.endsWith(".js") && !name.endsWith(".html") && !name.endsWith(".json")) continue;
         const body = buf.toString("utf8");
         for (const word of BANNED) {
-          if (body.includes(word)) hits.push(`${full.replace(REPO, "")}: ${word}`);
+          if (body.toLowerCase().includes(word.toLowerCase())) hits.push(`${full.replace(REPO, "")}: ${word}`);
         }
       }
     }

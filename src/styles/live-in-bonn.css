@@ -164,3 +164,34 @@
 .lib .event-facts div { background: var(--card); border: 1px solid var(--line); clip-path: var(--cut); padding: 24px; }
 .lib .event-facts dt { font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--gold); font-size: 16px; margin: 0 0 6px; }
 .lib .event-facts dd { margin: 0; color: var(--white); font-weight: 600; }
+
+/* extra unlocked sections on the details page */
+.lib .event-extra { padding: 64px 0 72px; }
+.lib .event-extra .lead { max-width: 820px; }
+.lib .event-gallery {
+  margin: 32px 0 0;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr 1fr;
+}
+.lib .event-gallery figure {
+  margin: 0;
+  background: var(--card);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.lib .event-gallery img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.lib .event-gallery figcaption {
+  padding: 10px 14px 14px;
+  color: var(--meta);
+  font-size: 13px;
+  line-height: 1.4;
+}
+.lib .event-gallery figcaption a { color: var(--meta); text-decoration: underline; text-underline-offset: 2px; }
+@media (max-width: 700px) {
+  .lib .event-gallery { grid-template-columns: 1fr; }
+}
