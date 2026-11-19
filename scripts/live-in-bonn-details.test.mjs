@@ -82,13 +82,34 @@ test("password 42 decrypts a complete details object; a wrong password fails", a
   assert.equal(payload.v, 1);
   assert.equal(payload.kdf, "PBKDF2");
   const details = await decrypt("42", payload);
-  for (const key of ["datum", "ort", "maps", "parken", "kueche", "mehr"]) {
+  for (const key of [
+    "datum",
+    "ort",
+    "maps",
+    "website",
+    "websiteLabel",
+    "parken",
+    "kueche",
+    "anmeldungen",
+    "mehr",
+  ]) {
     assert.equal(typeof details[key], "string");
     assert.ok(details[key].length > 0, key);
   }
   assert.match(details.datum, /19\.12\.2026/);
   assert.match(details.maps, /^https:\/\/www\.google\.com\/maps\//);
+  assert.match(details.website, /^https:\/\//);
+  assert.equal(details.websiteLabel, "Offizielle Website");
+  assert.match(details.anmeldungen, /13 Personen/);
+  assert.match(details.anmeldungen, /11 davon können am 19\. Dezember/);
+  assert.match(details.anmeldungen, /Frankfurt am Main/);
+  assert.match(details.anmeldungen, /Regionalverband Saarbrücken/);
   assert.equal(details.mehr, "Weitere Details folgen.");
+  const detailsPage = source("src/pages/live-in-bonn-details.tsx");
+  assert.match(detailsPage, /details\.anmeldungen/);
+  assert.match(detailsPage, /details\.website/);
+  assert.match(detailsPage, /rel="noopener noreferrer"/);
+  assert.match(detailsPage, /target="_blank"/);
   for (const section of [details.lokal, details.markt]) {
     assert.equal(typeof section.title, "string");
     assert.ok(section.title.length > 0);

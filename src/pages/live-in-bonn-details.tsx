@@ -106,6 +106,7 @@ export function LiveInBonnDetailsPage() {
               {details.ort}
             </a>
           </p>
+          <p className="details-hero-guests">{details.anmeldungen}</p>
           <p>
             <a className="details-back" href="/de/live-in-bonn">
               Zurück zur Übersichtsseite
@@ -132,6 +133,11 @@ export function LiveInBonnDetailsPage() {
                 <a href={details.maps} target="_blank" rel="noopener noreferrer">
                   {details.ort}
                 </a>
+                <span className="event-facts-extra">
+                  <a href={details.website} target="_blank" rel="noopener noreferrer">
+                    {details.websiteLabel}
+                  </a>
+                </span>
               </dd>
             </div>
             <div>
@@ -146,7 +152,12 @@ export function LiveInBonnDetailsPage() {
         </div>
       </section>
 
-      <DetailSection section={details.lokal} anchor="das-lokal" />
+      <DetailSection
+        section={details.lokal}
+        anchor="das-lokal"
+        website={details.website}
+        websiteLabel={details.websiteLabel}
+      />
       <DetailSection section={details.markt} anchor="weihnachtsmarkt" />
 
       <section className="details-more">
@@ -158,7 +169,17 @@ export function LiveInBonnDetailsPage() {
   );
 }
 
-function DetailSection({ section, anchor }: { section: EventSection; anchor: string }) {
+function DetailSection({
+  section,
+  anchor,
+  website,
+  websiteLabel,
+}: {
+  section: EventSection;
+  anchor: string;
+  website?: string;
+  websiteLabel?: string;
+}) {
   const headingId = `h-${anchor}`;
   return (
     <section className="event-extra" id={anchor} aria-labelledby={headingId}>
@@ -166,6 +187,13 @@ function DetailSection({ section, anchor }: { section: EventSection; anchor: str
         <p className="label">{section.title}</p>
         <h2 id={headingId}>{section.title}</h2>
         <p className="lead">{section.text}</p>
+        {website && websiteLabel ? (
+          <p className="details-lokal-web">
+            <a href={website} target="_blank" rel="noopener noreferrer">
+              {websiteLabel}
+            </a>
+          </p>
+        ) : null}
         <div className="event-gallery">
           {section.photos.map((photo) => (
             <GalleryFigure key={photo.href} photo={photo} />

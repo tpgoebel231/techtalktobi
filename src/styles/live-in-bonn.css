@@ -181,9 +181,17 @@
 .lib .details-hero .wrap { position: relative; z-index: 1; padding-top: 88px; padding-bottom: 96px; }
 .lib .details-hero h1 { font-size: clamp(44px, 7vw, 80px); margin-bottom: 20px; }
 .lib .details-hero .sub { margin-bottom: 12px; }
-.lib .details-hero-venue { font-size: 22px; font-weight: 700; margin: 0 0 28px; }
+.lib .details-hero-venue { font-size: 22px; font-weight: 700; margin: 0 0 12px; }
 .lib .details-hero-venue a { color: var(--gold); text-decoration: none; }
 .lib .details-hero-venue a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.lib .details-hero-guests {
+  max-width: 40em;
+  margin: 0 0 28px;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--ice);
+  font-weight: 600;
+}
 .lib .details-back { color: var(--ice); }
 .lib .details-hero-credit { margin: 28px 0 0; font-size: 13px; color: var(--meta); }
 .lib .details-hero-credit a { color: var(--meta); text-decoration: underline; text-underline-offset: 2px; }
@@ -200,6 +208,10 @@
 .lib .event-facts dt { font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--gold); font-size: 16px; margin: 0 0 6px; }
 .lib .event-facts dd { margin: 0; color: var(--white); font-weight: 600; }
 .lib .event-facts a { color: var(--ice); }
+.lib .event-facts-extra { display: block; margin-top: 10px; }
+.lib .details-lokal-web { margin: 18px 0 0; font-weight: 700; }
+.lib .details-lokal-web a { color: var(--gold); text-decoration: none; }
+.lib .details-lokal-web a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 .lib .event-extra { padding: 88px 0; }
 .lib .event-extra .lead { max-width: 720px; }
@@ -247,4 +259,5 @@
   .lib .event-gallery { grid-template-columns: 1fr; }
   .lib .details-hero { min-height: 0; }
   .lib .details-hero-venue { font-size: 18px; }
+  .lib .details-hero-guests { font-size: 16px; }
 }
