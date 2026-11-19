@@ -102,6 +102,8 @@ test("password 42 decrypts a complete details object; a wrong password fails", a
   assert.equal(details.websiteLabel, "Offizielle Website");
   assert.match(details.anmeldungen, /13 Personen/);
   assert.match(details.anmeldungen, /11 davon können am 19\. Dezember/);
+  assert.match(details.anmeldungen, /rund 12 Leute/);
+  assert.match(details.anmeldungen, /perfekte Größe für einen unkomplizierten Abend/);
   assert.match(details.anmeldungen, /Frankfurt am Main/);
   assert.match(details.anmeldungen, /Regionalverband Saarbrücken/);
   assert.equal(details.mehr, "Weitere Details folgen.");
