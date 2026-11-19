@@ -31,8 +31,11 @@ export type EventDetails = {
   datum: string;
   ort: string;
   maps: string;
+  website: string;
+  websiteLabel: string;
   parken: string;
   kueche: string;
+  anmeldungen: string;
   mehr: string;
   lokal: EventSection;
   markt: EventSection;
@@ -119,8 +122,21 @@ function isSection(value: unknown): value is EventSection {
 function isEventDetails(value: unknown): value is EventDetails {
   if (!value || typeof value !== "object") return false;
   const rec = value as Record<string, unknown>;
-  const strings = ["datum", "ort", "maps", "parken", "kueche", "mehr"].every(
-    (key) => typeof rec[key] === "string" && (rec[key] as string).length > 0,
+  const strings = [
+    "datum",
+    "ort",
+    "maps",
+    "website",
+    "websiteLabel",
+    "parken",
+    "kueche",
+    "anmeldungen",
+    "mehr",
+  ].every((key) => typeof rec[key] === "string" && (rec[key] as string).length > 0);
+  return (
+    strings &&
+    (rec.website as string).startsWith("https://") &&
+    isSection(rec.lokal) &&
+    isSection(rec.markt)
   );
-  return strings && isSection(rec.lokal) && isSection(rec.markt);
 }
