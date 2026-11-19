@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-Cx0BB4qO.js";import{t}from"./site-shell-Ds29PK1w.js";import{t as n}from"./i18n-BB8C3JRa.js";import{t as r}from"./privacy-XrF_xgPJ.js";var i=e();function a(){return(0,i.jsx)(n,{locale:`en`,children:(0,i.jsx)(t,{children:(0,i.jsx)(r,{})})})}export{a as component};
