@@ -5,6 +5,7 @@ import { FsdMatrix } from "@/components/fsd-matrix";
 import { FsdPriceChart } from "@/components/fsd-price-chart";
 import { GruenheideDashboard } from "@/components/gruenheide-dashboard";
 import { MbDriveAssistProDashboard } from "@/components/mb-drive-assist-pro-dashboard";
+import { TuevAdacEvTestsDashboard } from "@/components/tuev-adac-ev-tests-dashboard";
 import { MuskonomyMap } from "@/components/muskonomy-map";
 import { ResearchCard } from "@/components/research-card";
 import { RoboticsMap } from "@/components/robotics-map";
@@ -120,6 +121,8 @@ function widgetFor(slug: ResearchSlug) {
       return <GruenheideDashboard />;
     case "mercedes-mb-drive-assist-pro":
       return <MbDriveAssistProDashboard />;
+    case "tuev-adac-ev-tests":
+      return <TuevAdacEvTestsDashboard />;
   }
 }
 

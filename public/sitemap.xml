@@ -106,6 +106,13 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/mercedes-mb-drive-assist-pro"/>
   </url>
   <url>
+    <loc>https://techtalktobi.com/en/research/tuev-adac-ev-tests</loc>
+    <lastmod>2026-11-19</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/tuev-adac-ev-tests"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/tuev-adac-ev-tests"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/tuev-adac-ev-tests"/>
+  </url>
+  <url>
     <loc>https://techtalktobi.com/de</loc>
     <lastmod>2026-11-07</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en"/>
@@ -209,6 +216,13 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/mercedes-mb-drive-assist-pro"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/mercedes-mb-drive-assist-pro"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/mercedes-mb-drive-assist-pro"/>
+  </url>
+  <url>
+    <loc>https://techtalktobi.com/de/research/tuev-adac-ev-tests</loc>
+    <lastmod>2026-11-19</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/tuev-adac-ev-tests"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/tuev-adac-ev-tests"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/tuev-adac-ev-tests"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/privacy</loc>
