@@ -477,9 +477,12 @@ export async function githubPagesStartOptions() {
       autoStaticPathsDiscovery: false,
     },
     sitemap: { enabled: false },
-    pages: canonicalRoutes(pieces)
-      .filter((route) => route !== "/")
-      .map((path) => ({ path })),
+    pages: [
+      ...canonicalRoutes(pieces).filter((route) => route !== "/"),
+      // Root /privacy is its own route (src/routes/privacy.tsx) so the client
+      // router does not bounce it to /en after hydration.
+      "/privacy",
+    ].map((path) => ({ path })),
   };
 }
 
@@ -535,6 +538,18 @@ export function privacyRootSeo() {
       { hreflang: "x-default", href: `${SITE_ORIGIN}/privacy` },
     ],
   };
+}
+
+/**
+ * Prefer the prerendered root /privacy route (hydrates as /privacy). Fall back
+ * to /en/privacy only when the build has no root route output (unit tests).
+ */
+export function rootPrivacyHtml(root, htmlByRoute) {
+  try {
+    return readPrerenderedHtml(root, "/privacy");
+  } catch {
+    return htmlByRoute.get("/en/privacy");
+  }
 }
 
 export function publishRootPrivacyPage(root, prerenderedHtml) {
@@ -601,7 +616,7 @@ export async function prepare(root = "dist/client") {
   );
 
   // Must run after legacy aliases so a future /privacy bounce cannot overwrite it.
-  const rootPrivacy = publishRootPrivacyPage(root, htmlByRoute.get("/en/privacy"));
+  const rootPrivacy = publishRootPrivacyPage(root, rootPrivacyHtml(root, htmlByRoute));
   console.log(`prepare-github-pages: root privacy page ${rootPrivacy.join(", ")}`);
 
   console.log(`prepare-github-pages: web manifest ${publishWebManifest(root).join(", ")}`);
