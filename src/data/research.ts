@@ -10,6 +10,7 @@ export const RESEARCH_SLUGS = [
   "muskonomy",
   "tesla-gruenheide",
   "mercedes-mb-drive-assist-pro",
+  "tuev-adac-ev-tests",
 ] as const;
 
 export type ResearchSlug = (typeof RESEARCH_SLUGS)[number];
@@ -263,6 +264,37 @@ export const research: ResearchPiece[] = [
     tags: [
       { en: "Mercedes", de: "Mercedes" },
       { en: "Driver assistance", de: "Fahrerassistenz" },
+    ],
+    paragraphs: [],
+  },
+  {
+    slug: "tuev-adac-ev-tests",
+    kind: "tool",
+    date: "2026-11",
+    image: "/images/research-tuev-adac-ev-tests.jpg",
+    noBanner: true,
+    // Page title from Colleen / Tobias (Nov 19 2026). Dek = card dek (generic TÜV & ADAC framing).
+    // Card title/dek from Tobias (Nov 19 2026) via Colleen. Detail page and SEO keep title/dek.
+    title: {
+      en: "Why Tesla Ranks Low in TÜV Tests",
+      de: "Warum Tesla beim TÜV hinten liegt",
+    },
+    dek: {
+      en: "An analysis of Germany's major inspection and breakdown stats, with a focus on Tesla",
+      de: "Eine Analyse der großen deutschen Prüf- und Pannenstatistiken mit Fokus auf Tesla",
+    },
+    cardTitle: {
+      en: "TÜV & ADAC EV Tests",
+      de: "TÜV & ADAC E-Auto-Tests",
+    },
+    cardDek: {
+      en: "An analysis of Germany's major inspection and breakdown stats, with a focus on Tesla",
+      de: "Eine Analyse der großen deutschen Prüf- und Pannenstatistiken mit Fokus auf Tesla",
+    },
+    tags: [
+      { en: "TÜV", de: "TÜV" },
+      { en: "ADAC", de: "ADAC" },
+      { en: "Tesla", de: "Tesla" },
     ],
     paragraphs: [],
   },

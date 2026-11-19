@@ -88,6 +88,7 @@ export const LEGACY_PAGE_REDIRECTS = {
   "/research": "/en/research",
   "/research/tesla-gruenheide": "/de/research/tesla-gruenheide",
   "/research/mercedes-mb-drive-assist-pro": "/de/research/mercedes-mb-drive-assist-pro",
+  "/research/tuev-adac-ev-tests": "/de/research/tuev-adac-ev-tests",
 };
 
 /**

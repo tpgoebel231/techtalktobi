@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Warum Tesla beim TÜV hinten liegt | TESLATOBI Research-Deck</title>
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://techtalktobi.com/de/research/tuev-adac-ev-tests">
+
+  <!-- Google Font: Inter (400, 500, 600, 700, 900) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            mustard: '#DDBB38',
+            deepred: '#A11D20',
+            deepnavy: '#1F3A5F',
+            darkgray: '#2C2C2C',
+            lightgray: '#F4F6F8',
+            iceblue: '#8FD3FF',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* TeslaTobi Dark-Mode Editorial Hintergrund: Dark Navy -> Dark Gray */
+    html, body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #1F3A5F 0%, #253447 46%, #2C2C2C 100%);
+      background-attachment: fixed;
+      color: #FFFFFF;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* Smoked-Glass-Panel (Charcoal-Navy 88% Opazität + 2px Ice-Blue Hairline) */
+    .smoked-panel {
+      background: rgba(22, 34, 52, 0.88);
+      border: 2px solid #8FD3FF;
+      border-radius: 20px;
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    /* Kompaktere Smoked-Glass-KPI-Karte mit feiner 1.5px Ice-Blue Hairline */
+    .smoked-kpi {
+      background: rgba(22, 34, 52, 0.88);
+      border: 1.5px solid rgba(143, 211, 255, 0.72);
+      border-radius: 20px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    /* Flache Editorial-Headline: Inter Black, All-Caps, weicher Drop-Shadow (kein Neon/Outline/3D) */
+    .tt-headline {
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      text-shadow: 0 4px 16px rgba(0, 0, 0, 0.32);
+    }
+
+    /* Folder-Style Section Tabs */
+    .folder-tab {
+      transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+    }
+    .folder-tab-active {
+      background-color: #FFFFFF;
+      color: #1F3A5F;
+      font-weight: 900;
+      border-bottom: 2px solid #DDBB38;
+      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.22);
+    }
+    .folder-tab-inactive {
+      background-color: rgba(44, 44, 44, 0.70);
+      color: #F4F6F8;
+      font-weight: 600;
+      border-bottom: 2px solid transparent;
+    }
+    .folder-tab-inactive:hover {
+      background-color: rgba(44, 44, 44, 0.92);
+      color: #FFFFFF;
+    }
+
+    /* Hervorhebung der neuesten Tabellenzeile: helleres Smoked Glass + linker Mustard-Streifen */
+    .table-row-newest {
+      background: rgba(221, 187, 56, 0.14);
+      box-shadow: inset 4px 0 0 #DDBB38;
+    }
+
+    /* Butterweiche Einblend-Animation für Punkte & Tabellenzeilen */
+    @keyframes revealSmooth {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-reveal {
+      animation: revealSmooth 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Aufnahmemodus (Taste R): Blendet Tabs, Controls und Header-Button sauber aus */
+    body.recording-mode .hide-in-recording {
+      display: none !important;
+    }
+    body.recording-mode #exit-recording-btn {
+      display: inline-flex !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-mustard selection:text-deepnavy">
+
+  <!-- Exit-Button für Aufnahmemodus (Deep Red #A11D20 + 2px Mustard Border #DDBB38) -->
+  <button
+    id="exit-recording-btn"
+    type="button"
+    onclick="toggleRecordingMode(false)"
+    class="hidden fixed top-4 right-4 z-50 items-center gap-2 px-4 py-2.5 rounded-xl bg-deepred text-white font-black text-xs sm:text-sm tracking-wider uppercase border-2 border-mustard shadow-2xl hover:brightness-110 transition cursor-pointer"
+    aria-label="Aufnahmemodus beenden"
+  >
+    AUFNAHMEMODUS BEENDEN (R)
+  </button>
+
+  <!-- Haupt-Container: 16:9 Fullscreen (1920x1080 / 2560x1440) & responsiv für Mobilgeräte -->
+  <div class="w-full max-w-[1760px] mx-auto px-4 sm:px-8 lg:px-12 pt-4 sm:pt-6 pb-3 flex-1 flex flex-col">
+
+    <!-- HEADER: Ausschließlich Mustard (#DDBB38) als Akzentfarbe -->
+    <header class="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-4 border-b border-iceblue/25">
+      <div class="space-y-1 max-w-4xl">
+        <!-- Mustard Kicker -->
+        <p class="text-xs sm:text-sm font-bold tracking-[0.18em] uppercase text-mustard">
+          TÜV-REPORT 2027 &amp; ADAC &middot; 18. NOVEMBER 2026
+        </p>
+        <!-- Haupttitel: Inter Black ALL CAPS, genau EIN Schlüsselwort in Mustard -->
+        <h1 class="tt-headline text-2xl sm:text-4xl xl:text-[2.65rem] leading-[1.06] text-white">
+          WARUM TESLA BEIM TÜV <span class="text-mustard">HINTEN</span> LIEGT
+        </h1>
+        <!-- Gedämpfter Intro-Satz -->
+        <p class="text-sm sm:text-base text-lightgray/80 font-normal leading-snug pt-0.5">
+          Methodik, Baujahre, technische Ursachen, Wartungskonzept und der Vergleich zur ADAC-Pannenstatistik.
+        </p>
+      </div>
+
+      <!-- Rechts im Header: Zähler (01 / 21), 21 Mustard-Segmente + dezenter Aufnahmemodus-Button -->
+      <div class="flex flex-col items-start lg:items-end gap-2.5 shrink-0">
+        <div class="flex items-center gap-3 w-full lg:w-auto justify-between lg:justify-end">
+          <span id="global-counter" class="font-black text-2xl sm:text-3xl text-mustard tracking-tight tabular-nums">
+            01 / 21
+          </span>
+          <button
+            type="button"
+            onclick="toggleRecordingMode(true)"
+            class="hide-in-recording px-3 py-1.5 rounded-lg bg-darkgray/80 hover:bg-darkgray text-lightgray text-xs font-bold tracking-wider uppercase border border-mustard/50 hover:border-mustard transition cursor-pointer"
+            title="Aufnahmemodus aktivieren (Taste R)"
+          >
+            AUFNAHMEMODUS (R)
+          </button>
+        </div>
+
+        <!-- 21 segmentierte Mustard-Fortschrittsbalken -->
+        <div
+          id="progress-segments"
+          class="grid grid-cols-21 gap-1 w-full sm:w-[336px] lg:w-[356px]"
+          style="grid-template-columns: repeat(21, minmax(0, 1fr));"
+          aria-label="Fortschritt über alle 21 Schritte"
+        >
+          <!-- Dynamisch per JS erzeugt -->
+        </div>
+      </div>
+    </header>
+
+    <!-- FOLDER-STYLE SECTION TABS (im Aufnahmemodus ausgeblendet) -->
+    <nav
+      class="hide-in-recording mt-3.5 border-b border-iceblue/25"
+      aria-label="Sektionen des Research-Decks"
+    >
+      <div id="tab-row" class="flex flex-wrap items-end gap-1.5 sm:gap-2">
+        <!-- 5 Folder-Tabs werden per JS gerendert -->
+      </div>
+    </nav>
+
+    <!-- HAUPTBÜHNE: Klick auf freie Fläche / Panel schaltet zum nächsten Schritt weiter -->
+    <main
+      id="stage"
+      onclick="handleStageClick(event)"
+      class="flex-1 flex flex-col justify-center py-4 sm:py-6 cursor-pointer select-text"
+      title="Klicken für nächsten Schritt"
+    >
+      <!-- Dynamischer Inhalt des aktuellen Schritts (1 bis 21) -->
+    </main>
+
+    <!-- DEZENTE NAVIGATIONSLEISTE (im Aufnahmemodus ausgeblendet) -->
+    <div class="hide-in-recording flex flex-wrap items-center justify-between gap-3 pt-2 pb-2 border-t border-iceblue/15">
+      <div class="flex items-center gap-2.5">
+        <button
+          id="btn-prev"
+          type="button"
+          onclick="prevStep()"
+          class="px-4 py-2 rounded-xl bg-darkgray/80 hover:bg-darkgray text-white text-xs sm:text-sm font-bold tracking-wide border border-white/15 disabled:opacity-35 disabled:cursor-not-allowed transition cursor-pointer"
+        >
+          &larr; Zurück
+        </button>
+        <button
+          id="btn-next"
+          type="button"
+          onclick="nextStep()"
+          class="px-5 py-2 rounded-xl bg-mustard hover:brightness-105 text-deepnavy text-xs sm:text-sm font-black tracking-wider uppercase shadow-md disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
+        >
+          Weiter &rarr;
+        </button>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-sm text-lightgray/75">
+        <span id="tab-step-label" class="font-bold text-mustard">Tab 1 &middot; Schritt 1 / 5</span>
+        <span class="hidden md:inline">
+          Klick auf Bühne &middot; <strong class="text-white">&larr;/&rarr;</strong> oder <strong class="text-white">Leertaste</strong> &middot; <strong class="text-white">1&ndash;5</strong> Tabs &middot; <strong class="text-white">R</strong> Aufnahmemodus
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER: Links verlinkte Quellen, Rechts reiner Text TESLATOBI (keine Logos/Icons) -->
+  <footer class="w-full max-w-[1760px] mx-auto px-4 sm:px-8 lg:px-12 py-3 border-t border-iceblue/25 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs sm:text-sm text-lightgray/80">
+    <div>
+      <a
+        href="https://www.tuev-verband.de/pressemitteilungen/tuev-report-2027"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hover:text-mustard underline decoration-iceblue/40 underline-offset-4 transition"
+      >
+        Quellen: TÜV-Report 2027 (TÜV-Verband) &middot; ADAC Pannenstatistik 2026
+      </a>
+    </div>
+    <div class="font-black tracking-[0.22em] text-white uppercase select-none">
+      TESLATOBI
+    </div>
+  </footer>
+
+  <script>
+    /**
+     * Konfiguration der 5 Folder-Tabs mit Start-Index (0-basiert) im 21-Schritte-Deck.
+     */
+    const TABS = [
+  {
+    "id": 1,
+    "label": "1. Methodik & Grenzen (Klick)",
+    "startIndex": 0,
+    "count": 5
+  },
+  {
+    "id": 2,
+    "label": "2. Ergebnisse & Baujahre (Tabelle)",
+    "startIndex": 5,
+    "count": 7
+  },
+  {
+    "id": 3,
+    "label": "3. 3 Technische Gründe (Klick)",
+    "startIndex": 12,
+    "count": 3
+  },
+  {
+    "id": 4,
+    "label": "4. Wartung & Laufleistung (Klick)",
+    "startIndex": 15,
+    "count": 3
+  },
+  {
+    "id": 5,
+    "label": "5. ADAC & Praxis-Tipps (Klick)",
+    "startIndex": 18,
+    "count": 3
+  }
+];
+
+    /**
+     * Daten für die 6-zeilige Vergleichstabelle in Tab 2 (Schritte 6 bis 11).
+     * Nicht erfasste Werte werden strikt grau-kursiv mit "×" gerendert (niemals rot).
+     */
+    const COMPARISON_TABLE = {
+  "headlineHtml": "MEHRJAHRESVERGLEICH 2024 BIS <span class=\"text-mustard\">2027</span>",
+  "columns": [
+    "Modell / Altersklasse",
+    "Report 2024",
+    "Report 2025",
+    "Report 2026",
+    "Report 2027"
+  ],
+  "note": "Bei den 2–3-Jährigen belegen 2027 erstmals drei E-Autos die letzten Plätze: Model 3 (12,5 %), MG4 (16,0 %) und Model Y (18,5 %).",
+  "rows": [
+    [
+      "Ø 2–3 Jahre (Alle Pkw)",
+      "5,7 % (Ø 41 Tkm)",
+      "k. A. (Ø 42 Tkm)",
+      "6,5 % (Ø 43,5 Tkm)",
+      "6,4 % (Ø 43,9–47 Tkm)"
+    ],
+    [
+      "Bestes E-Auto (2–3 Jahre)",
+      "VW e-Golf · 2,6 %",
+      "VW e-Golf · 3,4 %",
+      "Mini Cooper SE · 3,5 %",
+      "Mazda MX-30 · 3,0 % (Platz 3)"
+    ],
+    [
+      "Tesla Model 3 (2–3 Jahre)",
+      "14,7 % (111/111)",
+      "14,2 % (111/111)",
+      "13,1 % (108/110)",
+      "12,5 % (107/109 · sinkt)"
+    ],
+    [
+      "Tesla Model Y (2–3 Jahre)",
+      "× noch nicht erfasst",
+      "× noch nicht erfasst",
+      "17,3 % (110/110)",
+      "18,5 % (109/109 · Rekord seit 2015)"
+    ],
+    [
+      "Tesla Model 3 (4–5 Jahre)",
+      "× noch nicht erfasst",
+      "19,7 % (Letzter)",
+      "21,0 % (102/103)",
+      "21,1 % (100/102 · Ø 10,2 %)"
+    ],
+    [
+      "Tesla Model 3 (6–7 Jahre)",
+      "× noch nicht erfasst",
+      "× noch nicht erfasst",
+      "× noch nicht erfasst",
+      "27,9 % (91/91 · Ø 13,2 %)"
+    ]
+  ]
+};
+
+    /**
+     * Alle 21 Schritte des vorgegebenen Narrativs.
+     * Jeder Schritt besitzt einen tabId (1–5) und einen Typ ('point' oder 'table').
+     */
+    const STEPS = [
+  {
+    "tabId": 1,
+    "type": "point",
+    "headlineHtml": "WAS IST DER <span class=\"text-mustard\">TÜV-REPORT?</span>",
+    "paragraphs": [
+      "Der TÜV-Report wertet reale, gesetzlich vorgeschriebene Hauptuntersuchungen (HU nach § 29 StVZO) an allen deutschen TÜV-Prüfstellen aus: TÜV SÜD, NORD, Rheinland und Hessen. Keine Halterbefragung, kein Dauertest.",
+      "Im TÜV-Report 2027 (veröffentlicht am 18. November 2026) stecken rund 9,7 Millionen HUs über 200 Fahrzeugmodelle – darunter 26 reine Elektroautos bei den 2- bis 3-Jährigen. Prüfzeitraum: 1. Juli 2025 bis 30. Juni 2026."
+    ],
+    "kpis": [
+      {
+        "value": "9,7 MIO.",
+        "label": "Geprüfte HUs"
+      },
+      {
+        "value": "200",
+        "label": "Ausgewertete Modelle"
+      },
+      {
+        "value": "26 E-AUTOS",
+        "label": "Bei den 2–3-Jährigen"
+      }
+    ]
+  },
+  {
+    "tabId": 1,
+    "type": "point",
+    "headlineHtml": "WIE OFT ZUR <span class=\"text-mustard\">HU?</span>",
+    "paragraphs": [
+      "In Deutschland müssen Neuwagen erstmals nach 36 Monaten (3 Jahren) zur Hauptuntersuchung, danach alle 24 Monate (2 Jahre).",
+      "Daraus entstehen die sechs Altersklassen des Reports: 2–3 Jahre (1. HU), 4–5 Jahre (2. HU), 6–7 Jahre (3. HU), 8–9 Jahre (4. HU), 10–11 Jahre (5. HU) und 12–13 Jahre (6. HU). Ein Modell erscheint erst im Ranking, wenn die Prüfzahlen groß genug sind – Model S und Model X fehlen deshalb."
+    ],
+    "kpis": [
+      {
+        "value": "36 MON.",
+        "label": "Bis zur 1. HU"
+      },
+      {
+        "value": "24 MON.",
+        "label": "Danach alle 2 Jahre"
+      },
+      {
+        "value": "6 KLASSEN",
+        "label": "Bis 12–13 Jahre"
+      }
+    ]
+  },
+  {
+    "tabId": 1,
+    "type": "point",
+    "headlineHtml": "DER <span class=\"text-mustard\">MÄNGELKATALOG</span> IM DETAIL",
+    "paragraphs": [
+      "Geprüft wird nach bundeseinheitlichem Katalog (Anlage VIII/VIIIa StVZO), und zwar zerlegungs- und zerstörungsfrei per Sicht-, Funktions- und Wirkungsprüfung.",
+      "Für den Report zählen 18 Mängelpunkte: 15 sicherheitsrelevante Punkte zu Licht & Beleuchtung (Abblendlicht, Rücklicht, Blinker), Fahrwerk & Lenkung (Achsaufhängung, Federn, Dämpfer, Lenkgelenke, Antriebswellen) sowie Bremsanlage (Scheiben, Leitungen, Fuß-/Feststellbremse) – plus 3 Umweltpunkte (Ölverlust, Motormanagement, Abgasuntersuchung), die bei E-Autos komplett wegfallen."
+    ],
+    "kpis": [
+      {
+        "value": "18 PUNKTE",
+        "label": "Systematisch erfasst"
+      },
+      {
+        "value": "15 MECHANIK",
+        "label": "Licht, Fahrwerk, Bremse"
+      },
+      {
+        "value": "0 ABGAS",
+        "label": "Vorteil für E-Autos"
+      }
+    ]
+  },
+  {
+    "tabId": 1,
+    "type": "point",
+    "headlineHtml": "WAS IST DIE <span class=\"text-mustard\">EM-QUOTE?</span>",
+    "paragraphs": [
+      "Maßgeblich fürs Ranking ist die EM-Quote: der Anteil aller Fahrzeuge eines Modells, die wegen erheblicher (EM) oder gefährlicher Mängel (VM) keine Plakette bekommen und binnen eines Monats zur Nachprüfung müssen.",
+      "Im Report 2027 fielen über alle Pkw 20,9 % durch (Vorjahr: 21,5 %). 66,7 % blieben ohne Mängel, 12,4 % hatten geringe Mängel und 0,05 % (~12.000 Pkw bundesweit) wurden als verkehrsunsicher sofort stillgelegt."
+    ],
+    "kpis": [
+      {
+        "value": "20,9 %",
+        "label": "EM + VM alle Pkw"
+      },
+      {
+        "value": "66,7 %",
+        "label": "Ohne Mängel"
+      },
+      {
+        "value": "1 MONAT",
+        "label": "Frist Nachprüfung"
+      }
+    ]
+  },
+  {
+    "tabId": 1,
+    "type": "point",
+    "headlineHtml": "METHODISCHE <span class=\"text-mustard\">GRENZEN</span> BEI E-AUTOS",
+    "paragraphs": [
+      "Elektromotor, Leistungselektronik, Infotainment, Software-Stabilität und der Batteriezustand (State of Health, SoH) werden heute praktisch nicht tiefengeprüft – bei der Hochvoltbatterie gibt es im Wesentlichen nur eine Sichtkontrolle.",
+      "Der TÜV fordert deshalb neue Tests (Isolation, Batteriezustand, ADAS/Software), der ADAC warnt vor unnötigen Kosten. Außerdem fehlen andere Prüforganisationen (DEKRA, GTÜ, KÜS) und alle Mängel, die vor dem HU-Termin schon in Werkstätten behoben wurden."
+    ],
+    "kpis": [
+      {
+        "value": "KEIN SoH",
+        "label": "Akku nicht tiefengeprüft"
+      },
+      {
+        "value": "NUR SICHT",
+        "label": "Bei Hochvoltbatterie"
+      },
+      {
+        "value": "BLINDFLECK",
+        "label": "Vorab-Reparaturen fehlen"
+      }
+    ]
+  },
+  {
+    "tabId": 2,
+    "type": "table",
+    "visibleRows": 1
+  },
+  {
+    "tabId": 2,
+    "type": "table",
+    "visibleRows": 2
+  },
+  {
+    "tabId": 2,
+    "type": "table",
+    "visibleRows": 3
+  },
+  {
+    "tabId": 2,
+    "type": "table",
+    "visibleRows": 4
+  },
+  {
+    "tabId": 2,
+    "type": "table",
+    "visibleRows": 5
+  },
+  {
+    "tabId": 2,
+    "type": "table",
+    "visibleRows": 6
+  },
+  {
+    "tabId": 2,
+    "type": "point",
+    "headlineHtml": "DIE <span class=\"text-mustard\">BAUJAHR-STRUKTUR</span> ERKLÄRT VIEL",
+    "paragraphs": [
+      "Der TÜV-Report 2027 bildet konstruktionsbedingt 3, 5 bzw. 7 Jahre alte Fahrzeuge ab, keine 2026er-Neuwagen. Bei der 1. HU (2–3 J.) stecken Model Y und Model 3 aus ca. Mitte 2022–Mitte 2023 drin – also noch Vor-Facelift-Model-3 (vor „Highland“) und überwiegend Exemplare vor der Querlenker-Überarbeitung ab Mitte 2023.",
+      "Das besonders schlechte Abschneiden des Model 3 bei den 6–7-Jährigen (27,9 %) betrifft frühe Europa-Auslieferungen von ca. Mitte 2018–Mitte 2019 aus dem US-Werk Fremont mit bekannten frühen Fahrwerks- und Verarbeitungsschwächen. Ob neuere Jahrgänge besser sind, zeigen erst die Reports 2028/2029."
+    ],
+    "kpis": [
+      {
+        "value": "2018–2019",
+        "label": "Fremont-M3 bei 6–7 J."
+      },
+      {
+        "value": "2022–2023",
+        "label": "1. HU vor Highland"
+      },
+      {
+        "value": "2028/29",
+        "label": "Erst dann neue BJ"
+      }
+    ]
+  },
+  {
+    "tabId": 3,
+    "type": "point",
+    "headlineHtml": "GRUND 1: SCHWACHE <span class=\"text-mustard\">ACHSAUFHÄNGUNGEN</span>",
+    "paragraphs": [
+      "Größter technischer Schwachpunkt ist das Fahrwerk: Beim Model Y werden ausgeschlagene Trag- und Führungsgelenke 24-mal häufiger beanstandet als im Klassenschnitt (0,5 %). Bis etwa Mitte 2023 waren die Kugelgelenke der oberen Querlenker schlecht gegen Feuchtigkeit abgedichtet – Wasser wäscht das Fett aus, Rost frisst die Lagerschale auf.",
+      "Dazu belasten Batteriegewicht und hohes Drehmoment die knapp dimensionierten Gelenke. Dass das kein generelles E-Auto-Gesetz ist, zeigen schwere E-SUVs wie Audi Q8 e-tron (3,2 %) oder Mercedes EQB (4,1 %)."
+    ],
+    "kpis": [
+      {
+        "value": "24×",
+        "label": "Häufiger beim Model Y"
+      },
+      {
+        "value": "0,5 %",
+        "label": "Klassenschnitt Achsen"
+      },
+      {
+        "value": "MITTE 2023",
+        "label": "Überarbeitete Gelenke"
+      }
+    ]
+  },
+  {
+    "tabId": 3,
+    "type": "point",
+    "headlineHtml": "GRUND 2: ROSTENDE <span class=\"text-mustard\">BREMSSCHEIBEN</span>",
+    "paragraphs": [
+      "Bei 3,4 % der geprüften Tesla Model Y bemängelt der TÜV die Bremsscheiben – mehr als dreimal so oft wie im Altersklassendurchschnitt (1,0 %).",
+      "Grund ist die starke Rekuperation: Im Alltag bremst fast nur der Elektromotor, die mechanischen Grauguss-Scheiben werden kaum genutzt und setzen durch Nässe und Streusalz Flugrost sowie ein schlechtes Tragbild an. Das trifft auch andere E-Autos: Beim chinesischen MG4 fallen nach drei Jahren sogar 10,3 % wegen der Bremsscheiben durch."
+    ],
+    "kpis": [
+      {
+        "value": "3,4 %",
+        "label": "Model Y Bremsscheiben"
+      },
+      {
+        "value": "1,0 %",
+        "label": "Altersklassenschnitt"
+      },
+      {
+        "value": "10,3 %",
+        "label": "Zum Vergleich: MG4"
+      }
+    ]
+  },
+  {
+    "tabId": 3,
+    "type": "point",
+    "headlineHtml": "GRUND 3: VERSTELLTE <span class=\"text-mustard\">FRONTBELEUCHTUNG</span>",
+    "paragraphs": [
+      "Als drittes technisches Problemfeld verzeichnet der TÜV bei Model Y und Model 3 überdurchschnittlich viele Beanstandungen an der vorderen Beleuchtung (in Detailauswertungen rund dreimal so häufig wie im Schnitt).",
+      "Bei modernen LED- und Matrix-LED-Scheinwerfern sind defekte Leuchtmittel selten. Meist stimmt die Ausrichtung nicht – zu hoch und blendend oder zu tief. Ohne regelmäßigen Werkstattbesuch fällt das erst im Lichttest der HU auf."
+    ],
+    "kpis": [
+      {
+        "value": "~3×",
+        "label": "Häufiger als Schnitt"
+      },
+      {
+        "value": "LED / MATRIX",
+        "label": "Meist falsch justiert"
+      },
+      {
+        "value": "KEIN VORAB-TEST",
+        "label": "Fällt erst bei HU auf"
+      }
+    ]
+  },
+  {
+    "tabId": 4,
+    "type": "point",
+    "headlineHtml": "<span class=\"text-mustard\">WARTUNGSKONZEPT</span> ALS STATISTIK-EFFEKT",
+    "paragraphs": [
+      "Der wirkungsvollste strukturelle Faktor, auf den sowohl TÜV-Verband als auch ADAC hinweisen: Seit 2019 schreibt Tesla als einziger Volumenhersteller keine verbindlichen, an die Garantie gekoppelten Inspektionsintervalle vor.",
+      "Fahrer von Mazda, Audi, Mercedes oder VW besuchen in drei Jahren 1–3× die Vertragswerkstatt – verstelltes Licht, Bremsrost oder Gelenkspiel werden VOR der HU behoben. Viele Tesla-Halter nutzen die 1. HU dagegen als erste technische Bestandsaufnahme: Sie sparen reguläre Servicekosten, bezahlen aber statistisch mit hohen Durchfallquoten."
+    ],
+    "kpis": [
+      {
+        "value": "SEIT 2019",
+        "label": "Keine Pflichtinspektion"
+      },
+      {
+        "value": "1–3×",
+        "label": "Werkstatt bei Konkurrenz"
+      },
+      {
+        "value": "SPAR-EFFEKT",
+        "label": "Geringere Servicekosten"
+      }
+    ]
+  },
+  {
+    "tabId": 4,
+    "type": "point",
+    "headlineHtml": "TESLAS OFFIZIELLE <span class=\"text-mustard\">WARTUNGS-EMPFEHLUNGEN</span>",
+    "intro": "Wartungsfrei heißt bei Tesla nicht sorgenfrei – das Handbuch nennt klare Empfehlungen, die ohne Garantiezwang aber oft ignoriert werden:",
+    "bullets": [
+      "<strong>Bremssättel reinigen &amp; schmieren:</strong> jährlich oder alle 20.000 km (in Regionen mit Streusalz)",
+      "<strong>Reifenrotation:</strong> alle 10.000 km (bzw. bei &gt; 1,5 mm Profilunterschied)",
+      "<strong>Innenraumfilter wechseln:</strong> alle 2 Jahre",
+      "<strong>Bremsflüssigkeit prüfen:</strong> alle 4 Jahre"
+    ],
+    "outro": "Wer diese Empfehlungen auslässt, riskiert genau die typischen TÜV-Mängel.",
+    "kpis": [
+      {
+        "value": "20 TKM / 1 J.",
+        "label": "Bremssättel warten"
+      },
+      {
+        "value": "10 TKM",
+        "label": "Reifenrotation"
+      },
+      {
+        "value": "2 J. / 4 J.",
+        "label": "Filter / Bremsflüssigkeit"
+      }
+    ]
+  },
+  {
+    "tabId": 4,
+    "type": "point",
+    "headlineHtml": "LAUFLEISTUNG REICHT NICHT (<span class=\"text-mustard\">AUDI-BEWEIS</span>)",
+    "paragraphs": [
+      "Teslas fahren deutlich mehr Langstrecke als fast alle anderen E-Autos: 58.000 km beim Model Y und 55.000 km beim Model 3 zur 1. HU (Mazda MX-30: 26.000 km; Fiat 500e: 24.000 km; Model 3 nach 6–7 Jahren sogar 114.000 km).",
+      "Aber Laufleistung allein erklärt das Ergebnis nicht: Bei der 2. HU (4–5 Jahre) gewinnt der Audi Q8 e-tron mit exakt 58.000 km das gesamte Ranking mit nur 3,3 % Mängelquote – gegenüber 18,5 % beim gleich viel gelaufenen Model Y. Auch EQB (4,1 % / 45 Tkm) und Ioniq 5 (4,2 % / 45 Tkm) zeigen, was gute Konstruktion plus Wartung leisten."
+    ],
+    "kpis": [
+      {
+        "value": "58 TKM",
+        "label": "Model Y & Audi Q8"
+      },
+      {
+        "value": "3,3 %",
+        "label": "Audi Q8 e-tron 4–5 J."
+      },
+      {
+        "value": "18,5 %",
+        "label": "Tesla Model Y 2–3 J."
+      }
+    ]
+  },
+  {
+    "tabId": 5,
+    "type": "point",
+    "headlineHtml": "<span class=\"text-mustard\">ADAC-PANNENSTATISTIK</span>: DAS GEGENBILD",
+    "paragraphs": [
+      "In der ADAC-Pannenstatistik 2026 (3,7 Millionen Einsätze im Jahr 2025) dreht sich das Bild komplett: Elektroautos bleiben deutlich seltener liegen als Verbrenner (2-Jährige: 2,1 vs. 5,8 Pannen je 1.000 Fzg.; 5-Jährige: 10,3 vs. 17,4).",
+      "Das Tesla Model 3 gehört mit nur 0,7 Pannen pro 1.000 dreijährige Fahrzeuge zu den zwei pannenärmsten Autos am gesamten deutschen Markt (knapp hinter dem BMW i3 mit 0,4), und auch das Model Y liegt in der Spitzengruppe. Für Käufer ist das oft wichtiger als der TÜV, weil es die echte Alltagszuverlässigkeit misst."
+    ],
+    "kpis": [
+      {
+        "value": "0,7 / 1.000",
+        "label": "Pannen Tesla Model 3"
+      },
+      {
+        "value": "3,7 MIO.",
+        "label": "ADAC-Einsätze 2025"
+      },
+      {
+        "value": "2,1 VS. 5,8",
+        "label": "E-Auto vs. Verbrenner"
+      }
+    ]
+  },
+  {
+    "tabId": 5,
+    "type": "point",
+    "headlineHtml": "SO LÖST SICH DER <span class=\"text-mustard\">WIDERSPRUCH</span> AUF",
+    "intro": "Beide Statistiken messen völlig verschiedene Dinge:",
+    "bullets": [
+      "<strong>ADAC-Pannenstatistik = akute Liegenbleiber am Straßenrand</strong> (45,4 % 12-Volt-Batterie, 21,8 % Motor/Antriebselektronik). Genau bei Antriebsstrang, Traktionsbatterie und Bordelektronik laufen Teslas im Alltag extrem zuverlässig.",
+      "<strong>TÜV-Report = sicherheitsrelevanter Verschleiß- und Wartungszustand von Mechanik und Licht.</strong> Ausgeschlagene Querlenker, rostige Bremsscheiben oder verstellte Scheinwerfer legen kein Auto lahm – kosten aber zuverlässig die Plakette."
+    ],
+    "kpis": [
+      {
+        "value": "ADAC = PANNEN",
+        "label": "Antrieb & Elektrik top"
+      },
+      {
+        "value": "TÜV = MECHANIK",
+        "label": "Verschleiß & Wartung"
+      },
+      {
+        "value": "2 WELTEN",
+        "label": "Kein Widerspruch"
+      }
+    ]
+  },
+  {
+    "tabId": 5,
+    "type": "point",
+    "headlineHtml": "4 <span class=\"text-mustard\">EMPFEHLUNGEN</span> FÜR KÄUFER &amp; HALTER",
+    "numberedList": [
+      "<strong>Vorab-Check statt Blindflug:</strong> 2–3 Monate vor der 1. HU Fahrwerk, Bremsen &amp; Licht in einer Fachwerkstatt prüfen lassen (noch innerhalb der 4 J. / 80.000 km Garantie).",
+      "<strong>Bremsen aktiv pflegen:</strong> Regelmäßig sicher und kräftig freibremsen; im Winter Bremssättel jährlich/alle 20.000 km reinigen und schmieren.",
+      "<strong>Querlenker gezielt prüfen:</strong> Bei Baujahren bis Mitte 2023 auf Quietschen/Knarzen achten. Verstärkte Aftermarket-Teile (z. B. Meyle HD) kosten in freien Fachbetrieben oft 450–750 € statt 800–1.300 € bei Tesla.",
+      "<strong>Gesamtkosten gegenrechnen:</strong> Einmalige Reparaturen relativieren sich oft gegen über Jahre eingesparte Pflichtinspektionen."
+    ],
+    "kpis": [
+      {
+        "value": "450–750 €",
+        "label": "Verstärkte Querlenker"
+      },
+      {
+        "value": "4 J. / 80 TKM",
+        "label": "Basisgarantie nutzen"
+      },
+      {
+        "value": "PROAKTIV",
+        "label": "Vor der HU checken"
+      }
+    ]
+  }
+];
+
+    // Globaler Zustand
+    let currentStepIndex = 0; // 0 bis 20 (entspricht 01 / 21 bis 21 / 21)
+    let isRecordingMode = false;
+
+    /**
+     * Hilfsfunktion: Formatiert Zahlen zweistellig (z. B. 01).
+     */
+    function pad2(num) {
+      return String(num).padStart(2, '0');
+    }
+
+    /**
+     * Haupt-Render-Funktion für Header, Tabs, Bühne und Controls.
+     */
+    function render() {
+      const step = STEPS[currentStepIndex];
+      const activeTab = TABS.find(t => t.id === step.tabId);
+
+      // 1. Globaler Zähler (01 / 21)
+      document.getElementById('global-counter').textContent =
+        `${pad2(currentStepIndex + 1)} / ${pad2(STEPS.length)}`;
+
+      // 2. 21 Mustard-Fortschrittssegmente
+      const progressEl = document.getElementById('progress-segments');
+      progressEl.innerHTML = STEPS.map((_, idx) => {
+        const isReached = idx <= currentStepIndex;
+        const isCurrent = idx === currentStepIndex;
+        return `<button
+          type="button"
+          onclick="goToStep(${idx})"
+          aria-label="Gehe zu Schritt ${idx + 1}"
+          class="h-2 rounded-full transition-all cursor-pointer ${
+            isCurrent
+              ? 'bg-mustard scale-y-125'
+              : isReached
+                ? 'bg-mustard/80 hover:bg-mustard'
+                : 'bg-white/20 hover:bg-white/35'
+          }"
+        ></button>`;
+      }).join('');
+
+      // 3. Folder-Style Section Tabs
+      const tabRowEl = document.getElementById('tab-row');
+      tabRowEl.innerHTML = TABS.map(tab => {
+        const isActive = tab.id === step.tabId;
+        return `<button
+          type="button"
+          onclick="goToTab(${tab.id})"
+          class="folder-tab px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-t-xl text-xs sm:text-[13px] xl:text-sm tracking-tight cursor-pointer ${
+            isActive ? 'folder-tab-active' : 'folder-tab-inactive'
+          }"
+        >
+          ${tab.label}
+        </button>`;
+      }).join('');
+
+      // 4. Hauptbühne rendern
+      const stageEl = document.getElementById('stage');
+      if (step.type === 'point') {
+        renderPointStep(stageEl, step);
+      } else if (step.type === 'table') {
+        renderTableStep(stageEl, step.visibleRows);
+      }
+
+      // 5. Navigations-Controls aktualisieren
+      const prevBtn = document.getElementById('btn-prev');
+      const nextBtn = document.getElementById('btn-next');
+      const tabStepLabel = document.getElementById('tab-step-label');
+
+      const stepInTab = (currentStepIndex - activeTab.startIndex) + 1;
+      tabStepLabel.textContent = `Tab ${activeTab.id} · Schritt ${stepInTab} / ${activeTab.count}`;
+
+      prevBtn.disabled = currentStepIndex === 0;
+      nextBtn.disabled = currentStepIndex === STEPS.length - 1;
+      nextBtn.textContent = currentStepIndex === STEPS.length - 1
+        ? 'Ende des Decks'
+        : (step.type === 'table' && step.visibleRows < COMPARISON_TABLE.rows.length
+            ? 'Nächste Zeile →'
+            : 'Weiter →');
+    }
+
+    /**
+     * Rendert einen regulären Punkt: ALL-CAPS Headline, Smoked-Glass-Panel links (~66%) & KPIs rechts (~34%).
+     */
+    function renderPointStep(container, step) {
+      let bodyHtml = '';
+
+      if (step.paragraphs) {
+        bodyHtml += step.paragraphs.map(p =>
+          `<p class="text-base sm:text-lg lg:text-[20px] xl:text-[22px] text-white/95 leading-relaxed font-normal">${p}</p>`
+        ).join('');
+      }
+
+      if (step.intro) {
+        bodyHtml += `<p class="text-base sm:text-lg lg:text-[20px] xl:text-[22px] text-white/95 leading-relaxed font-medium">${step.intro}</p>`;
+      }
+
+      if (step.bullets) {
+        bodyHtml += `<ul class="space-y-3 pt-1">` +
+          step.bullets.map(item => `
+            <li class="flex items-start gap-3 text-base sm:text-lg lg:text-[19px] xl:text-[21px] text-white/95 leading-snug">
+              <span class="mt-2 h-2 w-2 rounded-full bg-mustard shrink-0"></span>
+              <span>${item}</span>
+            </li>
+          `).join('') +
+        `</ul>`;
+      }
+
+      if (step.numberedList) {
+        bodyHtml += `<ol class="space-y-3 pt-1">` +
+          step.numberedList.map((item, idx) => `
+            <li class="flex items-start gap-3.5 text-base sm:text-lg lg:text-[18.5px] xl:text-[20px] text-white/95 leading-snug">
+              <span class="font-black text-mustard text-lg sm:text-xl leading-snug shrink-0">${idx + 1})</span>
+              <span>${item}</span>
+            </li>
+          `).join('') +
+        `</ol>`;
+      }
+
+      if (step.outro) {
+        bodyHtml += `<p class="text-base sm:text-lg lg:text-[19px] xl:text-[21px] text-lightgray/90 leading-relaxed pt-1 border-t border-iceblue/25">${step.outro}</p>`;
+      }
+
+      // KPI-Karten rechts (~34% Breite -> 4 von 12 Spalten)
+      const kpisHtml = step.kpis.map(kpi => {
+        // Dynamische Schriftgröße bei längeren KPI-Strings (z. B. "KEIN VORAB-TEST")
+        const isLong = kpi.value.length > 10;
+        const sizeClass = isLong
+          ? 'text-2xl sm:text-3xl xl:text-[2.15rem]'
+          : 'text-3xl sm:text-4xl xl:text-[3rem]';
+
+        return `
+          <div class="smoked-kpi px-5 py-4 sm:px-6 sm:py-5 flex flex-col justify-center">
+            <div class="font-black ${sizeClass} text-mustard tracking-tight leading-none uppercase">
+              ${kpi.value}
+            </div>
+            <div class="mt-2 text-xs sm:text-sm xl:text-base font-semibold text-lightgray/90 leading-snug">
+              ${kpi.label}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <div class="animate-reveal space-y-5 sm:space-y-6">
+          <!-- Punkt-Headline: Inter Black ALL CAPS mit genau EINEM Mustard-Wort -->
+          <h2 class="tt-headline text-2xl sm:text-4xl lg:text-5xl xl:text-[3.35rem] leading-[1.06] text-white">
+            ${step.headlineHtml}
+          </h2>
+
+          <!-- 66% Smoked-Glass-Panel links / 34% Kennzahlen rechts -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch">
+            <div class="lg:col-span-8 smoked-panel p-6 sm:p-8 xl:p-9 flex flex-col justify-center space-y-4">
+              ${bodyHtml}
+            </div>
+
+            <div class="lg:col-span-4 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3.5 sm:gap-4">
+              ${kpisHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /**
+     * Rendert die 6-zeilige Vergleichstabelle in Tab 2 mit zeilenweisem Aufklappen.
+     */
+    function renderTableStep(container, visibleRows) {
+      const theadHtml = COMPARISON_TABLE.columns.map((col, idx) => `
+        <th class="py-3.5 px-4 text-left text-xs sm:text-sm font-black uppercase tracking-wider ${
+          idx === 4 ? 'text-mustard' : 'text-lightgray'
+        }">
+          ${col}
+        </th>
+      `).join('');
+
+      const tbodyHtml = COMPARISON_TABLE.rows.slice(0, visibleRows).map((row, rIdx) => {
+        const isNewest = rIdx === visibleRows - 1;
+        const cellsHtml = row.map((cell, cIdx) => {
+          // Nicht erfasste Werte: STRIKT Grau-Kursiv mit × (niemals Rot!)
+          if (cell.startsWith('×')) {
+            return `<td class="py-3.5 px-4 text-sm sm:text-base text-gray-400 italic font-normal whitespace-nowrap">${cell}</td>`;
+          }
+          if (cIdx === 0) {
+            return `<td class="py-3.5 px-4 text-sm sm:text-base font-bold text-white whitespace-nowrap">${cell}</td>`;
+          }
+          if (cIdx === 4) {
+            return `<td class="py-3.5 px-4 text-sm sm:text-base font-black text-mustard">${cell}</td>`;
+          }
+          return `<td class="py-3.5 px-4 text-sm sm:text-base text-lightgray/95 font-medium">${cell}</td>`;
+        }).join('');
+
+        return `
+          <tr class="border-t border-iceblue/20 transition-colors ${isNewest ? 'table-row-newest animate-reveal' : ''}">
+            ${cellsHtml}
+          </tr>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <div class="space-y-4 sm:space-y-5">
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+            <h2 class="tt-headline text-2xl sm:text-4xl lg:text-5xl leading-[1.06] text-white">
+              ${COMPARISON_TABLE.headlineHtml}
+            </h2>
+            <span class="text-xs sm:text-sm font-bold tracking-wider uppercase text-mustard shrink-0">
+              ZEILE ${visibleRows} VON ${COMPARISON_TABLE.rows.length}
+            </span>
+          </div>
+
+          <div class="smoked-panel overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full border-collapse min-w-[760px]">
+                <thead class="bg-white/5 border-b border-iceblue/30">
+                  <tr>${theadHtml}</tr>
+                </thead>
+                <tbody>
+                  ${tbodyHtml}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Hinweis unter der Tabelle -->
+          <div class="px-4 py-3 rounded-xl bg-darkgray/65 border-l-4 border-mustard text-xs sm:text-sm lg:text-base text-lightgray/90">
+            <strong class="text-mustard uppercase tracking-wide mr-1.5">Hinweis:</strong>
+            ${COMPARISON_TABLE.note}
+          </div>
+        </div>
+      `;
+    }
+
+    /**
+     * Klick auf die Hauptbühne schaltet zum nächsten Schritt weiter (außer bei Links/Buttons oder Textmarkierung).
+     */
+    function handleStageClick(event) {
+      if (event.target.closest('button, a')) return;
+      const selection = window.getSelection();
+      if (selection && selection.toString().length > 0) return;
+      nextStep();
+    }
+
+    /**
+     * Navigation: Nächster Schritt (wechselt am Tab-Ende automatisch in den nächsten Tab).
+     */
+    function nextStep() {
+      if (currentStepIndex < STEPS.length - 1) {
+        currentStepIndex++;
+        render();
+      }
+    }
+
+    /**
+     * Navigation: Vorheriger Schritt.
+     */
+    function prevStep() {
+      if (currentStepIndex > 0) {
+        currentStepIndex--;
+        render();
+      }
+    }
+
+    /**
+     * Springt direkt zu einem bestimmten globalen Schritt (0–20).
+     */
+    function goToStep(index) {
+      if (index < 0 || index >= STEPS.length) return;
+      currentStepIndex = index;
+      render();
+    }
+
+    /**
+     * Springt zum ersten Schritt des jeweiligen Tabs (1–5).
+     */
+    function goToTab(tabId) {
+      const targetTab = TABS.find(t => t.id === tabId);
+      if (!targetTab) return;
+      currentStepIndex = targetTab.startIndex;
+      render();
+    }
+
+    /**
+     * Aufnahmemodus (Taste R oder Button) ein-/ausschalten.
+     */
+    function toggleRecordingMode(forceState) {
+      isRecordingMode = typeof forceState === 'boolean' ? forceState : !isRecordingMode;
+      document.body.classList.toggle('recording-mode', isRecordingMode);
+    }
+
+    /**
+     * Globale Tastatursteuerung:
+     * - Rechts / Leertaste: Weiter
+     * - Links: Zurück
+     * - 1–5: Tab-Wechsel (erster Punkt des Tabs)
+     * - R: Aufnahmemodus umschalten
+     * - Escape: Aufnahmemodus beenden
+     */
+    document.addEventListener('keydown', (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+      const key = e.key.toLowerCase();
+      if (key >= '1' && key <= '5') {
+        e.preventDefault();
+        goToTab(parseInt(key, 10));
+      } else if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        nextStep();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevStep();
+      } else if (key === 'r') {
+        e.preventDefault();
+        toggleRecordingMode();
+      } else if (e.key === 'Escape' && isRecordingMode) {
+        e.preventDefault();
+        toggleRecordingMode(false);
+      }
+    });
+
+    // Initiales Rendering beim Laden
+    window.addEventListener('DOMContentLoaded', render);
+  </script>
+</body>
+</html>
