@@ -482,6 +482,13 @@ test("root /privacy ships full policy HTML, not a legacy bounce", async () => {
   assert.equal(rootSeo.htmlLang, "en");
 });
 
+test("root /privacy is its own prerendered route (no client bounce to /en)", async () => {
+  const opts = await githubPagesStartOptions();
+  assert.ok(opts.pages.some((p) => p.path === "/privacy"));
+  const route = readFileSync(join(REPO, "src/routes/privacy.tsx"), "utf8");
+  assert.match(route, /createFileRoute\("\/privacy"\)/);
+});
+
 test("sitemap lists /privacy with lastmod 2026-11-09", () => {
   const sitemap = readFileSync(new URL("../public/sitemap.xml", import.meta.url), "utf8");
   assert.match(sitemap, /<loc>https:\/\/techtalktobi\.com\/privacy<\/loc>/);

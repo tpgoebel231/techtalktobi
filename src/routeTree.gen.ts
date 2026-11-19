@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LocaleRouteRouteImport } from './routes/$locale/route'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as LocaleIndexRouteImport } from './routes/$locale/index'
 import { Route as LocaleAboutRouteImport } from './routes/$locale/about'
 import { Route as LocaleConsultingRouteImport } from './routes/$locale/consulting'
@@ -37,6 +38,11 @@ const IndexRoute = IndexRouteImport.update({
 const LocaleRouteRoute = LocaleRouteRouteImport.update({
   id: '/$locale',
   path: '/$locale',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LocaleIndexRoute = LocaleIndexRouteImport.update({
@@ -128,6 +134,7 @@ const ApiHelgaWebhookRoute = ApiHelgaWebhookRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$locale': typeof LocaleRouteRouteWithChildren
+  '/privacy': typeof PrivacyRoute
   '/$locale/about': typeof LocaleAboutRoute
   '/$locale/consulting': typeof LocaleConsultingRoute
   '/$locale/datenschutz': typeof LocaleDatenschutzRoute
@@ -148,6 +155,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/privacy': typeof PrivacyRoute
   '/$locale/about': typeof LocaleAboutRoute
   '/$locale/consulting': typeof LocaleConsultingRoute
   '/$locale/datenschutz': typeof LocaleDatenschutzRoute
@@ -170,6 +178,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$locale': typeof LocaleRouteRouteWithChildren
+  '/privacy': typeof PrivacyRoute
   '/$locale/about': typeof LocaleAboutRoute
   '/$locale/consulting': typeof LocaleConsultingRoute
   '/$locale/datenschutz': typeof LocaleDatenschutzRoute
@@ -193,6 +202,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$locale'
+    | '/privacy'
     | '/$locale/about'
     | '/$locale/consulting'
     | '/$locale/datenschutz'
@@ -213,6 +223,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/privacy'
     | '/$locale/about'
     | '/$locale/consulting'
     | '/$locale/datenschutz'
@@ -234,6 +245,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$locale'
+    | '/privacy'
     | '/$locale/about'
     | '/$locale/consulting'
     | '/$locale/datenschutz'
@@ -256,6 +268,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LocaleRouteRoute: typeof LocaleRouteRouteWithChildren
+  PrivacyRoute: typeof PrivacyRoute
   ApiHelgaAuthorizeRoute: typeof ApiHelgaAuthorizeRoute
   ApiHelgaListenRoute: typeof ApiHelgaListenRoute
   ApiHelgaListenLinkRoute: typeof ApiHelgaListenLinkRoute
@@ -277,6 +290,13 @@ declare module '@tanstack/react-router' {
       path: '/$locale'
       fullPath: '/$locale'
       preLoaderRoute: typeof LocaleRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$locale/': {
@@ -438,6 +458,7 @@ const LocaleRouteRouteWithChildren = LocaleRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LocaleRouteRoute: LocaleRouteRouteWithChildren,
+  PrivacyRoute: PrivacyRoute,
   ApiHelgaAuthorizeRoute: ApiHelgaAuthorizeRoute,
   ApiHelgaListenRoute: ApiHelgaListenRoute,
   ApiHelgaListenLinkRoute: ApiHelgaListenLinkRoute,
