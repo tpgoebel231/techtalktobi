@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { Container } from "@/components/container";
+import { privacyDe } from "@/data/privacy-de";
 import { privacyEn, type PrivacyBlock } from "@/data/privacy-en";
+import { useLocale } from "@/lib/i18n";
 
 const TOKEN = /(https?:\/\/[^\s)]+[^\s).,;]|[\w.+-]+@[\w-]+\.[\w.]+\w)/g;
 
@@ -49,7 +51,7 @@ function Block({ block, k }: { block: PrivacyBlock; k: string }) {
 }
 
 export function PrivacyPage() {
-  const page = privacyEn;
+  const page = useLocale() === "de" ? privacyDe : privacyEn;
   return (
     <Container className="max-w-3xl py-14 sm:py-20">
       <h1 className="font-display text-4xl leading-tight text-fg sm:text-5xl">{page.title}</h1>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CONSENT_STORAGE_KEY } from "@/data/analytics";
 import { useLocale } from "@/lib/i18n";
-import type { Locale } from "@/lib/locale";
+import { privacyPath, type Locale } from "@/lib/locale";
 
 /** Footer link fires this to reopen the banner. */
 export const CONSENT_OPEN_EVENT = "ttt-consent-open";
@@ -103,7 +103,7 @@ export function ConsentBanner() {
     >
       <p className="text-sm leading-relaxed text-fg">
         {text.body}{" "}
-        <a href="/privacy" className="text-accent underline-offset-2 hover:underline">
+        <a href={privacyPath(locale)} className="text-accent underline-offset-2 hover:underline">
           {text.privacy}
         </a>
       </p>

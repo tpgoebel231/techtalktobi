@@ -459,10 +459,30 @@ test("canonical routes include locale privacy pages", async () => {
   const routes = canonicalRoutes(pieces);
   assert.ok(routes.includes("/en/privacy"));
   assert.ok(routes.includes("/de/privacy"));
-  const seo = seoForRoute("/en/privacy", pieces);
-  assert.equal(seo.title, PAGE_TITLES.privacy.en);
-  // Same text as /privacy: canonical points there (no redirect).
-  assert.equal(seo.canonical, `${SITE_ORIGIN}/privacy`);
+  const en = seoForRoute("/en/privacy", pieces);
+  assert.equal(en.title, PAGE_TITLES.privacy.en);
+  // Same English text as /privacy: canonical points there (no redirect).
+  assert.equal(en.canonical, `${SITE_ORIGIN}/privacy`);
+  assert.deepEqual(
+    en.alternates.map((a) => [a.hreflang, a.href]),
+    [
+      ["en", `${SITE_ORIGIN}/privacy`],
+      ["de", `${SITE_ORIGIN}/de/privacy`],
+      ["x-default", `${SITE_ORIGIN}/privacy`],
+    ],
+  );
+  const de = seoForRoute("/de/privacy", pieces);
+  assert.equal(de.title, PAGE_TITLES.privacy.de);
+  assert.equal(de.canonical, `${SITE_ORIGIN}/de/privacy`);
+  assert.equal(de.htmlLang, "de");
+  assert.deepEqual(
+    de.alternates.map((a) => [a.hreflang, a.href]),
+    [
+      ["en", `${SITE_ORIGIN}/privacy`],
+      ["de", `${SITE_ORIGIN}/de/privacy`],
+      ["x-default", `${SITE_ORIGIN}/privacy`],
+    ],
+  );
 });
 
 test("root /privacy ships full policy HTML, not a legacy bounce", async () => {
@@ -483,6 +503,7 @@ test("root /privacy ships full policy HTML, not a legacy bounce", async () => {
   const rootSeo = privacyRootSeo();
   assert.equal(rootSeo.canonical, `${SITE_ORIGIN}/privacy`);
   assert.equal(rootSeo.htmlLang, "en");
+  assert.ok(rootSeo.alternates.some((a) => a.hreflang === "de" && a.href === `${SITE_ORIGIN}/de/privacy`));
 });
 
 test("root /privacy is its own prerendered route (no client bounce to /en)", async () => {
@@ -492,11 +513,15 @@ test("root /privacy is its own prerendered route (no client bounce to /en)", asy
   assert.match(route, /createFileRoute\("\/privacy"\)/);
 });
 
-test("sitemap lists /privacy with lastmod 2026-11-09", () => {
+test("sitemap lists /privacy and /de/privacy with lastmod 2026-11-20", () => {
   const sitemap = readFileSync(new URL("../public/sitemap.xml", import.meta.url), "utf8");
   assert.match(sitemap, /<loc>https:\/\/techtalktobi\.com\/privacy<\/loc>/);
   assert.match(
     sitemap,
-    /<loc>https:\/\/techtalktobi\.com\/privacy<\/loc>\s*<lastmod>2026-11-09<\/lastmod>/,
+    /<loc>https:\/\/techtalktobi\.com\/privacy<\/loc>\s*<lastmod>2026-11-20<\/lastmod>/,
+  );
+  assert.match(
+    sitemap,
+    /<loc>https:\/\/techtalktobi\.com\/de\/privacy<\/loc>\s*<lastmod>2026-11-20<\/lastmod>/,
   );
 });

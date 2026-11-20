@@ -5,6 +5,7 @@ import { LangSwitcher } from "@/components/lang-switcher";
 import { Mark } from "@/components/mark";
 import { links } from "@/data/media";
 import { useCopy, useLocale } from "@/lib/i18n";
+import { privacyPath } from "@/lib/locale";
 
 export function SiteFooter() {
   const locale = useLocale();
@@ -61,7 +62,7 @@ export function SiteFooter() {
           <a href={`mailto:${links.email}`} className="text-muted no-underline hover:text-fg">
             {links.email}
           </a>
-          <a href="/privacy" className="text-muted no-underline hover:text-fg">
+          <a href={privacyPath(locale)} className="text-muted no-underline hover:text-fg">
             {copy.nav.privacy}
           </a>
           <ConsentSettingsLink className="cursor-pointer text-left text-muted hover:text-fg" />

@@ -12,7 +12,7 @@ export const Route = createFileRoute("/$locale/media/")({
     const locale = params.locale === "de" ? "de" : "en";
     return {
       meta: [
-        { title: "Media · TechTalkTobi" },
+        { title: locale === "de" ? "Medien · TechTalkTobi" : "Media · TechTalkTobi" },
         { name: "description", content: DESCRIPTION[locale] },
       ],
     };

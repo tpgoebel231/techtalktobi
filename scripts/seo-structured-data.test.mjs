@@ -59,16 +59,25 @@ test("Person JSON-LD has image, jobTitle, description and sameAs", async () => {
   }
 });
 
-test("/en/privacy and /de/privacy canonical to /privacy; root route unchanged", async () => {
+test("/en/privacy canonicals to /privacy; /de/privacy is its own German canonical", async () => {
   const pieces = await loadResearchPieces();
-  for (const locale of ["en", "de"]) {
-    const seo = seoForRoute(`/${locale}/privacy`, pieces);
-    assert.equal(seo.canonical, PRIVACY_CANONICAL);
-    assert.ok(seo.alternates.every((a) => a.href === PRIVACY_CANONICAL));
-    assert.match(
-      extraHeadTags(seo),
-      /<link rel="canonical" href="https:\/\/techtalktobi\.com\/privacy"\/>/,
-    );
+  const en = seoForRoute("/en/privacy", pieces);
+  assert.equal(en.canonical, PRIVACY_CANONICAL);
+  assert.match(
+    extraHeadTags(en),
+    /<link rel="canonical" href="https:\/\/techtalktobi\.com\/privacy"\/>/,
+  );
+  const de = seoForRoute("/de/privacy", pieces);
+  assert.equal(de.canonical, `${SITE_ORIGIN}/de/privacy`);
+  assert.match(
+    extraHeadTags(de),
+    /<link rel="canonical" href="https:\/\/techtalktobi\.com\/de\/privacy"\/>/,
+  );
+  for (const seo of [en, de, privacyRootSeo()]) {
+    const hrefs = Object.fromEntries(seo.alternates.map((a) => [a.hreflang, a.href]));
+    assert.equal(hrefs.en, PRIVACY_CANONICAL);
+    assert.equal(hrefs.de, `${SITE_ORIGIN}/de/privacy`);
+    assert.equal(hrefs["x-default"], PRIVACY_CANONICAL);
   }
   assert.equal(privacyRootSeo().canonical, `${SITE_ORIGIN}/privacy`);
   const prep = readFileSync(url("scripts/prepare-github-pages.mjs"), "utf8");
