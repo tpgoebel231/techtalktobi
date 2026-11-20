@@ -61,8 +61,8 @@
   label.lbl { display: block; font-size: .8rem; color: var(--muted); margin-bottom: 6px; }
   textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; min-height: 96px; resize: vertical; font-size: 16px; line-height: 1.45; }
   textarea:disabled { opacity: .5; }
-  .choices { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; border: 0; padding: 0; }
-  .choices legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .choices, .toggles { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; border: 0; padding: 0; margin-inline: 0; }
+  .choices legend, .toggles legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .choice { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 999px; padding: 8px 14px; min-height: 44px; cursor: pointer; background: var(--surface-2); user-select: none; }
   .choice input { accent-color: var(--accent); width: 18px; height: 18px; margin: 0; }
   .choice:has(input:checked) { border-color: var(--accent); background: rgba(255,152,0,.12); }
@@ -252,6 +252,19 @@
     return isNaN(d) ? "" : d.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
   }
   const actionName = { post: "Post", skip: "Skip", instructions: "Instructions" };
+  const flag = (v) => v === true;
+  function initialState(c, s, d) {
+    if (d) return { action: d.action || "", reply_text: d.reply_text || "", instructions: d.instructions || "", like: "like" in d ? flag(d.like) : (s ? flag(s.like) : flag(c.suggest_like)), heart: "heart" in d ? flag(d.heart) : (s ? flag(s.heart) : flag(c.suggest_heart)) };
+    if (s) return { action: s.action || "", reply_text: s.reply_text || c.proposed_reply || "", instructions: s.instructions || "", like: flag(s.like), heart: flag(s.heart) };
+    return { action: "", reply_text: c.proposed_reply || "", instructions: "", like: flag(c.suggest_like), heart: flag(c.suggest_heart) };
+  }
+  function savedLabel(s) {
+    const parts = [];
+    if (s.action && actionName[s.action]) parts.push(actionName[s.action]);
+    if (s.like) parts.push("Like");
+    if (s.heart) parts.push("Heart");
+    return parts.length ? parts.join(" \u00b7 ") : "Saved";
+  }
 
   function render() {
     const list = $("list");
@@ -293,7 +306,7 @@
     const cid = c.comment_id;
     const s = saved.get(cid);
     const d = getDraft(cid);
-    const state = d || (s ? { action: s.action, reply_text: s.reply_text || c.proposed_reply || "", instructions: s.instructions || "" } : { action: "", reply_text: c.proposed_reply || "", instructions: "" });
+    const state = initialState(c, s, d);
     const name = "act-" + cid;
 
     const stats = [fmtDate(c.published_at), typeof c.like_count === "number" ? c.like_count + (c.like_count === 1 ? " like" : " likes") : ""].filter(Boolean).join(" \u00b7 ");
@@ -314,12 +327,17 @@
       return el("label", { class: "choice" }, r, actionName[a]);
     });
     const choices = el("fieldset", { class: "choices" }, el("legend", { text: "Action" }), ...radios);
-    const right = el("div", {}, el("label", { class: "lbl", for: "r-" + cid, text: "Reply" }), reply, choices, instrBox);
+    const likeBox = el("input", { type: "checkbox", id: "like-" + cid, checked: state.like });
+    const heartBox = el("input", { type: "checkbox", id: "heart-" + cid, checked: state.heart });
+    const toggles = el("fieldset", { class: "toggles" }, el("legend", { text: "Reactions" }),
+      el("label", { class: "choice" }, likeBox, "Like"),
+      el("label", { class: "choice" }, heartBox, "Heart"));
+    const right = el("div", {}, el("label", { class: "lbl", for: "r-" + cid, text: "Reply" }), reply, choices, toggles, instrBox);
     const card = el("div", { class: "card comment", "data-cid": cid }, left, right);
 
     function current() {
       const chk = choices.querySelector("input:checked");
-      return { action: chk ? chk.value : "", reply_text: reply.value, instructions: instr.value };
+      return { action: chk ? chk.value : "", reply_text: reply.value, instructions: instr.value, like: !!likeBox.checked, heart: !!heartBox.checked };
     }
     function paint() {
       const cur = current();
@@ -329,17 +347,18 @@
       card.classList.toggle("dirty", isDirty);
       card.classList.toggle("decided", !isDirty && !!s);
       if (isDirty) { badge.className = "badge draft"; badge.textContent = "Unsaved changes"; }
-      else if (s) { badge.className = "badge saved"; badge.textContent = "Saved: " + actionName[s.action] + " \u00b7 " + fmtDate(s.decided_at); }
+      else if (s) { badge.className = "badge saved"; badge.textContent = "Saved: " + savedLabel(s) + " \u00b7 " + fmtDate(s.decided_at); }
       else { badge.className = "badge"; badge.textContent = "Open"; }
     }
     function onEdit() {
       const cur = current();
-      const base = s ? { action: s.action, reply_text: s.reply_text || c.proposed_reply || "", instructions: s.instructions || "" } : { action: "", reply_text: c.proposed_reply || "", instructions: "" };
-      if (cur.action === base.action && cur.reply_text === base.reply_text && (cur.action !== "instructions" || cur.instructions === base.instructions)) clearDraft(cid);
+      const base = initialState(c, s, null);
+      if (cur.action === base.action && cur.reply_text === base.reply_text && cur.like === base.like && cur.heart === base.heart && (cur.action !== "instructions" || cur.instructions === base.instructions)) clearDraft(cid);
       else setDraft(cid, cur);
       paint();
     }
     choices.addEventListener("change", () => { onEdit(); if (current().action === "instructions") instr.focus(); });
+    toggles.addEventListener("change", onEdit);
     reply.addEventListener("input", onEdit);
     instr.addEventListener("input", onEdit);
     card._current = current;
@@ -356,16 +375,16 @@
     for (const card of cards) {
       const cid = card.getAttribute("data-cid");
       const cur = card._current();
-      if (!cur.action) { open++; continue; }
+      if (!cur.action && !cur.like && !cur.heart) { open++; continue; }
       if (saved.has(cid) && !getDraft(cid)) continue;
       if (cur.action === "post" && !cur.reply_text.trim()) problems.push("a reply marked Post is empty");
       if (cur.action === "instructions" && !cur.instructions.trim()) problems.push("an Instructions box is empty");
-      decisions.push({ comment_id: cid, action: cur.action, reply_text: cur.reply_text, instructions: cur.action === "instructions" ? cur.instructions : "" });
+      decisions.push({ comment_id: cid, action: cur.action, reply_text: cur.reply_text, instructions: cur.action === "instructions" ? cur.instructions : "", like: !!cur.like, heart: !!cur.heart });
     }
     if (problems.length) { banner("err", "Not submitted: " + [...new Set(problems)].join(", ") + "."); return; }
     if (!decisions.length) {
       if (cards.length && !open) banner("info", "Nothing new to save on this page. All decisions here are already saved.");
-      else banner("err", "Not submitted: choose Post, Skip or Instructions for at least one comment on this page.");
+      else banner("err", "Not submitted: choose Post, Skip or Instructions, or turn on Like or Heart, for at least one comment on this page.");
       return;
     }
     const btn = $("submitBtn");
