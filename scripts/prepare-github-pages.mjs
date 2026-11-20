@@ -45,6 +45,21 @@ export const HEADSHOT_URL = `${SITE_ORIGIN}/images/tobias-goebel-headshot-800.jp
 /** English privacy lives at /privacy; /en/privacy is a same-text alias. /de/privacy is the German text. */
 export const PRIVACY_CANONICAL = `${SITE_ORIGIN}/privacy`;
 
+/** EN/DE legal-notice pair uses different slugs. */
+export const IMPRESSUM_PATHS = { en: "/en/imprint", de: "/de/impressum" };
+
+export const IMPRESSUM_SEO = {
+  en: {
+    title: "Legal notice · TechTalkTobi",
+    description:
+      "Information pursuant to § 5 of the German Digital Services Act (DDG) for techtalktobi.com.",
+  },
+  de: {
+    title: "Impressum · TechTalkTobi",
+    description: "Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG) für techtalktobi.com.",
+  },
+};
+
 const locales = ["en", "de"];
 const pages = ["", "about", "consulting", "media-kit", "media", "privacy", "research"];
 
@@ -115,6 +130,10 @@ export const LEGACY_PAGE_REDIRECTS = {
   "/research/topics/muskonomy": "/en/research/topics/muskonomy",
   "/en/research/topics": "/en/research",
   "/de/research/topics": "/de/research",
+  "/imprint": "/en/imprint",
+  "/impressum": "/de/impressum",
+  "/en/impressum": "/en/imprint",
+  "/de/imprint": "/de/impressum",
 };
 
 /**
@@ -381,6 +400,29 @@ export function seoForRoute(route, pieces) {
     };
   }
 
+  if (rest === "imprint" || rest === "impressum") {
+    const expected = locale === "de" ? "impressum" : "imprint";
+    if (rest !== expected) {
+      throw new Error(`prepare-github-pages: ${route} is not the canonical legal-notice path`);
+    }
+    const canonical = `${SITE_ORIGIN}${IMPRESSUM_PATHS[locale]}`;
+    return {
+      title: IMPRESSUM_SEO[locale].title,
+      description: IMPRESSUM_SEO[locale].description,
+      canonical,
+      ogUrl: canonical,
+      image: DEFAULT_OG_IMAGE,
+      type: "website",
+      locale: locale === "de" ? "de_DE" : "en_US",
+      htmlLang: locale,
+      alternates: [
+        { hreflang: "en", href: `${SITE_ORIGIN}${IMPRESSUM_PATHS.en}` },
+        { hreflang: "de", href: `${SITE_ORIGIN}${IMPRESSUM_PATHS.de}` },
+        { hreflang: "x-default", href: `${SITE_ORIGIN}${IMPRESSUM_PATHS.en}` },
+      ],
+    };
+  }
+
   const pageTitle = rest ? PAGE_TITLES[rest]?.[locale] : LOCALE_HEAD[locale].title;
   if (!pageTitle) {
     throw new Error(`prepare-github-pages: no title for ${route}`);
@@ -584,6 +626,7 @@ export function canonicalRoutes(pieces) {
     }
   }
   for (const page of Object.keys(DE_ONLY_PAGES)) routes.push(`/de/${page}`);
+  routes.push(IMPRESSUM_PATHS.en, IMPRESSUM_PATHS.de);
   return routes;
 }
 

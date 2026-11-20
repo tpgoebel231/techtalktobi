@@ -376,7 +376,7 @@ test("German-only pages ship as routes with de-only hreflang and stay out of the
   const mainSeo = seoForRoute("/de/live-in-bonn", pieces);
   assert.equal(mainSeo.robots, undefined);
   assert.doesNotMatch(extraHeadTags(mainSeo), /name="robots"/);
-  assert.ok(!routes.some((r) => r.includes("impressum")));
+  // Impressum is a public bilingual legal page (see impressum.test.mjs), not German-only.
   const sitemap = readFileSync(new URL("../public/sitemap.xml", import.meta.url), "utf8");
   assert.ok(!/live-in-bonn|datenschutz/.test(sitemap));
 });

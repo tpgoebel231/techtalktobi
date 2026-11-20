@@ -16,6 +16,8 @@ import { Route as LocaleIndexRouteImport } from './routes/$locale/index'
 import { Route as LocaleAboutRouteImport } from './routes/$locale/about'
 import { Route as LocaleConsultingRouteImport } from './routes/$locale/consulting'
 import { Route as LocaleDatenschutzRouteImport } from './routes/$locale/datenschutz'
+import { Route as LocaleImpressumRouteImport } from './routes/$locale/impressum'
+import { Route as LocaleImprintRouteImport } from './routes/$locale/imprint'
 import { Route as LocaleMediaKitRouteImport } from './routes/$locale/media-kit'
 import { Route as LocalePrivacyRouteImport } from './routes/$locale/privacy'
 import { Route as LocaleLiveInBonnIndexRouteImport } from './routes/$locale/live-in-bonn/index'
@@ -64,6 +66,16 @@ const LocaleConsultingRoute = LocaleConsultingRouteImport.update({
 const LocaleDatenschutzRoute = LocaleDatenschutzRouteImport.update({
   id: '/datenschutz',
   path: '/datenschutz',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleImpressumRoute = LocaleImpressumRouteImport.update({
+  id: '/impressum',
+  path: '/impressum',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleImprintRoute = LocaleImprintRouteImport.update({
+  id: '/imprint',
+  path: '/imprint',
   getParentRoute: () => LocaleRouteRoute,
 } as any)
 const LocaleMediaKitRoute = LocaleMediaKitRouteImport.update({
@@ -145,6 +157,8 @@ export interface FileRoutesByFullPath {
   '/$locale/about': typeof LocaleAboutRoute
   '/$locale/consulting': typeof LocaleConsultingRoute
   '/$locale/datenschutz': typeof LocaleDatenschutzRoute
+  '/$locale/impressum': typeof LocaleImpressumRoute
+  '/$locale/imprint': typeof LocaleImprintRoute
   '/$locale/media-kit': typeof LocaleMediaKitRoute
   '/$locale/privacy': typeof LocalePrivacyRoute
   '/$locale/': typeof LocaleIndexRoute
@@ -167,6 +181,8 @@ export interface FileRoutesByTo {
   '/$locale/about': typeof LocaleAboutRoute
   '/$locale/consulting': typeof LocaleConsultingRoute
   '/$locale/datenschutz': typeof LocaleDatenschutzRoute
+  '/$locale/impressum': typeof LocaleImpressumRoute
+  '/$locale/imprint': typeof LocaleImprintRoute
   '/$locale/media-kit': typeof LocaleMediaKitRoute
   '/$locale/privacy': typeof LocalePrivacyRoute
   '/$locale': typeof LocaleIndexRoute
@@ -191,6 +207,8 @@ export interface FileRoutesById {
   '/$locale/about': typeof LocaleAboutRoute
   '/$locale/consulting': typeof LocaleConsultingRoute
   '/$locale/datenschutz': typeof LocaleDatenschutzRoute
+  '/$locale/impressum': typeof LocaleImpressumRoute
+  '/$locale/imprint': typeof LocaleImprintRoute
   '/$locale/media-kit': typeof LocaleMediaKitRoute
   '/$locale/privacy': typeof LocalePrivacyRoute
   '/$locale/': typeof LocaleIndexRoute
@@ -216,6 +234,8 @@ export interface FileRouteTypes {
     | '/$locale/about'
     | '/$locale/consulting'
     | '/$locale/datenschutz'
+    | '/$locale/impressum'
+    | '/$locale/imprint'
     | '/$locale/media-kit'
     | '/$locale/privacy'
     | '/$locale/'
@@ -238,6 +258,8 @@ export interface FileRouteTypes {
     | '/$locale/about'
     | '/$locale/consulting'
     | '/$locale/datenschutz'
+    | '/$locale/impressum'
+    | '/$locale/imprint'
     | '/$locale/media-kit'
     | '/$locale/privacy'
     | '/$locale'
@@ -261,6 +283,8 @@ export interface FileRouteTypes {
     | '/$locale/about'
     | '/$locale/consulting'
     | '/$locale/datenschutz'
+    | '/$locale/impressum'
+    | '/$locale/imprint'
     | '/$locale/media-kit'
     | '/$locale/privacy'
     | '/$locale/'
@@ -338,6 +362,20 @@ declare module '@tanstack/react-router' {
       path: '/datenschutz'
       fullPath: '/$locale/datenschutz'
       preLoaderRoute: typeof LocaleDatenschutzRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/impressum': {
+      id: '/$locale/impressum'
+      path: '/impressum'
+      fullPath: '/$locale/impressum'
+      preLoaderRoute: typeof LocaleImpressumRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/imprint': {
+      id: '/$locale/imprint'
+      path: '/imprint'
+      fullPath: '/$locale/imprint'
+      preLoaderRoute: typeof LocaleImprintRouteImport
       parentRoute: typeof LocaleRouteRoute
     }
     '/$locale/media-kit': {
@@ -445,6 +483,8 @@ interface LocaleRouteRouteChildren {
   LocaleAboutRoute: typeof LocaleAboutRoute
   LocaleConsultingRoute: typeof LocaleConsultingRoute
   LocaleDatenschutzRoute: typeof LocaleDatenschutzRoute
+  LocaleImpressumRoute: typeof LocaleImpressumRoute
+  LocaleImprintRoute: typeof LocaleImprintRoute
   LocaleMediaKitRoute: typeof LocaleMediaKitRoute
   LocalePrivacyRoute: typeof LocalePrivacyRoute
   LocaleIndexRoute: typeof LocaleIndexRoute
@@ -461,6 +501,8 @@ const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
   LocaleAboutRoute: LocaleAboutRoute,
   LocaleConsultingRoute: LocaleConsultingRoute,
   LocaleDatenschutzRoute: LocaleDatenschutzRoute,
+  LocaleImpressumRoute: LocaleImpressumRoute,
+  LocaleImprintRoute: LocaleImprintRoute,
   LocaleMediaKitRoute: LocaleMediaKitRoute,
   LocalePrivacyRoute: LocalePrivacyRoute,
   LocaleIndexRoute: LocaleIndexRoute,
@@ -490,12 +532,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}

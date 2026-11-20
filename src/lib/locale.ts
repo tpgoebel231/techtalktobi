@@ -10,14 +10,24 @@ export function privacyPath(locale: Locale): string {
   return locale === "de" ? "/de/privacy" : "/privacy";
 }
 
+export function impressumPath(locale: Locale): string {
+  return locale === "de" ? "/de/impressum" : "/en/imprint";
+}
+
 /**
  * Paths whose EN/DE pair is not a simple prefix swap
- * (/privacy is the English canonical).
+ * (/privacy is the English canonical; imprint and impressum use different slugs).
  */
 const LOCALE_PATH_ALIASES: Record<string, Record<Locale, string>> = {
   "/privacy": { en: "/privacy", de: "/de/privacy" },
   "/en/privacy": { en: "/privacy", de: "/de/privacy" },
   "/de/privacy": { en: "/privacy", de: "/de/privacy" },
+  "/en/imprint": { en: "/en/imprint", de: "/de/impressum" },
+  "/de/impressum": { en: "/en/imprint", de: "/de/impressum" },
+  "/en/impressum": { en: "/en/imprint", de: "/de/impressum" },
+  "/de/imprint": { en: "/en/imprint", de: "/de/impressum" },
+  "/imprint": { en: "/en/imprint", de: "/de/impressum" },
+  "/impressum": { en: "/en/imprint", de: "/de/impressum" },
 };
 
 /** Swap the locale prefix of a path (and optional search/hash). */
