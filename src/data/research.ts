@@ -18,9 +18,45 @@ export type ResearchKind = "essay" | "tool" | "matrix" | "tracker" | "map";
 
 export type LocalizedText = Record<Locale, string>;
 
+/** Top-level Research categories (index tiles + /{locale}/research/topics/<slug>). */
+export const RESEARCH_CATEGORY_SLUGS = [
+  "autonomous-driving",
+  "robotics",
+  "muskonomy",
+] as const;
+
+export type ResearchCategorySlug = (typeof RESEARCH_CATEGORY_SLUGS)[number];
+
+export type ResearchCategory = {
+  slug: ResearchCategorySlug;
+  label: LocalizedText;
+  /** Piece whose card image represents the category tile. */
+  imageFrom: ResearchSlug;
+};
+
+export const RESEARCH_CATEGORIES: ResearchCategory[] = [
+  {
+    slug: "autonomous-driving",
+    label: { en: "Autonomous Driving", de: "Autonomes Fahren" },
+    imageFrom: "waymo",
+  },
+  {
+    slug: "robotics",
+    label: { en: "Robotics", de: "Robotik" },
+    imageFrom: "ai-robotics",
+  },
+  {
+    slug: "muskonomy",
+    label: { en: "Muskonomy", de: "Muskonomy" },
+    imageFrom: "muskonomy",
+  },
+];
+
 export type ResearchPiece = {
   slug: ResearchSlug;
   kind: ResearchKind;
+  /** Top-level category on the Research index. */
+  category: ResearchCategorySlug;
   date: string;
   image: string;
   title: LocalizedText;
@@ -38,6 +74,7 @@ export const research: ResearchPiece[] = [
   {
     slug: "self-driving",
     kind: "essay",
+    category: "autonomous-driving",
     date: "2026-06",
     image: "/images/research-self-driving.jpg",
     title: {
@@ -70,6 +107,7 @@ export const research: ResearchPiece[] = [
   {
     slug: "speed-vs-safety",
     kind: "tool",
+    category: "autonomous-driving",
     date: "2026-04",
     image: "/images/research-speed-safety.jpg",
     title: {
@@ -94,6 +132,7 @@ export const research: ResearchPiece[] = [
   {
     slug: "tesla-ecosystem",
     kind: "tracker",
+    category: "muskonomy",
     date: "2026-05",
     image: "/images/research-ecosystem.jpg",
     title: {
@@ -122,6 +161,7 @@ export const research: ResearchPiece[] = [
   {
     slug: "ai-robotics",
     kind: "map",
+    category: "robotics",
     date: "2026-07",
     image: "/images/research-robotics.jpg",
     title: {
@@ -150,6 +190,7 @@ export const research: ResearchPiece[] = [
   {
     slug: "fsd-matrix",
     kind: "matrix",
+    category: "autonomous-driving",
     date: "2026-08",
     image: "/images/research-fsd-matrix.jpg",
     title: {
@@ -174,6 +215,7 @@ export const research: ResearchPiece[] = [
   {
     slug: "waymo",
     kind: "tracker",
+    category: "autonomous-driving",
     date: "2026-08",
     image: "/images/research-waymo.jpg",
     title: {
@@ -198,6 +240,7 @@ export const research: ResearchPiece[] = [
   {
     slug: "muskonomy",
     kind: "map",
+    category: "muskonomy",
     date: "2026-06",
     image: "/images/research-muskonomy.jpg",
     noBanner: true,
@@ -219,6 +262,7 @@ export const research: ResearchPiece[] = [
   {
     slug: "tesla-gruenheide",
     kind: "tool",
+    category: "robotics",
     date: "2026-11",
     image: "/images/research-tesla-gruenheide.jpg",
     noBanner: true,
@@ -240,6 +284,7 @@ export const research: ResearchPiece[] = [
   {
     slug: "mercedes-mb-drive-assist-pro",
     kind: "tool",
+    category: "autonomous-driving",
     date: "2026-11",
     image: "/images/research-mercedes-mb-drive-assist-pro.jpg",
     noBanner: true,
@@ -270,6 +315,7 @@ export const research: ResearchPiece[] = [
   {
     slug: "tuev-adac-ev-tests",
     kind: "tool",
+    category: "muskonomy",
     date: "2026-11",
     image: "/images/research-tuev-adac-ev-tests.jpg",
     noBanner: true,
@@ -591,3 +637,41 @@ export const waymoCities: WaymoCity[] = [
     },
   },
 ];
+
+export function getResearchCategory(slug: string): ResearchCategory | undefined {
+  return RESEARCH_CATEGORIES.find((item) => item.slug === slug);
+}
+
+export function isResearchCategorySlug(value: string): value is ResearchCategorySlug {
+  return RESEARCH_CATEGORY_SLUGS.includes(value as ResearchCategorySlug);
+}
+
+/** Pieces in a category, newest first (same month: later entry in `research` first). */
+export function researchInCategory(slug: ResearchCategorySlug): ResearchPiece[] {
+  return research
+    .map((piece, index) => ({ piece, index }))
+    .filter(({ piece }) => piece.category === slug)
+    .sort((a, b) => b.piece.date.localeCompare(a.piece.date) || b.index - a.index)
+    .map(({ piece }) => piece);
+}
+
+/** Short title used on cards and category tiles. */
+export function researchCardTitle(piece: ResearchPiece, locale: Locale): string {
+  return piece.cardTitle?.[locale] ?? piece.title[locale];
+}
+
+/** Mechanical meta description for a category page: label plus piece titles. */
+export function researchCategoryDescription(slug: ResearchCategorySlug, locale: Locale): string {
+  const category = getResearchCategory(slug)!;
+  const titles = researchInCategory(slug).map((piece) => researchCardTitle(piece, locale));
+  return `${category.label[locale]}: ${titles.join(", ")}.`;
+}
+
+export const RESEARCH_CATEGORY_TITLE_SUFFIX = {
+  en: "Research · TechTalkTobi",
+  de: "Recherche · TechTalkTobi",
+} as const;
+
+export function researchCategoryTitle(slug: ResearchCategorySlug, locale: Locale): string {
+  return `${getResearchCategory(slug)!.label[locale]} · ${RESEARCH_CATEGORY_TITLE_SUFFIX[locale]}`;
+}

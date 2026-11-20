@@ -53,10 +53,14 @@ export const copy = {
     research: {
       eyebrow: "Research",
       title: "Research",
-      dek: "Graphics, a public FSD scorecard, and an interactive explainer.",
+      dek: "I dive deeper into the self-driving vehicle industry, analyze the emerging humanoid robotics space, and cover the general Elon Musk ecosystem: AI, AV technologies and regulation, robotaxis, EVs, and more.",
       read: "Open",
       related: "More research",
       back: "All research",
+      viewAll: "View all",
+      pieceSingular: "piece",
+      piecePlural: "pieces",
+      topicsLabel: "Research topics",
       getAccess: "Get access to this research",
       kinds: {
         essay: "Graphic",
@@ -212,10 +216,14 @@ export const copy = {
     research: {
       eyebrow: "Recherche",
       title: "Recherche",
-      dek: "Grafiken, eine öffentliche FSD-Bewertungsmatrix und ein interaktiver Rechner.",
+      dek: "Ich steige tiefer ein in autonome Fahrzeuge, analysiere den aufkommenden Markt für humanoide Roboter, und decke allgemein das Elon Musk Ökosystem ab: KI, automatisiertes Fahren, Robotaxis, E-Autos, und mehr.",
       read: "Öffnen",
       related: "Weitere Beiträge",
       back: "Zur Übersicht",
+      viewAll: "Alle ansehen",
+      pieceSingular: "Beitrag",
+      piecePlural: "Beiträge",
+      topicsLabel: "Recherche-Themen",
       getAccess: "Zugang zu dieser Analyse anfragen",
       kinds: {
         essay: "Grafik",
