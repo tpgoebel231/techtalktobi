@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { ConsentSettingsLink } from "@/components/consent-banner";
 import { Container } from "@/components/container";
 import { LangSwitcher } from "@/components/lang-switcher";
 import { Mark } from "@/components/mark";
@@ -63,6 +64,7 @@ export function SiteFooter() {
           <a href="/privacy" className="text-muted no-underline hover:text-fg">
             {copy.nav.privacy}
           </a>
+          <ConsentSettingsLink className="cursor-pointer text-left text-muted hover:text-fg" />
           <LangSwitcher />
         </div>
       </Container>

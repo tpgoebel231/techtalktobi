@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { ConsentBanner } from "@/components/consent-banner";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { useCopy } from "@/lib/i18n";
@@ -19,6 +20,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
         {children}
       </main>
       <SiteFooter />
+      <ConsentBanner />
     </div>
   );
 }

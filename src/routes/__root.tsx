@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
-import { gaConfigSnippet, gaLoaderSrc } from "@/data/analytics";
+import { gaConsentBootstrap } from "@/data/analytics";
 import { isCleanPath } from "@/lib/clean-routes";
 import { NotFoundPage } from "@/pages/not-found";
 import appCss from "../styles.css?url";
@@ -48,12 +48,10 @@ export const Route = createRootRoute({
     scripts: clean
       ? []
       : [
+          // Consent Mode v2: all storage denied; gtag.js loads only after
+          // Accept (src/components/consent-banner.tsx).
           {
-            async: true,
-            src: gaLoaderSrc,
-          },
-          {
-            children: gaConfigSnippet,
+            children: gaConsentBootstrap,
           },
         ],
     };
