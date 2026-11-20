@@ -12,19 +12,33 @@ import {
   teslaTobiVideos,
   videosByTopic,
   cvHref,
+  type Video,
 } from "@/data/media";
+import { latestChannelVideos, type FeedVideo } from "@/data/youtube-latest";
 import { useCopy, useLocale } from "@/lib/i18n";
+
+function feedAsVideo(item: FeedVideo, channel: Video["channel"]): Video {
+  return { id: item.id, title: { en: item.title, de: item.title }, channel };
+}
+
+function notIn(list: Video[], seen: Set<string>) {
+  return list.filter((video) => !seen.has(video.id));
+}
 
 export function MediaPage() {
   const locale = useLocale();
   const copy = useCopy();
 
-  const teslaRobotics = videosByTopic(teslaTobiVideos[locale], "robotics");
-  const teslaSociety = videosByTopic(teslaTobiVideos[locale], "ai-society");
-  const teslaDriving = videosByTopic(teslaTobiVideos[locale], "self-driving");
-  const talkSociety = videosByTopic(techTalkVideos, "ai-society");
-  const talkDriving = videosByTopic(techTalkVideos, "self-driving");
-  const talkRobotics = videosByTopic(techTalkVideos, "robotics");
+  const teslaLatest = latestChannelVideos("teslatobi", 9);
+  const talkLatest = latestChannelVideos("techtalktobi", 9);
+  const teslaSeen = new Set(teslaLatest.map((item) => item.id));
+  const talkSeen = new Set(talkLatest.map((item) => item.id));
+  const teslaRobotics = notIn(videosByTopic(teslaTobiVideos[locale], "robotics"), teslaSeen);
+  const teslaSociety = notIn(videosByTopic(teslaTobiVideos[locale], "ai-society"), teslaSeen);
+  const teslaDriving = notIn(videosByTopic(teslaTobiVideos[locale], "self-driving"), teslaSeen);
+  const talkSociety = notIn(videosByTopic(techTalkVideos, "ai-society"), talkSeen);
+  const talkDriving = notIn(videosByTopic(techTalkVideos, "self-driving"), talkSeen);
+  const talkRobotics = notIn(videosByTopic(techTalkVideos, "robotics"), talkSeen);
 
   return (
     <Container className="py-14 sm:py-20">
@@ -72,29 +86,49 @@ export function MediaPage() {
           meta={channels.teslatobi.lang[locale]}
         />
         <h3 className="mt-10 font-mono text-[11px] tracking-widest text-muted uppercase">
-          {copy.media.topicRobotics}
+          {copy.media.latest}
         </h3>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {teslaRobotics.map((video) => (
-            <YoutubeCard key={video.id} video={video} />
+          {teslaLatest.map((item) => (
+            <YoutubeCard key={item.id} video={feedAsVideo(item, "teslatobi")} />
           ))}
         </div>
-        <h3 className="mt-12 font-mono text-[11px] tracking-widest text-muted uppercase">
-          {copy.media.topicSociety}
-        </h3>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {teslaSociety.map((video) => (
-            <YoutubeCard key={video.id} video={video} />
-          ))}
-        </div>
-        <h3 className="mt-12 font-mono text-[11px] tracking-widest text-muted uppercase">
-          {copy.media.topicDriving}
-        </h3>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {teslaDriving.map((video) => (
-            <YoutubeCard key={video.id} video={video} />
-          ))}
-        </div>
+        {teslaRobotics.length > 0 ? (
+          <>
+            <h3 className="mt-12 font-mono text-[11px] tracking-widest text-muted uppercase">
+              {copy.media.topicRobotics}
+            </h3>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {teslaRobotics.map((video) => (
+                <YoutubeCard key={video.id} video={video} />
+              ))}
+            </div>
+          </>
+        ) : null}
+        {teslaSociety.length > 0 ? (
+          <>
+            <h3 className="mt-12 font-mono text-[11px] tracking-widest text-muted uppercase">
+              {copy.media.topicSociety}
+            </h3>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {teslaSociety.map((video) => (
+                <YoutubeCard key={video.id} video={video} />
+              ))}
+            </div>
+          </>
+        ) : null}
+        {teslaDriving.length > 0 ? (
+          <>
+            <h3 className="mt-12 font-mono text-[11px] tracking-widest text-muted uppercase">
+              {copy.media.topicDriving}
+            </h3>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {teslaDriving.map((video) => (
+                <YoutubeCard key={video.id} video={video} />
+              ))}
+            </div>
+          </>
+        ) : null}
       </section>
 
       <section className="mt-20">
@@ -106,29 +140,49 @@ export function MediaPage() {
           meta={channels.techtalktobi.lang[locale]}
         />
         <h3 className="mt-10 font-mono text-[11px] tracking-widest text-muted uppercase">
-          {copy.media.topicRobotics}
+          {copy.media.latest}
         </h3>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {talkRobotics.map((video) => (
-            <YoutubeCard key={video.id} video={video} />
+          {talkLatest.map((item) => (
+            <YoutubeCard key={item.id} video={feedAsVideo(item, "techtalktobi")} />
           ))}
         </div>
-        <h3 className="mt-12 font-mono text-[11px] tracking-widest text-muted uppercase">
-          {copy.media.topicSociety}
-        </h3>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {talkSociety.map((video) => (
-            <YoutubeCard key={video.id} video={video} />
-          ))}
-        </div>
-        <h3 className="mt-12 font-mono text-[11px] tracking-widest text-muted uppercase">
-          {copy.media.topicDriving}
-        </h3>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {talkDriving.map((video) => (
-            <YoutubeCard key={video.id} video={video} />
-          ))}
-        </div>
+        {talkRobotics.length > 0 ? (
+          <>
+            <h3 className="mt-12 font-mono text-[11px] tracking-widest text-muted uppercase">
+              {copy.media.topicRobotics}
+            </h3>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {talkRobotics.map((video) => (
+                <YoutubeCard key={video.id} video={video} />
+              ))}
+            </div>
+          </>
+        ) : null}
+        {talkSociety.length > 0 ? (
+          <>
+            <h3 className="mt-12 font-mono text-[11px] tracking-widest text-muted uppercase">
+              {copy.media.topicSociety}
+            </h3>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {talkSociety.map((video) => (
+                <YoutubeCard key={video.id} video={video} />
+              ))}
+            </div>
+          </>
+        ) : null}
+        {talkDriving.length > 0 ? (
+          <>
+            <h3 className="mt-12 font-mono text-[11px] tracking-widest text-muted uppercase">
+              {copy.media.topicDriving}
+            </h3>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {talkDriving.map((video) => (
+                <YoutubeCard key={video.id} video={video} />
+              ))}
+            </div>
+          </>
+        ) : null}
       </section>
     </Container>
   );

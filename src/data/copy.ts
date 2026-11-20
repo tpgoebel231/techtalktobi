@@ -64,6 +64,7 @@ export const copy = {
       piecePlural: "pieces",
       topicsLabel: "Research topics",
       getAccess: "Get access to this research",
+      watchVideo: "Watch the video",
       kinds: {
         essay: "Graphic",
         tool: "Interactive",
@@ -91,6 +92,7 @@ export const copy = {
       pressTitle: "For press and bookings",
       pressDek:
         "Short bio, topics, and contacts in one PDF. Name: Tobias P. Goebel. Channels: TeslaTobi and TechTalkTobi.",
+      latest: "Latest videos",
     },
     about: {
       eyebrow: "About",
@@ -142,6 +144,15 @@ export const copy = {
       usage: "Name and likeness",
       usageBody:
         "Use Tobias P. Goebel as the name. TeslaTobi for the German YouTube channel, TechTalkTobi for the English channel. Online: tpgoebel. Headshot as supplied. Not affiliated with Tesla, Inc.",
+      headshot: "Download headshot",
+      stats: "Channel numbers",
+      statsAsOf: "As of November 2026",
+      teslaSubscribers: "subscribers",
+      teslaViews: "total views",
+      teslaDach: "DACH share, last 90 days",
+      talkViews: "views, last 90 days",
+      talkWatch: "watch time, last 90 days",
+      talkHours: "hours",
     },
     tool: {
       units: "Units",
@@ -228,6 +239,7 @@ export const copy = {
       piecePlural: "Beiträge",
       topicsLabel: "Recherche-Themen",
       getAccess: "Zugang zu dieser Analyse anfragen",
+      watchVideo: "Zum Video",
       kinds: {
         essay: "Grafik",
         tool: "Interaktiv",
@@ -255,6 +267,7 @@ export const copy = {
       pressTitle: "Für Presse und Buchungen",
       pressDek:
         "Kurzbio, Themen und Kontakt in einem PDF. Name: Tobias P. Goebel. Kanäle: TeslaTobi und TechTalkTobi.",
+      latest: "Neueste Videos",
     },
     about: {
       eyebrow: "Über mich",
@@ -306,6 +319,15 @@ export const copy = {
       usage: "Name und Bild",
       usageBody:
         "Bitte Tobias P. Goebel als Namen verwenden. TeslaTobi für den deutschen YouTube-Kanal, TechTalkTobi für den englischen. Online: tpgoebel. Porträt bitte wie bereitgestellt. Nicht verbunden mit Tesla, Inc.",
+      headshot: "Porträt herunterladen",
+      stats: "Kanalzahlen",
+      statsAsOf: "Stand: November 2026",
+      teslaSubscribers: "Abonnenten",
+      teslaViews: "Aufrufe insgesamt",
+      teslaDach: "DACH-Anteil, letzte 90 Tage",
+      talkViews: "Aufrufe, letzte 90 Tage",
+      talkWatch: "Wiedergabezeit, letzte 90 Tage",
+      talkHours: "Stunden",
     },
     tool: {
       units: "Einheit",

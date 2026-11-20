@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { NEW_TAB, NewTabHint } from "@/components/new-tab-hint";
 import { Container } from "@/components/container";
 import { FsdMatrix } from "@/components/fsd-matrix";
 import { FsdPriceChart } from "@/components/fsd-price-chart";
@@ -53,6 +54,19 @@ export function ResearchDetailPage({ slug }: { slug: ResearchSlug }) {
           {piece.title[locale]}
         </h1>
         <p className="mt-4 max-w-2xl text-lg text-muted">{piece.dek[locale]}</p>
+        {piece.videoId ? (
+          <p className="mt-6">
+            <a
+              href={`https://www.youtube.com/watch?v=${piece.videoId}`}
+              className="inline-flex items-center gap-2 text-accent no-underline hover:underline"
+              {...NEW_TAB}
+            >
+              {copy.research.watchVideo}
+              <ArrowUpRight className="size-4" aria-hidden="true" />
+              <NewTabHint />
+            </a>
+          </p>
+        ) : null}
       </Container>
 
       {hoistWidget && widget ? (

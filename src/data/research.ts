@@ -70,6 +70,8 @@ export type ResearchPiece = {
   /** Shorter title/dek for index and related cards. Detail page and SEO keep title/dek. */
   cardTitle?: LocalizedText;
   cardDek?: LocalizedText;
+  /** Companion YouTube video, when there is one. */
+  videoId?: string;
 };
 
 export const research: ResearchPiece[] = [
@@ -263,6 +265,7 @@ export const research: ResearchPiece[] = [
   },
   {
     slug: "tesla-gruenheide",
+    videoId: "fC7smnPZzmQ",
     kind: "tool",
     category: "robotics",
     date: "2026-11",
@@ -286,6 +289,7 @@ export const research: ResearchPiece[] = [
   },
   {
     slug: "mercedes-mb-drive-assist-pro",
+    videoId: "dpFS0SMJIC8",
     kind: "tool",
     category: "autonomous-driving",
     date: "2026-11",
@@ -318,6 +322,7 @@ export const research: ResearchPiece[] = [
   },
   {
     slug: "tuev-adac-ev-tests",
+    videoId: "1gjQ84Uj8N4",
     kind: "tool",
     category: "muskonomy",
     date: "2026-11",
