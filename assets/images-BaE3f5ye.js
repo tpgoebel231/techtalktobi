@@ -1,0 +1,1 @@
+var e={"/images/research-muskonomy.jpg":[480,800,1200],"/images/tobias.jpg":[400]},t=[480,800,1200];function n(n){let r=n.match(/^\/images\/([a-z0-9-]+)\.jpg$/);if(r)return(e[n]??t).map(e=>`/images/${r[1]}-${e}.webp ${e}w`).join(`, `)}var r=`(min-width: 1152px) 360px, (min-width: 768px) 31vw, calc(100vw - 40px)`;export{n,r as t};

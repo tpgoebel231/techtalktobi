@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-Cx0BB4qO.js";import{P as t,y as n}from"./index-BYOiK9pH.js";import{t as r}from"./privacy-XrF_xgPJ.js";var i=e();function a(){return(0,i.jsx)(t,{locale:`en`,children:(0,i.jsx)(n,{children:(0,i.jsx)(r,{})})})}export{a as component};
