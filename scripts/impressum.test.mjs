@@ -68,6 +68,11 @@ test("Impressum pages, footer, sitemap and locale switcher", async () => {
   const enContact = impressum.en.blocks.find((b) => b.contact).contact;
   assert.equal(deContact.formHref, "/de/about#contact");
   assert.equal(enContact.formHref, "/en/about#contact");
+  assert.equal(deContact.email, "tobias@techtalktobi.com");
+  assert.equal(enContact.email, "tobias@techtalktobi.com");
+  assert.equal(deContact.formLabel, "Weitere Kontaktmöglichkeiten");
+  assert.equal(enContact.formLabel, "More ways to reach me");
+  assert.doesNotMatch(JSON.stringify(impressum), /Kontaktformular|Contact form/);
 });
 
 test("Impressum SEO, prerender routes and sitemap", async () => {

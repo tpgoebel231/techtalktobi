@@ -6,6 +6,7 @@
 const VARIANT_WIDTHS: Record<string, number[]> = {
   "/images/research-muskonomy.jpg": [480, 800, 1200],
   "/images/tobias.jpg": [400],
+  "/images/tobias-goebel-headshot.jpg": [400, 800, 1200],
 };
 const DEFAULT_WIDTHS = [480, 800, 1200];
 
