@@ -57,7 +57,8 @@ test("English file has the same data values as the German original", () => {
 });
 
 test("English file is translated: no German strings, US number format, no em dash", () => {
-  const visible = withoutComments(en);
+  // Skip <style> blocks: compiled Tailwind CSS has values like .125rem.
+  const visible = withoutComments(en).replace(/<style>[\s\S]*?<\/style>/g, "");
   assert.doesNotMatch(visible, /\b(Belegschaft|Meilenstein|Szenario|Mitarbeiter|Köpfe|Personal|Leiharbeit|Zurück|Weiter|Quelle)\b/);
   assert.doesNotMatch(visible, /de-DE/);
   assert.doesNotMatch(visible, /\b\d{1,3}\.\d{3}\b(?! GWh)/, "decimal-point thousands left over");
