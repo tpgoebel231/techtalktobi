@@ -1,4 +1,5 @@
 import { Container } from "@/components/container";
+import { imageSrcSet } from "@/lib/images";
 import { Button } from "@/components/ui/button";
 import { advisory } from "@/data/consulting";
 import { links } from "@/data/media";
@@ -14,6 +15,8 @@ export function ConsultingPage() {
       <section className="relative isolate overflow-hidden">
         <img
           src="/images/consulting-desk.jpg"
+          srcSet={imageSrcSet("/images/consulting-desk.jpg")}
+          sizes="100vw"
           alt=""
           className="absolute inset-0 size-full object-cover"
         />

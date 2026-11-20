@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { ResearchPiece } from "@/data/research";
+import { CARD_SIZES, imageSrcSet } from "@/lib/images";
 import { useCopy, useLocale } from "@/lib/i18n";
 
 export function ResearchCard({ piece }: { piece: ResearchPiece }) {
@@ -19,6 +20,12 @@ export function ResearchCard({ piece }: { piece: ResearchPiece }) {
       <div className="aspect-3/2 overflow-hidden bg-surface-2">
         <img
           src={piece.image}
+          srcSet={imageSrcSet(piece.image)}
+          sizes={CARD_SIZES}
+          width={1200}
+          height={800}
+          loading="lazy"
+          decoding="async"
           alt=""
           className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
         />

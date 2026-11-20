@@ -7,6 +7,7 @@ import {
   type ResearchCategory,
 } from "@/data/research";
 import { useCopy, useLocale } from "@/lib/i18n";
+import { CARD_SIZES, imageSrcSet } from "@/lib/images";
 
 /** Large overview tile on the Research index: image, label, count, piece titles. */
 export function ResearchCategoryTile({ category }: { category: ResearchCategory }) {
@@ -26,6 +27,11 @@ export function ResearchCategoryTile({ category }: { category: ResearchCategory 
         {image ? (
           <img
             src={image}
+            srcSet={imageSrcSet(image)}
+            sizes={CARD_SIZES}
+            width={1200}
+            height={675}
+            decoding="async"
             alt=""
             className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
           />
