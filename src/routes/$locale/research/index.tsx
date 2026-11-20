@@ -7,8 +7,8 @@ const TITLES = {
 } as const;
 
 const DESCRIPTION = {
-  en: "Graphics, a public FSD scorecard, and an interactive explainer.",
-  de: "Grafiken, eine öffentliche FSD-Bewertungsmatrix und ein interaktiver Rechner.",
+  en: "I dive deeper into the self-driving vehicle industry, analyze the emerging humanoid robotics space, and cover the general Elon Musk ecosystem: AI, AV technologies and regulation, robotaxis, EVs, and more.",
+  de: "Ich steige tiefer ein in autonome Fahrzeuge, analysiere den aufkommenden Markt für humanoide Roboter, und decke allgemein das Elon Musk Ökosystem ab: KI, automatisiertes Fahren, Robotaxis, E-Autos, und mehr.",
 } as const;
 
 export const Route = createFileRoute("/$locale/research/")({

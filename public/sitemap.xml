@@ -37,7 +37,7 @@
   </url>
   <url>
     <loc>https://techtalktobi.com/en/research</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research"/>
@@ -113,6 +113,27 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/tuev-adac-ev-tests"/>
   </url>
   <url>
+    <loc>https://techtalktobi.com/en/research/topics/autonomous-driving</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/topics/autonomous-driving"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/topics/autonomous-driving"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/topics/autonomous-driving"/>
+  </url>
+  <url>
+    <loc>https://techtalktobi.com/en/research/topics/robotics</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/topics/robotics"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/topics/robotics"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/topics/robotics"/>
+  </url>
+  <url>
+    <loc>https://techtalktobi.com/en/research/topics/muskonomy</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/topics/muskonomy"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/topics/muskonomy"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/topics/muskonomy"/>
+  </url>
+  <url>
     <loc>https://techtalktobi.com/de</loc>
     <lastmod>2026-11-07</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en"/>
@@ -149,7 +170,7 @@
   </url>
   <url>
     <loc>https://techtalktobi.com/de/research</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research"/>
@@ -223,6 +244,27 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/tuev-adac-ev-tests"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/tuev-adac-ev-tests"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/tuev-adac-ev-tests"/>
+  </url>
+  <url>
+    <loc>https://techtalktobi.com/de/research/topics/autonomous-driving</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/topics/autonomous-driving"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/topics/autonomous-driving"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/topics/autonomous-driving"/>
+  </url>
+  <url>
+    <loc>https://techtalktobi.com/de/research/topics/robotics</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/topics/robotics"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/topics/robotics"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/topics/robotics"/>
+  </url>
+  <url>
+    <loc>https://techtalktobi.com/de/research/topics/muskonomy</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://techtalktobi.com/en/research/topics/muskonomy"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://techtalktobi.com/de/research/topics/muskonomy"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://techtalktobi.com/en/research/topics/muskonomy"/>
   </url>
   <url>
     <loc>https://techtalktobi.com/privacy</loc>

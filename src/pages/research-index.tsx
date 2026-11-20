@@ -1,13 +1,7 @@
 import { Container } from "@/components/container";
-import { ResearchCard } from "@/components/research-card";
-import { research } from "@/data/research";
+import { ResearchCategoryTile } from "@/components/research-category-tile";
+import { RESEARCH_CATEGORIES } from "@/data/research";
 import { useCopy } from "@/lib/i18n";
-
-// Muskonomy map leads the index; the rest keep their data order.
-const ordered = [
-  ...research.filter((piece) => piece.slug === "muskonomy"),
-  ...research.filter((piece) => piece.slug !== "muskonomy"),
-];
 
 export function ResearchIndexPage() {
   const copy = useCopy();
@@ -21,11 +15,15 @@ export function ResearchIndexPage() {
         {copy.research.title}
       </h1>
       <p className="mt-4 max-w-2xl text-muted">{copy.research.dek}</p>
-      <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {ordered.map((piece) => (
-          <ResearchCard key={piece.slug} piece={piece} />
-        ))}
-      </div>
+      <nav aria-label={copy.research.topicsLabel} className="mt-12">
+        <ul className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {RESEARCH_CATEGORIES.map((category) => (
+            <li key={category.slug} className="flex flex-col [&>a]:flex-1">
+              <ResearchCategoryTile category={category} />
+            </li>
+          ))}
+        </ul>
+      </nav>
     </Container>
   );
 }

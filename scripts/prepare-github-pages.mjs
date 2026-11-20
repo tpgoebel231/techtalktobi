@@ -89,6 +89,13 @@ export const LEGACY_PAGE_REDIRECTS = {
   "/research/tesla-gruenheide": "/de/research/tesla-gruenheide",
   "/research/mercedes-mb-drive-assist-pro": "/de/research/mercedes-mb-drive-assist-pro",
   "/research/tuev-adac-ev-tests": "/de/research/tuev-adac-ev-tests",
+  // Bare category URLs follow /research (English index).
+  "/research/topics": "/en/research",
+  "/research/topics/autonomous-driving": "/en/research/topics/autonomous-driving",
+  "/research/topics/robotics": "/en/research/topics/robotics",
+  "/research/topics/muskonomy": "/en/research/topics/muskonomy",
+  "/en/research/topics": "/en/research",
+  "/de/research/topics": "/de/research",
 };
 
 /**
@@ -220,8 +227,8 @@ export const PAGE_DESCRIPTIONS = {
     de: "How Tobias Goebel uses Google and YouTube API access on TechTalkTobi to manage his own YouTube channels.",
   },
   research: {
-    en: "Graphics, a public FSD scorecard, and an interactive explainer.",
-    de: "Grafiken, eine öffentliche FSD-Bewertungsmatrix und ein interaktiver Rechner.",
+    en: "I dive deeper into the self-driving vehicle industry, analyze the emerging humanoid robotics space, and cover the general Elon Musk ecosystem: AI, AV technologies and regulation, robotaxis, EVs, and more.",
+    de: "Ich steige tiefer ein in autonome Fahrzeuge, analysiere den aufkommenden Markt für humanoide Roboter, und decke allgemein das Elon Musk Ökosystem ab: KI, automatisiertes Fahren, Robotaxis, E-Autos, und mehr.",
   },
 };
 
@@ -238,6 +245,9 @@ function mustReplace(html, pattern, replacement, label) {
   }
   return html.replace(pattern, replacement);
 }
+
+/** Compiled src/data/research.ts (set by loadResearchPieces). */
+let researchModule;
 
 export async function loadResearchPieces() {
   const src = readFileSync(join(repoRoot, "src/data/research.ts"), "utf8");
@@ -259,6 +269,7 @@ export async function loadResearchPieces() {
   if (!Array.isArray(mod.research)) {
     throw new Error("prepare-github-pages: compiled research.ts did not export research[]");
   }
+  researchModule = mod;
   return mod.research;
 }
 
@@ -297,6 +308,26 @@ export function seoForRoute(route, pieces) {
       locale: "de_DE",
       htmlLang: "de",
       alternates: [{ hreflang: "de", href: `${SITE_ORIGIN}${route}` }],
+    };
+  }
+
+  const topicMatch = rest.match(/^research\/topics\/([^/]+)$/);
+  if (topicMatch) {
+    const slug = topicMatch[1];
+    if (!researchModule?.isResearchCategorySlug(slug)) {
+      throw new Error(`prepare-github-pages: unknown research topic ${slug}`);
+    }
+    const lead = bySlug.get(researchModule.getResearchCategory(slug).imageFrom);
+    return {
+      title: researchModule.researchCategoryTitle(slug, locale),
+      description: researchModule.researchCategoryDescription(slug, locale),
+      canonical: `${SITE_ORIGIN}${route}`,
+      ogUrl: `${SITE_ORIGIN}${route}`,
+      image: lead ? absoluteUrl(lead.image) : DEFAULT_OG_IMAGE,
+      type: "website",
+      locale: locale === "de" ? "de_DE" : "en_US",
+      htmlLang: locale,
+      alternates,
     };
   }
 
@@ -447,6 +478,13 @@ function shellDest(root, route) {
   return join(root, route.slice(1) + ".html");
 }
 
+/** Category slugs in index order (falls back to the pieces' own categories). */
+export function researchTopicSlugs(pieces) {
+  const declared = researchModule?.RESEARCH_CATEGORY_SLUGS;
+  if (declared) return [...declared];
+  return [...new Set(pieces.map((piece) => piece.category).filter(Boolean))];
+}
+
 /** Canonical HTML routes: `/` plus every `/en|de/...` page the snapshot ships. */
 export function canonicalRoutes(pieces) {
   const routes = ["/"];
@@ -456,6 +494,9 @@ export function canonicalRoutes(pieces) {
     }
     for (const piece of pieces) {
       routes.push(`/${locale}/research/${piece.slug}`);
+    }
+    for (const topic of researchTopicSlugs(pieces)) {
+      routes.push(`/${locale}/research/topics/${topic}`);
     }
   }
   for (const page of Object.keys(DE_ONLY_PAGES)) routes.push(`/de/${page}`);

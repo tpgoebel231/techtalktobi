@@ -29,6 +29,7 @@ import { Route as ApiHelgaListenRouteImport } from './routes/api/helga/listen'
 import { Route as ApiHelgaListenLinkRouteImport } from './routes/api/helga/listen-link'
 import { Route as ApiHelgaRecordingRouteImport } from './routes/api/helga/recording'
 import { Route as ApiHelgaWebhookRouteImport } from './routes/api/helga/webhook'
+import { Route as LocaleResearchTopicsTopicRouteImport } from './routes/$locale/research/topics/$topic'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -130,6 +131,12 @@ const ApiHelgaWebhookRoute = ApiHelgaWebhookRouteImport.update({
   path: '/api/helga/webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LocaleResearchTopicsTopicRoute =
+  LocaleResearchTopicsTopicRouteImport.update({
+    id: '/research/topics/$topic',
+    path: '/research/topics/$topic',
+    getParentRoute: () => LocaleRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -152,6 +159,7 @@ export interface FileRoutesByFullPath {
   '/$locale/live-in-bonn/': typeof LocaleLiveInBonnIndexRoute
   '/$locale/media/': typeof LocaleMediaIndexRoute
   '/$locale/research/': typeof LocaleResearchIndexRoute
+  '/$locale/research/topics/$topic': typeof LocaleResearchTopicsTopicRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -173,6 +181,7 @@ export interface FileRoutesByTo {
   '/$locale/live-in-bonn': typeof LocaleLiveInBonnIndexRoute
   '/$locale/media': typeof LocaleMediaIndexRoute
   '/$locale/research': typeof LocaleResearchIndexRoute
+  '/$locale/research/topics/$topic': typeof LocaleResearchTopicsTopicRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -196,6 +205,7 @@ export interface FileRoutesById {
   '/$locale/live-in-bonn/': typeof LocaleLiveInBonnIndexRoute
   '/$locale/media/': typeof LocaleMediaIndexRoute
   '/$locale/research/': typeof LocaleResearchIndexRoute
+  '/$locale/research/topics/$topic': typeof LocaleResearchTopicsTopicRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -220,6 +230,7 @@ export interface FileRouteTypes {
     | '/$locale/live-in-bonn/'
     | '/$locale/media/'
     | '/$locale/research/'
+    | '/$locale/research/topics/$topic'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -241,6 +252,7 @@ export interface FileRouteTypes {
     | '/$locale/live-in-bonn'
     | '/$locale/media'
     | '/$locale/research'
+    | '/$locale/research/topics/$topic'
   id:
     | '__root__'
     | '/'
@@ -263,6 +275,7 @@ export interface FileRouteTypes {
     | '/$locale/live-in-bonn/'
     | '/$locale/media/'
     | '/$locale/research/'
+    | '/$locale/research/topics/$topic'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -418,6 +431,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHelgaWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$locale/research/topics/$topic': {
+      id: '/$locale/research/topics/$topic'
+      path: '/research/topics/$topic'
+      fullPath: '/$locale/research/topics/$topic'
+      preLoaderRoute: typeof LocaleResearchTopicsTopicRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
   }
 }
 
@@ -434,6 +454,7 @@ interface LocaleRouteRouteChildren {
   LocaleLiveInBonnIndexRoute: typeof LocaleLiveInBonnIndexRoute
   LocaleMediaIndexRoute: typeof LocaleMediaIndexRoute
   LocaleResearchIndexRoute: typeof LocaleResearchIndexRoute
+  LocaleResearchTopicsTopicRoute: typeof LocaleResearchTopicsTopicRoute
 }
 
 const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
@@ -449,6 +470,7 @@ const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
   LocaleLiveInBonnIndexRoute: LocaleLiveInBonnIndexRoute,
   LocaleMediaIndexRoute: LocaleMediaIndexRoute,
   LocaleResearchIndexRoute: LocaleResearchIndexRoute,
+  LocaleResearchTopicsTopicRoute: LocaleResearchTopicsTopicRoute,
 }
 
 const LocaleRouteRouteWithChildren = LocaleRouteRoute._addFileChildren(
