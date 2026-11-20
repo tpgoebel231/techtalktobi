@@ -1,0 +1,1 @@
+import{t as e}from"./privacy-CQi2dJUG.js";var t=e;export{t as component};
