@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Locale } from "@/lib/locale";
-import { NEW_TAB, NewTabHint } from "@/components/new-tab-hint";
+import { DeckOpenButton, DeckOpenLink } from "@/components/deck-open";
 import { useLocale } from "@/lib/i18n";
 
 /*
@@ -18,11 +18,6 @@ export const GRUENHEIDE_EMBED_SRC: Record<Locale, string> = {
 const FRAME_TITLE: Record<Locale, string> = {
   de: "Interaktives Dashboard: Giga Berlin Belegschaft & Optimus 10-Jahres-Projektion",
   en: "Interactive dashboard: Giga Berlin workforce & Optimus 10-year projection",
-};
-
-const OPEN_LABEL: Record<Locale, string> = {
-  de: "Dashboard im Vollbild öffnen",
-  en: "Open the dashboard full screen",
 };
 
 const INITIAL_HEIGHT = 1500;
@@ -70,6 +65,7 @@ export function GruenheideDashboard() {
 
   return (
     <div className="flex flex-col gap-3">
+      <DeckOpenButton href={src} />
       <div className="overflow-hidden rounded-xl bg-[#F4F6F8] shadow-[var(--shadow-border)]">
         <iframe
           ref={frameRef}
@@ -81,14 +77,7 @@ export function GruenheideDashboard() {
           style={{ height }}
         />
       </div>
-      <a
-        href={src}
-        {...NEW_TAB}
-        className="self-end text-sm text-accent"
-      >
-        {OPEN_LABEL[locale]}
-        <NewTabHint />
-      </a>
+      <DeckOpenLink href={src} />
     </div>
   );
 }

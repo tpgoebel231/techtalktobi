@@ -1,5 +1,5 @@
 import type { Locale } from "@/lib/locale";
-import { NEW_TAB, NewTabHint } from "@/components/new-tab-hint";
+import { DECK_FRAME_CLASS, DeckOpenButton, DeckOpenLink } from "@/components/deck-open";
 import { useLocale } from "@/lib/i18n";
 
 /*
@@ -21,33 +21,22 @@ const FRAME_TITLE: Record<Locale, string> = {
   en: "Interactive dashboard: TÜV & ADAC EV Tests",
 };
 
-const OPEN_LABEL: Record<Locale, string> = {
-  de: "Dashboard im Vollbild öffnen",
-  en: "Open the dashboard full screen",
-};
-
 export function TuevAdacEvTestsDashboard() {
   const locale = useLocale();
   const src = TUEV_ADAC_EMBED_SRC[locale];
 
   return (
     <div className="flex flex-col gap-3">
+      <DeckOpenButton href={src} />
       <div className="overflow-hidden rounded-xl bg-[#15181d] shadow-[var(--shadow-border)]">
         <iframe
           key={src}
           src={src}
           title={FRAME_TITLE[locale]}
-          className="block w-full border-0 aspect-video"
+          className={DECK_FRAME_CLASS}
         />
       </div>
-      <a
-        href={src}
-        {...NEW_TAB}
-        className="self-end text-sm text-accent"
-      >
-        {OPEN_LABEL[locale]}
-        <NewTabHint />
-      </a>
+      <DeckOpenLink href={src} />
     </div>
   );
 }

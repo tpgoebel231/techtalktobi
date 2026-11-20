@@ -273,6 +273,12 @@ export async function loadResearchPieces() {
   return mod.research;
 }
 
+/** Whole compiled research.ts module (helpers like newestResearch). */
+export async function loadResearchModule() {
+  await loadResearchPieces();
+  return researchModule;
+}
+
 export function seoForRoute(route, pieces) {
   const bySlug = new Map(pieces.map((piece) => [piece.slug, piece]));
 

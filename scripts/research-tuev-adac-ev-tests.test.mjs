@@ -127,8 +127,11 @@ test("detail page frames the per-locale deck file", () => {
   const component = source("src/components/tuev-adac-ev-tests-dashboard.tsx");
   assert.ok(component.includes('"/research/embed/tuev-adac-ev-tests.de.html"'));
   assert.ok(component.includes('"/research/embed/tuev-adac-ev-tests.en.html"'));
-  assert.ok(component.includes("Dashboard im Vollbild öffnen"));
-  assert.ok(component.includes("Open the dashboard full screen"));
+  // Full-screen labels moved to the shared deck-open component.
+  assert.ok(component.includes("<DeckOpenLink href={src} />"));
+  const deckOpen = source("src/components/deck-open.tsx");
+  assert.ok(deckOpen.includes("Dashboard im Vollbild öffnen"));
+  assert.ok(deckOpen.includes("Open the dashboard full screen"));
   const card = source("src/components/research-card.tsx");
   assert.ok(card.includes("piece.cardTitle?.[locale] ?? piece.title[locale]"));
   assert.ok(card.includes("piece.cardDek?.[locale] ?? piece.dek[locale]"));

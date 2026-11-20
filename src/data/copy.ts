@@ -42,7 +42,8 @@ export const copy = {
         "Independent briefings on what these systems actually do, and what European rules already allow. From Boston, in English or German.",
       advisoryDoorCta: "Advisory",
       featured: "Research",
-      featuredDek: "Published graphics, a public FSD scorecard, and an interactive tool.",
+      featuredDek:
+        "I dive deeper into the self-driving vehicle industry, analyze the emerging humanoid robotics space, and cover the general Elon Musk ecosystem: AI, AV technologies and regulation, robotaxis, EVs, and more.",
       mediaTitle: "TeslaTobi and TechTalkTobi",
       mediaDek:
         "The German commentary channel and the English commentary channel. Event reports in a TV format.",
@@ -205,7 +206,7 @@ export const copy = {
       advisoryDoorCta: "Beratung",
       featured: "Recherche",
       featuredDek:
-        "Veröffentlichte Grafiken, eine öffentliche FSD-Bewertungsmatrix und ein interaktives Tool.",
+        "Ich steige tiefer ein in autonome Fahrzeuge, analysiere den aufkommenden Markt für humanoide Roboter, und decke allgemein das Elon Musk Ökosystem ab: KI, automatisiertes Fahren, Robotaxis, E-Autos, und mehr.",
       mediaTitle: "TeslaTobi und TechTalkTobi",
       mediaDek:
         "Der deutschsprachige und der englischsprachige Kommentar-Kanal. Dazu Eventberichte im TV-Stil.",

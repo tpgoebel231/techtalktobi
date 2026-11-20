@@ -1,21 +1,17 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import { NEW_TAB, NewTabHint } from "@/components/new-tab-hint";
 import { Container } from "@/components/container";
 import { ResearchCard } from "@/components/research-card";
 import { Button } from "@/components/ui/button";
-import { research } from "@/data/research";
+import { newestResearch } from "@/data/research";
 import { links } from "@/data/media";
 import { useCopy, useLocale } from "@/lib/i18n";
-
-const FEATURED = ["muskonomy", "ai-robotics", "fsd-matrix"] as const;
 
 export function HomePage() {
   const locale = useLocale();
   const copy = useCopy();
-  const featured = FEATURED.map(
-    (slug) => research.find((item) => item.slug === slug)!,
-  );
+  // Newest three pieces, so new research shows up here without a code edit.
+  const featured = newestResearch(3);
 
   return (
     <>
@@ -103,10 +99,9 @@ export function HomePage() {
               </p>
             </div>
             <Button asChild variant="link" className="hidden sm:inline-flex">
-              <Link to="/$locale/research" params={{ locale }} {...NEW_TAB}>
+              <Link to="/$locale/research" params={{ locale }}>
                 {copy.nav.research}
                 <ArrowUpRight className="size-4" aria-hidden="true" />
-                <NewTabHint />
               </Link>
             </Button>
           </div>
@@ -140,7 +135,6 @@ function Door({
     <Link
       to={to}
       params={{ locale }}
-      {...NEW_TAB}
       className="group flex flex-col rounded-xl bg-surface p-7 no-underline shadow-[var(--shadow-border)] transition-[box-shadow] duration-150 hover:shadow-[var(--shadow-border-hover)] sm:p-8"
     >
       <p className="font-mono text-xs text-accent tabular-nums">{index}</p>
@@ -149,7 +143,6 @@ function Door({
       <span className="mt-6 inline-flex items-center gap-1 text-sm text-accent">
         {cta}
         <ArrowUpRight className="size-4" aria-hidden="true" />
-        <NewTabHint />
       </span>
     </Link>
   );
