@@ -26,6 +26,25 @@ const repoRoot = fileURLToPath(new URL("..", import.meta.url));
 export const SITE_ORIGIN = "https://techtalktobi.com";
 export const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/og.jpg`;
 
+/** Page-specific share cards (1200x630, public/og/), per locale. */
+export const PAGE_OG_IMAGES = {
+  "": "home",
+  about: "about",
+  media: "media",
+  research: "research",
+};
+
+export function pageOgImage(rest, locale) {
+  const name = PAGE_OG_IMAGES[rest];
+  return name ? `${SITE_ORIGIN}/og/og-${name}-${locale}.jpg` : undefined;
+}
+
+/** Press headshot (public/images/), used for Person JSON-LD. */
+export const HEADSHOT_URL = `${SITE_ORIGIN}/images/tobias-goebel-headshot-800.jpg`;
+
+/** Privacy text lives at /privacy; /en/privacy and /de/privacy point their canonical there (no redirect). */
+export const PRIVACY_CANONICAL = `${SITE_ORIGIN}/privacy`;
+
 const locales = ["en", "de"];
 const pages = ["", "about", "consulting", "media-kit", "media", "privacy", "research"];
 
@@ -196,7 +215,7 @@ export const LOCALE_HEAD = {
 
 /** Titles from src/routes/$locale/** (home uses locale title). */
 export const PAGE_TITLES = {
-  about: { en: "About · TechTalkTobi", de: "About · TechTalkTobi" },
+  about: { en: "Tobias P. Goebel: About · TechTalkTobi", de: "Tobias P. Goebel: Über mich · TechTalkTobi" },
   consulting: { en: "Advisory · TechTalkTobi", de: "Beratung · TechTalkTobi" },
   "media-kit": { en: "Media Kit · TechTalkTobi", de: "Media Kit · TechTalkTobi" },
   media: { en: "Media · TechTalkTobi", de: "Media · TechTalkTobi" },
@@ -345,9 +364,13 @@ export function seoForRoute(route, pieces) {
     }
     const title = `${piece.title[locale]} · TechTalkTobi`;
     const description = piece.dek[locale];
+    const datePublished = piece.published ?? piece.date;
+    const lastmod = sitemapLastmod(route);
     return {
       title,
       description,
+      datePublished,
+      dateModified: lastmod && lastmod >= datePublished ? lastmod : datePublished,
       canonical: `${SITE_ORIGIN}${route}`,
       ogUrl: `${SITE_ORIGIN}${route}`,
       image: absoluteUrl(piece.image),
@@ -368,12 +391,32 @@ export function seoForRoute(route, pieces) {
   if (!pageDescription) {
     throw new Error(`prepare-github-pages: no description for ${route}`);
   }
+  if (rest === "privacy") {
+    // Same text as /privacy (PR #95 keeps that root route): canonical there,
+    // no redirect, so Search Console indexes one privacy URL.
+    return {
+      title: pageTitle,
+      description: pageDescription,
+      canonical: PRIVACY_CANONICAL,
+      ogUrl: PRIVACY_CANONICAL,
+      image: DEFAULT_OG_IMAGE,
+      type: "website",
+      locale: locale === "de" ? "de_DE" : "en_US",
+      htmlLang: locale,
+      alternates: [
+        { hreflang: "en", href: PRIVACY_CANONICAL },
+        { hreflang: "x-default", href: PRIVACY_CANONICAL },
+      ],
+    };
+  }
+  const ogImage = pageOgImage(rest, locale);
   return {
     title: pageTitle,
     description: pageDescription,
     canonical: `${SITE_ORIGIN}${route}`,
     ogUrl: `${SITE_ORIGIN}${route}`,
-    image: DEFAULT_OG_IMAGE,
+    image: ogImage ?? DEFAULT_OG_IMAGE,
+    ...(ogImage ? { imageWidth: 1200, imageHeight: 630 } : {}),
     type: "website",
     locale: locale === "de" ? "de_DE" : "en_US",
     htmlLang: locale,
@@ -384,13 +427,44 @@ export function seoForRoute(route, pieces) {
 const PERSON_ID = `${SITE_ORIGIN}/#person`;
 const WEBSITE_ID = `${SITE_ORIGIN}/#website`;
 
+/** Person facts reuse existing site copy (src/data/copy.ts home dek). */
+export const PERSON_COPY = {
+  en: {
+    jobTitle: "Journalist and advisor on autonomous systems",
+    description:
+      "Journalist and advisor on autonomous systems: AI, robotics, self-driving vehicles, and the Tesla and competitive ecosystem.",
+  },
+  de: {
+    jobTitle: "Journalist und Berater für autonome Systeme",
+    description:
+      "Journalist und Berater für autonome Systeme: KI, Robotik, selbstfahrende Fahrzeuge und das Tesla-Ökosystem samt Wettbewerb.",
+  },
+};
+
+let sitemapLastmods;
+/** <lastmod> per URL path from public/sitemap.xml (dateModified source). */
+export function sitemapLastmod(route) {
+  if (!sitemapLastmods) {
+    sitemapLastmods = new Map();
+    const xml = readFileSync(join(repoRoot, "public/sitemap.xml"), "utf8");
+    for (const m of xml.matchAll(/<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)) {
+      sitemapLastmods.set(m[1].replace(SITE_ORIGIN, ""), m[2]);
+    }
+  }
+  return sitemapLastmods.get(route);
+}
+
 export function structuredData(seo) {
+  const personCopy = PERSON_COPY[seo.htmlLang === "de" ? "de" : "en"];
   const person = {
     "@type": "Person",
     "@id": PERSON_ID,
     name: "Tobias P. Goebel",
     alternateName: ["Tobias Goebel", "TeslaTobi", "Tesla Tobi", "TechTalkTobi", "tpgoebel"],
     url: `${SITE_ORIGIN}/en/about`,
+    image: HEADSHOT_URL,
+    jobTitle: personCopy.jobTitle,
+    description: personCopy.description,
     sameAs: [
       "https://www.youtube.com/@TeslaTobi",
       "https://www.youtube.com/@TechTalk-Tobi",
@@ -418,6 +492,8 @@ export function structuredData(seo) {
   if (seo.type === "article") {
     page.headline = seo.title.replace(/ · TechTalkTobi$/, "");
     page.author = { "@id": PERSON_ID };
+    if (seo.datePublished) page.datePublished = seo.datePublished;
+    if (seo.dateModified) page.dateModified = seo.dateModified;
     page.publisher = { "@id": PERSON_ID };
   }
   const json = JSON.stringify({ "@context": "https://schema.org", "@graph": [website, person, page] });

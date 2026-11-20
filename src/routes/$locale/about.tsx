@@ -6,13 +6,18 @@ const DESCRIPTION = {
   de: "Content und Beratung zu autonomen Fahrsystemen (Robotaxis, Fahrerassistenz), KI und Robotik.",
 } as const;
 
+const TITLE = {
+  en: "Tobias P. Goebel: About · TechTalkTobi",
+  de: "Tobias P. Goebel: Über mich · TechTalkTobi",
+} as const;
+
 export const Route = createFileRoute("/$locale/about")({
   component: AboutPage,
   head: ({ params }) => {
     const locale = params.locale === "de" ? "de" : "en";
     return {
       meta: [
-        { title: "About · TechTalkTobi" },
+        { title: TITLE[locale] },
         { name: "description", content: DESCRIPTION[locale] },
       ],
     };
