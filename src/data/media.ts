@@ -6,7 +6,7 @@ export type Video = {
   id: string;
   title: Record<Locale, string>;
   channel: "teslatobi" | "techtalktobi" | "reports";
-  topic: VideoTopic;
+  topic?: VideoTopic;
 };
 
 export const reportVideos: Video[] = [

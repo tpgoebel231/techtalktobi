@@ -1,8 +1,10 @@
 import { Printer } from "lucide-react";
 import { Container } from "@/components/container";
 import { Button } from "@/components/ui/button";
+import { channelStats } from "@/data/channel-stats";
 import { channels, links } from "@/data/media";
 import { useCopy, useLocale } from "@/lib/i18n";
+import { imageSrcSet } from "@/lib/images";
 
 export function MediaKitPage() {
   const locale = useLocale();
@@ -59,11 +61,26 @@ export function MediaKitPage() {
       </div>
 
       <div className="mt-12 grid gap-10 lg:grid-cols-12">
-        <img
-          src="/images/tobias.jpg"
-          alt={copy.brand.name}
-          className="w-full max-w-xs rounded-xl object-cover lg:col-span-4"
-        />
+        <div className="lg:col-span-4">
+          <img
+            src="/images/tobias-goebel-headshot.jpg"
+            srcSet={imageSrcSet("/images/tobias-goebel-headshot.jpg")}
+            sizes="(min-width: 1024px) 320px, 320px"
+            width={800}
+            height={800}
+            alt={copy.brand.name}
+            className="w-full max-w-xs rounded-xl object-cover"
+          />
+          <p className="mt-3">
+            <a
+              href="/images/tobias-goebel-headshot.jpg"
+              download="tobias-goebel-headshot.jpg"
+              className="text-sm text-accent underline-offset-2 hover:underline"
+            >
+              {copy.mediaKit.headshot}
+            </a>
+          </p>
+        </div>
         <div className="lg:col-span-8">
           <h2 className="text-sm font-medium tracking-wide text-muted uppercase">
             {copy.mediaKit.shortBio}
@@ -114,6 +131,55 @@ export function MediaKitPage() {
               </a>
             </li>
           </ul>
+        </div>
+      </div>
+
+      <div className="mt-14 border-t border-border pt-8">
+        <h2 className="font-display text-2xl text-fg">{copy.mediaKit.stats}</h2>
+        <p className="mt-2 text-sm text-muted">{copy.mediaKit.statsAsOf}</p>
+        <div className="mt-6 grid gap-10 md:grid-cols-2">
+          <div>
+            <h3 className="text-sm font-medium tracking-wide text-muted uppercase">
+              {channels.teslatobi.name[locale]}
+            </h3>
+            <ul className="mt-3 space-y-2 text-sm text-fg">
+              <li>
+                {new Intl.NumberFormat(locale === "de" ? "de-DE" : "en-US").format(channelStats.teslatobi.subscribers)}{" "}
+                {copy.mediaKit.teslaSubscribers}
+              </li>
+              <li>
+                {new Intl.NumberFormat(locale === "de" ? "de-DE" : "en-US").format(channelStats.teslatobi.totalViews)}{" "}
+                {copy.mediaKit.teslaViews}
+              </li>
+              <li>
+                {copy.mediaKit.teslaDach}:{" "}
+                {new Intl.NumberFormat(locale === "de" ? "de-DE" : "en-US", {
+                  style: "percent",
+                  minimumFractionDigits: 1,
+                  maximumFractionDigits: 1,
+                }).format(channelStats.teslatobi.dachShare90d)}
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium tracking-wide text-muted uppercase">
+              {channels.techtalktobi.name[locale]}
+            </h3>
+            <ul className="mt-3 space-y-2 text-sm text-fg">
+              <li>
+                {copy.mediaKit.talkViews}:{" "}
+                {new Intl.NumberFormat(locale === "de" ? "de-DE" : "en-US").format(channelStats.techtalktobi.views90d)}
+              </li>
+              <li>
+                {copy.mediaKit.talkWatch}:{" "}
+                {new Intl.NumberFormat(locale === "de" ? "de-DE" : "en-US", {
+                  minimumFractionDigits: 1,
+                  maximumFractionDigits: 1,
+                }).format(channelStats.techtalktobi.watchHours90d)}{" "}
+                {copy.mediaKit.talkHours}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015">
+  <entry>
+    <yt:videoId>abc123XYZ-_</yt:videoId>
+    <title>KI &amp; Roboter: &quot;ChatGPT moment&quot;</title>
+    <published>2026-11-19T12:00:00+00:00</published>
+  </entry>
+  <entry>
+    <yt:videoId>secondId000</yt:videoId>
+    <title>Plain title</title>
+    <published>2026-11-18T08:00:00+00:00</published>
+  </entry>
+</feed>
