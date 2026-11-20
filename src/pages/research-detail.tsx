@@ -15,7 +15,8 @@ import { Button } from "@/components/ui/button";
 import { WaymoTracker } from "@/components/waymo-tracker";
 import {
   getResearch,
-  research,
+  getResearchCategory,
+  relatedResearch,
   type ResearchSlug,
 } from "@/data/research";
 import { useCopy, useLocale } from "@/lib/i18n";
@@ -24,7 +25,8 @@ export function ResearchDetailPage({ slug }: { slug: ResearchSlug }) {
   const locale = useLocale();
   const copy = useCopy();
   const piece = getResearch(slug)!;
-  const related = research.filter((item) => item.slug !== slug).slice(0, 3);
+  const related = relatedResearch(slug, 3);
+  const category = getResearchCategory(piece.category)!;
   const widget = widgetFor(slug);
   const hoistWidget = piece.kind !== "essay";
 
@@ -32,12 +34,12 @@ export function ResearchDetailPage({ slug }: { slug: ResearchSlug }) {
     <article>
       <Container className="py-10 sm:py-16">
         <Link
-          to="/$locale/research"
-          params={{ locale }}
+          to="/$locale/research/topics/$topic"
+          params={{ locale, topic: category.slug }}
           className="inline-flex h-11 items-center gap-2 text-sm text-muted no-underline hover:text-fg"
         >
-          <ArrowLeft className="size-4" />
-          {copy.research.back}
+          <ArrowLeft className="size-4" aria-hidden="true" />
+          {category.label[locale]}
         </Link>
         <div className="mt-8 flex flex-wrap items-center gap-2">
           <Badge>{copy.research.kinds[piece.kind]}</Badge>

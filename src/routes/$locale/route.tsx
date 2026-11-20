@@ -1,7 +1,7 @@
 import {
   createFileRoute,
+  notFound,
   Outlet,
-  redirect,
   useRouterState,
 } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
@@ -11,9 +11,8 @@ import { isCleanPath } from "@/lib/clean-routes";
 
 export const Route = createFileRoute("/$locale")({
   beforeLoad: ({ params }) => {
-    if (!isLocale(params.locale)) {
-      throw redirect({ to: "/$locale", params: { locale: "en" } });
-    }
+    // Unknown first segment (e.g. /nope): real 404, not a soft redirect home.
+    if (!isLocale(params.locale)) throw notFound();
   },
   head: ({ params }) => {
     const de = params.locale === "de";

@@ -9,6 +9,7 @@ import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { gaConfigSnippet, gaLoaderSrc } from "@/data/analytics";
 import { isCleanPath } from "@/lib/clean-routes";
+import { NotFoundPage } from "@/pages/not-found";
 import appCss from "../styles.css?url";
 
 const APP_NAME = "Tobias P. Goebel";
@@ -65,7 +66,7 @@ export const Route = createRootRoute({
     };
   },
   component: RootDocument,
-  notFoundComponent: NotFound,
+  notFoundComponent: NotFoundPage,
 });
 
 function RootDocument() {
@@ -85,34 +86,5 @@ function RootDocument() {
         <Scripts />
       </body>
     </html>
-  );
-}
-
-function NotFound() {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const de = pathname.startsWith("/de");
-
-  return (
-    <main className="mx-auto flex min-h-dvh max-w-lg flex-col justify-center gap-4 px-6">
-      <p className="font-mono text-xs tracking-widest text-muted uppercase">
-        404
-      </p>
-      <h1 className="font-display text-4xl leading-tight text-fg">
-        {de ? "Diese Seite gibt es nicht." : "This road is closed."}
-      </h1>
-      <p className="text-muted">
-        {de
-          ? "Unter dieser Adresse liegt keine Seite. Zurück zur Startseite."
-          : "That page is not on this map. Head back to the site."}
-      </p>
-      <p className="flex gap-4 text-sm">
-        <a href="/en" className="text-accent hover:underline">
-          English
-        </a>
-        <a href="/de" className="text-accent hover:underline">
-          Deutsch
-        </a>
-      </p>
-    </main>
   );
 }

@@ -655,6 +655,36 @@ export function researchInCategory(slug: ResearchCategorySlug): ResearchPiece[] 
     .map(({ piece }) => piece);
 }
 
+/** All pieces newest first (same month: later entry in `research` first). */
+export function researchNewestFirst(): ResearchPiece[] {
+  return research
+    .map((piece, index) => ({ piece, index }))
+    .sort((a, b) => b.piece.date.localeCompare(a.piece.date) || b.index - a.index)
+    .map(({ piece }) => piece);
+}
+
+/** The newest `count` pieces (home page "Research" row). */
+export function newestResearch(count = 3): ResearchPiece[] {
+  return researchNewestFirst().slice(0, count);
+}
+
+/**
+ * "More research" under a piece: other pieces from the same topic, newest
+ * first, topped up with the newest pieces from other topics.
+ */
+export function relatedResearch(slug: ResearchSlug, count = 3): ResearchPiece[] {
+  const piece = getResearch(slug);
+  const sameTopic = piece
+    ? researchInCategory(piece.category).filter((item) => item.slug !== slug)
+    : [];
+  const picked = sameTopic.slice(0, count);
+  for (const item of researchNewestFirst()) {
+    if (picked.length >= count) break;
+    if (item.slug !== slug && !picked.includes(item)) picked.push(item);
+  }
+  return picked;
+}
+
 /** Short title used on cards and category tiles. */
 export function researchCardTitle(piece: ResearchPiece, locale: Locale): string {
   return piece.cardTitle?.[locale] ?? piece.title[locale];
