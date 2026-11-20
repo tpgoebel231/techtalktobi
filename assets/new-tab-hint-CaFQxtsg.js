@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-Cx0BB4qO.js";import{n as t}from"./i18n--hZSwizw.js";var n=e(),r={target:`_blank`,rel:`noopener noreferrer`};function i(){let e=t();return(0,n.jsxs)(`span`,{className:`sr-only`,children:[` `,e.newTab]})}export{i as n,r as t};

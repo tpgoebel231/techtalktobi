@@ -1,0 +1,1 @@
+import{t as e}from"./privacy-FLAUL2dL.js";var t=e;export{t as component};
