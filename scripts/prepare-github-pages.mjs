@@ -42,7 +42,7 @@ export function pageOgImage(rest, locale) {
 /** Press headshot (public/images/), used for Person JSON-LD. */
 export const HEADSHOT_URL = `${SITE_ORIGIN}/images/tobias-goebel-headshot-800.jpg`;
 
-/** Privacy text lives at /privacy; /en/privacy and /de/privacy point their canonical there (no redirect). */
+/** English privacy lives at /privacy; /en/privacy is a same-text alias. /de/privacy is the German text. */
 export const PRIVACY_CANONICAL = `${SITE_ORIGIN}/privacy`;
 
 const locales = ["en", "de"];
@@ -218,8 +218,8 @@ export const PAGE_TITLES = {
   about: { en: "Tobias P. Goebel: About · TechTalkTobi", de: "Tobias P. Goebel: Über mich · TechTalkTobi" },
   consulting: { en: "Advisory · TechTalkTobi", de: "Beratung · TechTalkTobi" },
   "media-kit": { en: "Media Kit · TechTalkTobi", de: "Media Kit · TechTalkTobi" },
-  media: { en: "Media · TechTalkTobi", de: "Media · TechTalkTobi" },
-  privacy: { en: "Privacy Policy · TechTalkTobi", de: "Privacy Policy · TechTalkTobi" },
+  media: { en: "Media · TechTalkTobi", de: "Medien · TechTalkTobi" },
+  privacy: { en: "Privacy Policy · TechTalkTobi", de: "Datenschutzhinweise zur Google- und YouTube-API · TechTalkTobi" },
   research: { en: "Research · TechTalkTobi", de: "Recherche · TechTalkTobi" },
 };
 
@@ -243,7 +243,7 @@ export const PAGE_DESCRIPTIONS = {
   },
   privacy: {
     en: "How Tobias Goebel uses Google and YouTube API access on TechTalkTobi to manage his own YouTube channels.",
-    de: "How Tobias Goebel uses Google and YouTube API access on TechTalkTobi to manage his own YouTube channels.",
+    de: "Wie Tobias Goebel den Zugriff auf die Google- und YouTube-API über TechTalkTobi nutzt, um seine eigenen YouTube-Kanäle zu verwalten.",
   },
   research: {
     en: "I dive deeper into the self-driving vehicle industry, analyze the emerging humanoid robotics space, and cover the general Elon Musk ecosystem: AI, AV technologies and regulation, robotaxis, EVs, and more.",
@@ -392,19 +392,21 @@ export function seoForRoute(route, pieces) {
     throw new Error(`prepare-github-pages: no description for ${route}`);
   }
   if (rest === "privacy") {
-    // Same text as /privacy (PR #95 keeps that root route): canonical there,
-    // no redirect, so Search Console indexes one privacy URL.
+    // /en/privacy is the same English text as /privacy: canonical there, no redirect.
+    // /de/privacy is the German translation, so it is canonical for itself.
+    const canonical = locale === "de" ? `${SITE_ORIGIN}/de/privacy` : PRIVACY_CANONICAL;
     return {
       title: pageTitle,
       description: pageDescription,
-      canonical: PRIVACY_CANONICAL,
-      ogUrl: PRIVACY_CANONICAL,
+      canonical,
+      ogUrl: canonical,
       image: DEFAULT_OG_IMAGE,
       type: "website",
       locale: locale === "de" ? "de_DE" : "en_US",
       htmlLang: locale,
       alternates: [
         { hreflang: "en", href: PRIVACY_CANONICAL },
+        { hreflang: "de", href: `${SITE_ORIGIN}/de/privacy` },
         { hreflang: "x-default", href: PRIVACY_CANONICAL },
       ],
     };
@@ -659,6 +661,7 @@ export function privacyRootSeo() {
     htmlLang: "en",
     alternates: [
       { hreflang: "en", href: `${SITE_ORIGIN}/privacy` },
+      { hreflang: "de", href: `${SITE_ORIGIN}/de/privacy` },
       { hreflang: "x-default", href: `${SITE_ORIGIN}/privacy` },
     ],
   };

@@ -38,7 +38,7 @@ test("banner: equal Accept/Decline, localStorage, privacy link, DE + EN, no em d
   assert.match(b, /<Button variant="outline" onClick=\{decline\}>/);
   assert.match(b, /<Button variant="outline" onClick=\{accept\}>/);
   assert.match(b, /localStorage\.setItem\(CONSENT_STORAGE_KEY, choice\)/);
-  assert.match(b, /href="\/privacy"/);
+  assert.match(b, /href=\{privacyPath\(locale\)\}/);
   for (const s of [
     "Accept",
     "Decline",
