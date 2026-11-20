@@ -14,6 +14,7 @@ import {
   cvHref,
   type Video,
 } from "@/data/media";
+import { ChannelStatsGrid } from "@/components/channel-stats-grid";
 import { latestChannelVideos, type FeedVideo } from "@/data/youtube-latest";
 import { useCopy, useLocale } from "@/lib/i18n";
 
@@ -64,6 +65,9 @@ export function MediaPage() {
               {copy.media.cvCta}
             </a>
           </Button>
+        </div>
+        <div className="mt-8">
+          <ChannelStatsGrid heading="h3" />
         </div>
       </section>
 
