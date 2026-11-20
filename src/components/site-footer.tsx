@@ -5,7 +5,7 @@ import { LangSwitcher } from "@/components/lang-switcher";
 import { Mark } from "@/components/mark";
 import { links } from "@/data/media";
 import { useCopy, useLocale } from "@/lib/i18n";
-import { privacyPath } from "@/lib/locale";
+import { impressumPath, privacyPath } from "@/lib/locale";
 
 export function SiteFooter() {
   const locale = useLocale();
@@ -61,6 +61,9 @@ export function SiteFooter() {
           </a>
           <a href={`mailto:${links.email}`} className="text-muted no-underline hover:text-fg">
             {links.email}
+          </a>
+          <a href={impressumPath(locale)} className="text-muted no-underline hover:text-fg">
+            {copy.nav.imprint}
           </a>
           <a href={privacyPath(locale)} className="text-muted no-underline hover:text-fg">
             {copy.nav.privacy}
