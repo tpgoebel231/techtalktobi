@@ -58,6 +58,8 @@ export type ResearchPiece = {
   /** Top-level category on the Research index. */
   category: ResearchCategorySlug;
   date: string;
+  /** Exact publish day (YYYY-MM-DD) when known; Article JSON-LD falls back to `date`. */
+  published?: string;
   image: string;
   title: LocalizedText;
   dek: LocalizedText;
@@ -264,6 +266,7 @@ export const research: ResearchPiece[] = [
     kind: "tool",
     category: "robotics",
     date: "2026-11",
+    published: "2026-11-10",
     image: "/images/research-tesla-gruenheide.jpg",
     noBanner: true,
     // Title/dek from Tobias's dashboard file (Nov 10 2026); EN is a translation.
@@ -286,6 +289,7 @@ export const research: ResearchPiece[] = [
     kind: "tool",
     category: "autonomous-driving",
     date: "2026-11",
+    published: "2026-11-17",
     image: "/images/research-mercedes-mb-drive-assist-pro.jpg",
     noBanner: true,
     // Page title from Interactive Slides / Tobias (Nov 17 2026). Dek from the deck meta description; EN is a translation.
@@ -317,6 +321,7 @@ export const research: ResearchPiece[] = [
     kind: "tool",
     category: "muskonomy",
     date: "2026-11",
+    published: "2026-11-19",
     image: "/images/research-tuev-adac-ev-tests.jpg",
     noBanner: true,
     // Page title from Colleen / Tobias (Nov 19 2026). Dek = card dek (generic TÜV & ADAC framing).

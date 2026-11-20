@@ -149,9 +149,9 @@ test("research SEO uses the piece title, dek, and image; x-default is the /en UR
 test("non-research pages use page deks and route titles; home keeps locale description", async () => {
   const pieces = await loadResearchPieces();
   const about = seoForRoute("/en/about", pieces);
-  assert.equal(about.title, "About · TechTalkTobi");
+  assert.equal(about.title, "Tobias P. Goebel: About · TechTalkTobi");
   assert.equal(about.description, PAGE_DESCRIPTIONS.about.en);
-  assert.equal(about.image, DEFAULT_OG_IMAGE);
+  assert.equal(about.image, `${SITE_ORIGIN}/og/og-about-en.jpg`);
   assert.equal(about.type, "website");
 
   const advisory = seoForRoute("/de/consulting", pieces);
@@ -244,9 +244,9 @@ test("prepare writes unique heads, keeps 404 generic, and preserves Pages extras
   assert.match(deMusk, /property="og:locale" content="de_DE"/);
 
   const about = readFileSync(join(root, "en/about.html"), "utf8");
-  assert.match(about, /<title>About · TechTalkTobi<\/title>/);
+  assert.match(about, /<title>Tobias P\. Goebel: About · TechTalkTobi<\/title>/);
   assert.ok(about.includes(PAGE_DESCRIPTIONS.about.en));
-  assert.match(about, /property="og:image" content="https:\/\/techtalktobi.com\/og.jpg"/);
+  assert.match(about, /property="og:image" content="https:\/\/techtalktobi.com\/og\/og-about-en.jpg"/);
 
   const index = readFileSync(join(root, "index.html"), "utf8");
   assert.equal(index, legacyRedirectHtml("/en"));
@@ -392,8 +392,10 @@ test("Live in Bonn has its own social card; other routes keep og.jpg without twi
   assert.match(tags, /name="twitter:image" content="https:\/\/techtalktobi\.com\/live-in-bonn\/og-live-in-bonn-v2\.jpg"/);
   const ds = seoForRoute("/de/datenschutz", pieces);
   assert.equal(ds.image, DEFAULT_OG_IMAGE);
-  const home = extraHeadTags(seoForRoute("/de", pieces));
-  assert.doesNotMatch(home, /twitter:image|og:image:width/);
+  // Home, about, media and research index have their own cards (seo-structured-data.test.mjs);
+  // other routes keep og.jpg without twitter:image.
+  const advisory = extraHeadTags(seoForRoute("/de/consulting", pieces));
+  assert.doesNotMatch(advisory, /twitter:image|og:image:width/);
 });
 
 test("legacyRedirectHtml points canonical and refresh at the English destination", () => {
@@ -459,7 +461,8 @@ test("canonical routes include locale privacy pages", async () => {
   assert.ok(routes.includes("/de/privacy"));
   const seo = seoForRoute("/en/privacy", pieces);
   assert.equal(seo.title, PAGE_TITLES.privacy.en);
-  assert.equal(seo.canonical, `${SITE_ORIGIN}/en/privacy`);
+  // Same text as /privacy: canonical points there (no redirect).
+  assert.equal(seo.canonical, `${SITE_ORIGIN}/privacy`);
 });
 
 test("root /privacy ships full policy HTML, not a legacy bounce", async () => {
