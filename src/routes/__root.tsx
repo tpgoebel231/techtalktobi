@@ -11,12 +11,13 @@ import { gaConfigSnippet, gaLoaderSrc } from "@/data/analytics";
 import { isCleanPath } from "@/lib/clean-routes";
 import { NotFoundPage } from "@/pages/not-found";
 import appCss from "../styles.css?url";
+import fontsCss from "../fonts.css?url";
 
 const APP_NAME = "Tobias P. Goebel";
 
 export const Route = createRootRoute({
   head: ({ matches }) => {
-    // Clean routes (src/lib/clean-routes.ts) skip GA4 and Google Fonts.
+    // Clean routes (src/lib/clean-routes.ts) skip GA4 and the site fonts.
     const clean = isCleanPath(matches[matches.length - 1]?.pathname);
     return {
     meta: [
@@ -40,16 +41,8 @@ export const Route = createRootRoute({
       ...(clean
         ? []
         : [
-            { rel: "preconnect", href: "https://fonts.googleapis.com" },
-            {
-              rel: "preconnect",
-              href: "https://fonts.gstatic.com",
-              crossOrigin: "anonymous" as const,
-            },
-            {
-              rel: "stylesheet",
-              href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@500;600;700&display=swap",
-            },
+            // Self-hosted fonts (src/fonts.css), no Google Fonts request.
+            { rel: "stylesheet", href: fontsCss },
           ]),
     ],
     scripts: clean

@@ -20,6 +20,7 @@ import {
   type ResearchSlug,
 } from "@/data/research";
 import { useCopy, useLocale } from "@/lib/i18n";
+import { imageSrcSet } from "@/lib/images";
 
 export function ResearchDetailPage({ slug }: { slug: ResearchSlug }) {
   const locale = useLocale();
@@ -62,6 +63,9 @@ export function ResearchDetailPage({ slug }: { slug: ResearchSlug }) {
         <div className="overflow-hidden">
           <img
             src={piece.image}
+            srcSet={imageSrcSet(piece.image)}
+            sizes="100vw"
+            fetchPriority="high"
             alt=""
             className="max-h-80 w-full object-cover"
           />

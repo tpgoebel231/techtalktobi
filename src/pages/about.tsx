@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { imageSrcSet } from "@/lib/images";
 import { Globe, Mail, Youtube } from "lucide-react";
 import { HelgaCall } from "@/components/helga-call";
 import { Container } from "@/components/container";
@@ -50,6 +51,10 @@ export function AboutPage() {
         <div className="lg:col-span-5">
           <img
             src="/images/tobias.jpg"
+            srcSet={imageSrcSet("/images/tobias.jpg")}
+            sizes="(min-width: 1024px) 440px, 100vw"
+            width={400}
+            height={400}
             alt={copy.brand.name}
             className="w-full rounded-xl object-cover"
           />

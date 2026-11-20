@@ -1,0 +1,24 @@
+/*
+ * Self-hosted site fonts (OFL, via @fontsource), replacing the Google Fonts
+ * request: no third-party font call, nothing render-blocking off-site.
+ * Same families and weights as the old Google Fonts URL. Linked only on
+ * non-clean routes (see src/lib/clean-routes.ts), like Google Fonts was.
+ */
+@import "@fontsource/ibm-plex-sans/latin-400.css";
+@import "@fontsource/ibm-plex-sans/latin-ext-400.css";
+@import "@fontsource/ibm-plex-sans/latin-400-italic.css";
+@import "@fontsource/ibm-plex-sans/latin-ext-400-italic.css";
+@import "@fontsource/ibm-plex-sans/latin-500.css";
+@import "@fontsource/ibm-plex-sans/latin-ext-500.css";
+@import "@fontsource/ibm-plex-sans/latin-600.css";
+@import "@fontsource/ibm-plex-sans/latin-ext-600.css";
+@import "@fontsource/ibm-plex-mono/latin-400.css";
+@import "@fontsource/ibm-plex-mono/latin-ext-400.css";
+@import "@fontsource/ibm-plex-mono/latin-500.css";
+@import "@fontsource/ibm-plex-mono/latin-ext-500.css";
+@import "@fontsource/outfit/latin-500.css";
+@import "@fontsource/outfit/latin-ext-500.css";
+@import "@fontsource/outfit/latin-600.css";
+@import "@fontsource/outfit/latin-ext-600.css";
+@import "@fontsource/outfit/latin-700.css";
+@import "@fontsource/outfit/latin-ext-700.css";

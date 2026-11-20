@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { newestResearch } from "@/data/research";
 import { links } from "@/data/media";
 import { useCopy, useLocale } from "@/lib/i18n";
+import { imageSrcSet } from "@/lib/images";
 
 export function HomePage() {
   const locale = useLocale();
@@ -20,6 +21,11 @@ export function HomePage() {
           <div className="lg:col-span-4">
             <img
               src="/images/tobias.jpg"
+              srcSet={imageSrcSet("/images/tobias.jpg")}
+              sizes="(min-width: 1024px) 360px, 384px"
+              width={400}
+              height={400}
+              fetchPriority="high"
               alt={copy.brand.name}
               className="aspect-square w-full max-w-sm rounded-xl object-cover lg:max-w-none"
             />
