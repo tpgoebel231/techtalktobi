@@ -34,7 +34,7 @@ export const impressum: Record<Locale, ImpressumPage> = {
           emailLabel: "E-Mail",
           email: "tobias@techtalktobi.com",
           formHref: "/de/about#contact",
-          formLabel: "Kontaktformular",
+          formLabel: "Weitere Kontaktmöglichkeiten",
         },
       },
       { h2: "Verantwortlich für den Inhalt nach § 18 Abs. 2 Medienstaatsvertrag (MStV)" },
@@ -65,7 +65,7 @@ export const impressum: Record<Locale, ImpressumPage> = {
           emailLabel: "Email",
           email: "tobias@techtalktobi.com",
           formHref: "/en/about#contact",
-          formLabel: "Contact form",
+          formLabel: "More ways to reach me",
         },
       },
       {
