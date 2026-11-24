@@ -27,9 +27,9 @@ test("home shows the three newest pieces", async () => {
     "mercedes-mb-drive-assist-pro",
   ]);
   assert.deepEqual(mod.newestResearch(3, "en").map((p) => p.slug), [
+    "vw-automatisiertes-fahren",
     "tuev-adac-ev-tests",
     "mercedes-mb-drive-assist-pro",
-    "tesla-gruenheide",
   ]);
   assert.deepEqual(mod.newestResearch(3, "de").map((p) => p.slug), newest);
   const dates = mod.researchNewestFirst().map((p) => p.date);
@@ -58,7 +58,7 @@ test("More research prefers the same topic, then the newest pieces", async () =>
   );
   assert.deepEqual(
     mod.relatedResearch("tesla-gruenheide", 3, "en").map((p) => p.slug),
-    ["ai-robotics", "tuev-adac-ev-tests", "mercedes-mb-drive-assist-pro"],
+    ["ai-robotics", "vw-automatisiertes-fahren", "tuev-adac-ev-tests"],
   );
 });
 

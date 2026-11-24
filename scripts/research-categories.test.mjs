@@ -95,15 +95,10 @@ test("category routes are canonical, prerendered, and have their own SEO", async
     }
   }
   assert.throws(() => seoForRoute("/en/research/topics/nope", pieces), /unknown research topic/);
-  // Piece URLs stay where they were, except German-only decks.
-  const deOnly = new Set(["vw-automatisiertes-fahren"]);
+  // Piece URLs stay where they were.
   for (const slug of Object.keys(EXPECTED)) {
     assert.ok(routes.includes(`/de/research/${slug}`));
-    if (deOnly.has(slug)) {
-      assert.ok(!routes.includes(`/en/research/${slug}`), slug);
-    } else {
-      assert.ok(routes.includes(`/en/research/${slug}`));
-    }
+    assert.ok(routes.includes(`/en/research/${slug}`));
   }
 });
 
@@ -124,7 +119,7 @@ test("sitemap lists all six category pages with lastmod and hreflang", () => {
       const loc = `${SITE_ORIGIN}/${locale}/research/topics/${topic}`;
       const block = sitemap.split("<url>").find((chunk) => chunk.includes(`<loc>${loc}</loc>`));
       assert.ok(block, loc);
-      const lastmod = locale === "de" && topic === "autonomous-driving" ? "2026-11-24" : "2026-11-20";
+      const lastmod = topic === "autonomous-driving" ? "2026-11-24" : "2026-11-20";
       assert.ok(block.includes(`<lastmod>${lastmod}</lastmod>`), `${loc} lastmod ${lastmod}`);
       assert.ok(block.includes(`hreflang="de" href="${SITE_ORIGIN}/de/research/topics/${topic}"`));
       assert.ok(block.includes(`hreflang="x-default" href="${SITE_ORIGIN}/en/research/topics/${topic}"`));
@@ -140,7 +135,7 @@ test("bare category URLs bounce to the English pages; existing bounces stay", ()
   assert.equal(LEGACY_PAGE_REDIRECTS["/muskonomy"], "/en/research/muskonomy");
   assert.equal(LEGACY_PAGE_REDIRECTS["/research/tuev-adac-ev-tests"], "/de/research/tuev-adac-ev-tests");
   assert.equal(LEGACY_PAGE_REDIRECTS["/research/vw-automatisiertes-fahren"], "/de/research/vw-automatisiertes-fahren");
-  assert.equal(LEGACY_PAGE_REDIRECTS["/en/research/vw-automatisiertes-fahren"], "/de/research/vw-automatisiertes-fahren");
+  assert.ok(!("/en/research/vw-automatisiertes-fahren" in LEGACY_PAGE_REDIRECTS));
 });
 
 test("German nav label stays Recherche", () => {
