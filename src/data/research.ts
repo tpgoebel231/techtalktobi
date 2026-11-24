@@ -11,6 +11,7 @@ export const RESEARCH_SLUGS = [
   "tesla-gruenheide",
   "mercedes-mb-drive-assist-pro",
   "tuev-adac-ev-tests",
+  "vw-automatisiertes-fahren",
 ] as const;
 
 export type ResearchSlug = (typeof RESEARCH_SLUGS)[number];
@@ -72,6 +73,8 @@ export type ResearchPiece = {
   cardDek?: LocalizedText;
   /** Companion YouTube video, when there is one. */
   videoId?: string;
+  /** Locales this piece is published in. Default: both en and de. */
+  locales?: readonly Locale[];
 };
 
 export const research: ResearchPiece[] = [
@@ -351,6 +354,39 @@ export const research: ResearchPiece[] = [
       { en: "TÜV", de: "TÜV" },
       { en: "ADAC", de: "ADAC" },
       { en: "Tesla", de: "Tesla" },
+    ],
+    paragraphs: [],
+  },
+  {
+    slug: "vw-automatisiertes-fahren",
+    kind: "tool",
+    category: "autonomous-driving",
+    date: "2026-11",
+    published: "2026-11-24",
+    image: "/images/research-vw-automatisiertes-fahren.jpg",
+    noBanner: true,
+    // German only for now. EN title/dek/tags satisfy LocalizedText and are
+    // unpublished mirrors of the German strings until a translation ships.
+    // Title from the deck. Page dek from the deck meta description (without
+    // the trailing Stand date). Card dek from the deck intro, without the
+    // "Recherche mit Stand ..." prefix. COPY-REVIEW.
+    locales: ["de"],
+    title: {
+      en: "VW und automatisiertes Fahren",
+      de: "VW und automatisiertes Fahren",
+    },
+    dek: {
+      en: "Volkswagen Konzern und automatisiertes Fahren (ADAS und ADS): was heute auf deutschen Straßen fährt, welche Technik und Partner dahinterstehen und was bis 2028 kommen soll.",
+      de: "Volkswagen Konzern und automatisiertes Fahren (ADAS und ADS): was heute auf deutschen Straßen fährt, welche Technik und Partner dahinterstehen und was bis 2028 kommen soll.",
+    },
+    cardDek: {
+      en: "Was VW, Audi und Porsche heute bieten, welche Technik und Partner dahinterstehen und was bis 2028 kommen soll",
+      de: "Was VW, Audi und Porsche heute bieten, welche Technik und Partner dahinterstehen und was bis 2028 kommen soll",
+    },
+    tags: [
+      { en: "Volkswagen", de: "Volkswagen" },
+      { en: "ADAS", de: "ADAS" },
+      { en: "ADS", de: "ADS" },
     ],
     paragraphs: [],
   },
@@ -656,39 +692,51 @@ export function isResearchCategorySlug(value: string): value is ResearchCategory
   return RESEARCH_CATEGORY_SLUGS.includes(value as ResearchCategorySlug);
 }
 
+const ALL_RESEARCH_LOCALES: readonly Locale[] = ["en", "de"];
+
+/** Locales this piece is published in (default: both). */
+export function researchPublishedLocales(piece: ResearchPiece): readonly Locale[] {
+  return piece.locales ?? ALL_RESEARCH_LOCALES;
+}
+
+export function isResearchPublished(piece: ResearchPiece, locale: Locale): boolean {
+  return researchPublishedLocales(piece).includes(locale);
+}
+
 /** Pieces in a category, newest first (same month: later entry in `research` first). */
-export function researchInCategory(slug: ResearchCategorySlug): ResearchPiece[] {
+export function researchInCategory(slug: ResearchCategorySlug, locale?: Locale): ResearchPiece[] {
   return research
     .map((piece, index) => ({ piece, index }))
-    .filter(({ piece }) => piece.category === slug)
+    .filter(({ piece }) => piece.category === slug && (!locale || isResearchPublished(piece, locale)))
     .sort((a, b) => b.piece.date.localeCompare(a.piece.date) || b.index - a.index)
     .map(({ piece }) => piece);
 }
 
 /** All pieces newest first (same month: later entry in `research` first). */
-export function researchNewestFirst(): ResearchPiece[] {
+export function researchNewestFirst(locale?: Locale): ResearchPiece[] {
   return research
     .map((piece, index) => ({ piece, index }))
+    .filter(({ piece }) => !locale || isResearchPublished(piece, locale))
     .sort((a, b) => b.piece.date.localeCompare(a.piece.date) || b.index - a.index)
     .map(({ piece }) => piece);
 }
 
 /** The newest `count` pieces (home page "Research" row). */
-export function newestResearch(count = 3): ResearchPiece[] {
-  return researchNewestFirst().slice(0, count);
+export function newestResearch(count = 3, locale?: Locale): ResearchPiece[] {
+  return researchNewestFirst(locale).slice(0, count);
 }
 
 /**
  * "More research" under a piece: other pieces from the same topic, newest
  * first, topped up with the newest pieces from other topics.
  */
-export function relatedResearch(slug: ResearchSlug, count = 3): ResearchPiece[] {
+export function relatedResearch(slug: ResearchSlug, count = 3, locale?: Locale): ResearchPiece[] {
   const piece = getResearch(slug);
   const sameTopic = piece
-    ? researchInCategory(piece.category).filter((item) => item.slug !== slug)
+    ? researchInCategory(piece.category, locale).filter((item) => item.slug !== slug)
     : [];
   const picked = sameTopic.slice(0, count);
-  for (const item of researchNewestFirst()) {
+  for (const item of researchNewestFirst(locale)) {
     if (picked.length >= count) break;
     if (item.slug !== slug && !picked.includes(item)) picked.push(item);
   }
@@ -703,7 +751,7 @@ export function researchCardTitle(piece: ResearchPiece, locale: Locale): string 
 /** Mechanical meta description for a category page: label plus piece titles. */
 export function researchCategoryDescription(slug: ResearchCategorySlug, locale: Locale): string {
   const category = getResearchCategory(slug)!;
-  const titles = researchInCategory(slug).map((piece) => researchCardTitle(piece, locale));
+  const titles = researchInCategory(slug, locale).map((piece) => researchCardTitle(piece, locale));
   return `${category.label[locale]}: ${titles.join(", ")}.`;
 }
 

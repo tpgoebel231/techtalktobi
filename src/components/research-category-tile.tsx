@@ -13,7 +13,7 @@ import { CARD_SIZES, imageSrcSet } from "@/lib/images";
 export function ResearchCategoryTile({ category }: { category: ResearchCategory }) {
   const locale = useLocale();
   const copy = useCopy();
-  const pieces = researchInCategory(category.slug);
+  const pieces = researchInCategory(category.slug, locale);
   const image = getResearch(category.imageFrom)?.image ?? pieces[0]?.image;
   const count = `${pieces.length} ${pieces.length === 1 ? copy.research.pieceSingular : copy.research.piecePlural}`;
 
