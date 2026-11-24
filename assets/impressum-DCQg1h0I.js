@@ -1,0 +1,1 @@
+import{t as e}from"./impressum-BSwcV82E.js";var t=e;export{t as component};
