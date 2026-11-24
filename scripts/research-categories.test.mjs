@@ -28,6 +28,7 @@ const EXPECTED = {
   "fsd-matrix": "autonomous-driving",
   waymo: "autonomous-driving",
   "mercedes-mb-drive-assist-pro": "autonomous-driving",
+  "vw-automatisiertes-fahren": "autonomous-driving",
   "ai-robotics": "robotics",
   "tesla-gruenheide": "robotics",
   muskonomy: "muskonomy",
@@ -94,10 +95,15 @@ test("category routes are canonical, prerendered, and have their own SEO", async
     }
   }
   assert.throws(() => seoForRoute("/en/research/topics/nope", pieces), /unknown research topic/);
-  // Piece URLs stay where they were.
+  // Piece URLs stay where they were, except German-only decks.
+  const deOnly = new Set(["vw-automatisiertes-fahren"]);
   for (const slug of Object.keys(EXPECTED)) {
     assert.ok(routes.includes(`/de/research/${slug}`));
-    assert.ok(routes.includes(`/en/research/${slug}`));
+    if (deOnly.has(slug)) {
+      assert.ok(!routes.includes(`/en/research/${slug}`), slug);
+    } else {
+      assert.ok(routes.includes(`/en/research/${slug}`));
+    }
   }
 });
 
@@ -111,14 +117,15 @@ test("router registers topics as its own route, not the piece-detail $slug", () 
   assert.match(index, /ResearchCategoryTile/);
 });
 
-test("sitemap lists all six category pages with 2026-11-20 lastmod and hreflang", () => {
+test("sitemap lists all six category pages with lastmod and hreflang", () => {
   const sitemap = source("public/sitemap.xml");
   for (const locale of ["en", "de"]) {
     for (const topic of TOPICS) {
       const loc = `${SITE_ORIGIN}/${locale}/research/topics/${topic}`;
       const block = sitemap.split("<url>").find((chunk) => chunk.includes(`<loc>${loc}</loc>`));
       assert.ok(block, loc);
-      assert.match(block, /<lastmod>2026-11-20<\/lastmod>/);
+      const lastmod = locale === "de" && topic === "autonomous-driving" ? "2026-11-24" : "2026-11-20";
+      assert.ok(block.includes(`<lastmod>${lastmod}</lastmod>`), `${loc} lastmod ${lastmod}`);
       assert.ok(block.includes(`hreflang="de" href="${SITE_ORIGIN}/de/research/topics/${topic}"`));
       assert.ok(block.includes(`hreflang="x-default" href="${SITE_ORIGIN}/en/research/topics/${topic}"`));
     }
@@ -132,6 +139,8 @@ test("bare category URLs bounce to the English pages; existing bounces stay", ()
   assert.equal(LEGACY_PAGE_REDIRECTS["/research"], "/en/research");
   assert.equal(LEGACY_PAGE_REDIRECTS["/muskonomy"], "/en/research/muskonomy");
   assert.equal(LEGACY_PAGE_REDIRECTS["/research/tuev-adac-ev-tests"], "/de/research/tuev-adac-ev-tests");
+  assert.equal(LEGACY_PAGE_REDIRECTS["/research/vw-automatisiertes-fahren"], "/de/research/vw-automatisiertes-fahren");
+  assert.equal(LEGACY_PAGE_REDIRECTS["/en/research/vw-automatisiertes-fahren"], "/de/research/vw-automatisiertes-fahren");
 });
 
 test("German nav label stays Recherche", () => {

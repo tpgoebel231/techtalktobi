@@ -12,7 +12,7 @@ export function HomePage() {
   const locale = useLocale();
   const copy = useCopy();
   // Newest three pieces, so new research shows up here without a code edit.
-  const featured = newestResearch(3);
+  const featured = newestResearch(3, locale);
 
   return (
     <>

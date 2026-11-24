@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VW und automatisiertes Fahren · Stand 24.11.2026 · TeslaTobi</title>
+<meta name="description" content="Volkswagen Konzern und automatisiertes Fahren (ADAS und ADS): was heute auf deutschen Straßen fährt, welche Technik und Partner dahinterstehen und was bis 2028 kommen soll. Stand 24.11.2026.">
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://techtalktobi.com/de/research/vw-automatisiertes-fahren">
+<style>
+    /* Inter (OFL), self-hosted variable font; replaces the Google Fonts request. */
+    @font-face{font-family:'Inter';font-style:normal;font-display:swap;font-weight:100 900;src:url(/research/embed/fonts/inter-latin-ext-wght-normal.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+    @font-face{font-family:'Inter';font-style:normal;font-display:swap;font-weight:100 900;src:url(/research/embed/fonts/inter-latin-wght-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  </style>
+<style>
+  :root{
+    --mustard:#DDBB38; --red:#A11D20; --navy:#1F3A5F; --gray:#2C2C2C; --ice:#8FD3FF; --white:#FFFFFF;
+    --glass:rgba(24,33,46,.91);            /* charcoal-navy smoked glass ~91% */
+    --font:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    /* fluid scale: based on the smaller of width/height so 16:9 and phones both work */
+    --u0:min(1vw,1.78vh);                  /* 1 "unit" = 19.2px on 1920x1080 */
+    --u:var(--u0);
+    --pad:clamp(16px,calc(var(--u)*3.2),88px);
+    --radius:clamp(20px,calc(var(--u)*2.1),56px);
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:#15181d;color:var(--white);font-family:var(--font);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{
+    overflow:hidden;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;
+    background:
+      radial-gradient(120% 90% at 85% -10%, rgba(31,58,95,.95) 0%, rgba(31,58,95,0) 60%),
+      radial-gradient(90% 80% at -10% 110%, rgba(31,58,95,.55) 0%, rgba(31,58,95,0) 55%),
+      linear-gradient(160deg,#1c2733 0%, var(--gray) 55%, #1f2226 100%);
+    background-attachment:fixed;
+  }
+  .app{height:100vh;height:100dvh;display:grid;grid-template-rows:auto 1fr auto;padding:var(--pad);padding-bottom:calc(var(--pad)*.7);gap:calc(var(--pad)*.55)}
+
+  /* ---------- top bar ---------- */
+  .topbar{display:grid;grid-template-columns:1fr auto;align-items:end;gap:calc(var(--u)*2);padding-bottom:calc(var(--u)*.9)}
+  body.rec .topbar{padding-bottom:calc(var(--u)*1.1);border-bottom:2px solid rgba(143,211,255,.35)}
+  .kicker{font-size:clamp(10px,calc(var(--u)*.78),20px);font-weight:700;letter-spacing:.22em;color:var(--mustard);text-transform:uppercase;margin-bottom:.45em}
+  .title{font-weight:900;text-transform:uppercase;font-size:clamp(20px,calc(var(--u)*2.15),58px);line-height:1;letter-spacing:-.01em}
+  .title em{font-style:normal;color:var(--mustard)}
+  .intro{margin-top:.6em;font-size:clamp(12px,calc(var(--u)*.95),26px);font-weight:500;color:rgba(255,255,255,.62);max-width:80em;line-height:1.4}
+  .progress{text-align:right;min-width:9em}
+  .count{font-weight:900;font-size:clamp(18px,calc(var(--u)*1.9),52px);font-variant-numeric:tabular-nums;letter-spacing:.02em;line-height:1}
+  .count .cur{color:var(--mustard)} .count .sep,.count .tot{color:rgba(221,187,56,.45)}
+  /* ---- section tabs (folder style, same pattern as the TeslaTobi research pages) ---- */
+  .navrow{display:flex;align-items:flex-end;gap:calc(var(--u)*1);border-bottom:2px solid rgba(143,211,255,.35)}
+  .nav-tabs{display:flex;gap:clamp(4px,calc(var(--u)*.45),12px);overflow-x:auto;overflow-y:hidden;flex:1;min-width:0;scrollbar-width:thin;scrollbar-color:var(--mustard) transparent;-webkit-overflow-scrolling:touch}
+  .nav-tabs::-webkit-scrollbar{height:4px} .nav-tabs::-webkit-scrollbar-thumb{background:var(--mustard);border-radius:9px}
+  .nav-tab{font-family:var(--font);font-weight:900;letter-spacing:.02em;font-size:clamp(12px,calc(var(--u)*.78),21px);line-height:1.1;cursor:pointer;flex-shrink:0;white-space:nowrap;
+           display:flex;align-items:center;gap:.55em;padding:.72em 1.25em .66em;border:0;border-bottom:2px solid transparent;border-radius:.8em .8em 0 0;
+           background:rgba(44,44,44,.7);color:#D1D5DB;transition:background .25s,color .25s,box-shadow .25s}
+  .nav-tab:hover{color:#fff}
+  .nav-tab svg{width:1.15em;height:1.15em;flex-shrink:0;color:var(--mustard)}
+  .nav-tab.on{background:#fff;color:var(--navy);border-bottom-color:var(--mustard);box-shadow:0 -2px 14px rgba(0,0,0,.28)}
+  .nav-tab.on svg{color:var(--navy)}
+  .nav-tab:focus-visible{outline:2px solid var(--mustard);outline-offset:-2px}
+  .nav-tab .short{display:none}
+  .recbtn{font-family:var(--font);font-weight:700;font-size:clamp(11px,calc(var(--u)*.68),18px);cursor:pointer;flex-shrink:0;margin-bottom:.45em;
+          display:flex;align-items:center;gap:.5em;padding:.5em .95em;border-radius:.75em;background:var(--navy);color:#fff;border:1px solid rgba(255,255,255,.2);transition:filter .2s}
+  .recbtn:hover{filter:brightness(1.25)} .recbtn svg{width:1.2em;height:1.2em;color:var(--mustard)}
+  .recbtn:focus-visible{outline:2px solid var(--mustard);outline-offset:2px}
+  /* clean recording mode: hide tab row + helper chrome, keep content, progress, source */
+  body.rec .navrow, body.rec .hint{display:none !important}
+  .exitrec{position:fixed;top:12px;right:12px;z-index:50;display:none;align-items:center;gap:.5em;cursor:pointer;
+           font-family:var(--font);font-weight:900;font-size:clamp(12px,calc(var(--u)*.72),18px);padding:.6em 1.15em;border-radius:999px;
+           background:var(--red);color:#fff;border:2px solid var(--mustard);box-shadow:0 10px 30px rgba(0,0,0,.45);transition:opacity .6s,transform .2s}
+  .exitrec svg{width:1.1em;height:1.1em}
+  .exitrec:hover{transform:scale(1.05);opacity:1 !important}
+  body.rec .exitrec{display:flex} body.rec.recdim .exitrec{opacity:.3}
+  .segs{display:flex;gap:clamp(3px,calc(var(--u)*.3),8px);margin-top:calc(var(--u)*.8);justify-content:flex-end}
+  .seg{width:clamp(14px,calc(var(--u)*2.2),60px);height:clamp(2px,calc(var(--u)*.22),6px);border-radius:3px;background:rgba(221,187,56,.16);transition:background .4s var(--ease);cursor:pointer;position:relative}
+  .seg::after{content:"";position:absolute;inset:-10px -2px}   /* bigger hit area */
+  .seg.done{background:rgba(221,187,56,.6)} .seg.on{background:var(--mustard)}
+
+  /* ---------- stage & slides ---------- */
+  .stage{position:relative;min-height:0}
+  .slide{--u:calc(var(--u0) * var(--fit,1))}  /* --fit is lowered by JS only if a long point would overflow */
+  .slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:calc(var(--u)*2.2);
+         transition:opacity .42s var(--ease),transform .42s var(--ease)}
+  .slide.enter{opacity:0;transform:translateX(calc(var(--u)*2.5))}
+  .slide.enter.back{transform:translateX(calc(var(--u)*-2.5))}
+  .slide.leave{opacity:0;transform:translateX(calc(var(--u)*-2.5))}
+  .slide.leave.back{transform:translateX(calc(var(--u)*2.5))}
+
+  .num{font-weight:800;font-size:clamp(12px,calc(var(--u)*1),26px);letter-spacing:.24em;color:var(--mustard);margin-bottom:.9em;display:flex;align-items:center;gap:.9em}
+  .num::after{content:"";height:2px;width:calc(var(--u)*5);background:rgba(221,187,56,.6)}
+  h1.hl{font-weight:900;text-transform:uppercase;line-height:.98;letter-spacing:-.015em;font-size:clamp(30px,calc(var(--u)*5.6),156px);
+        text-shadow:0 4px 24px rgba(0,0,0,.35);hyphens:manual;overflow-wrap:break-word}
+  h1.hl em{font-style:normal;color:var(--mustard)}
+  h1.hl .nw{white-space:nowrap}
+  .hl-sub{display:block;margin-top:.35em;font-weight:800;text-transform:uppercase;letter-spacing:.04em;font-size:clamp(14px,calc(var(--u)*1.75),48px);color:rgba(255,255,255,.66);line-height:1.15}
+
+  .body{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:calc(var(--u)*1.8);align-items:stretch}
+  .body.nofig{grid-template-columns:minmax(0,1fr);max-width:calc(var(--u)*92)}
+  .panel{background:var(--glass);border:2px solid rgba(143,211,255,.75);border-radius:var(--radius);
+         padding:calc(var(--u)*2.3) calc(var(--u)*2.7);box-shadow:0 18px 50px rgba(0,0,0,.35);
+         backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;align-items:center}
+  .panel p{font-size:clamp(17px,calc(var(--u)*1.95),54px);line-height:1.42;font-weight:500;color:var(--white)}
+
+  /* figure callouts */
+  .figs{display:flex;flex-direction:column;gap:calc(var(--u)*1.2);justify-content:center}
+  .fig{background:rgba(24,33,46,.6);border:2px solid rgba(143,211,255,.28);border-radius:calc(var(--radius)*.75);padding:calc(var(--u)*1.3) calc(var(--u)*1.7)}
+  .big{font-weight:900;color:var(--mustard);font-size:clamp(34px,calc(var(--u)*5.2),140px);line-height:.95;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .big small{font-size:.42em;letter-spacing:0;margin-left:.12em;font-weight:900}
+  .cap{margin-top:.45em;font-size:clamp(12px,calc(var(--u)*1.05),30px);font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.78)}
+  .split{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(var(--u)*.9);margin-top:calc(var(--u)*1.1);padding-top:calc(var(--u)*1.1);border-top:2px solid rgba(143,211,255,.25)}
+  .split .n{font-weight:900;color:var(--mustard);font-size:clamp(22px,calc(var(--u)*2.9),80px);line-height:1}
+  .split .l{font-size:clamp(10px,calc(var(--u)*.85),24px);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.72);margin-top:.35em}
+  /* timeline */
+  .tl{display:flex;flex-direction:column;gap:0}
+  .tl .row{display:grid;grid-template-columns:auto 1fr;gap:calc(var(--u)*1.2);align-items:baseline;padding:calc(var(--u)*.95) 0;border-top:2px solid rgba(143,211,255,.22)}
+  .tl .row:first-child{border-top:none;padding-top:0}
+  .tl .when{font-weight:900;color:var(--mustard);font-size:clamp(18px,calc(var(--u)*2.15),60px);line-height:1;white-space:nowrap;min-width:5.3em}
+  .tl .what{font-size:clamp(12px,calc(var(--u)*1.1),30px);font-weight:600;line-height:1.3;color:rgba(255,255,255,.86)}
+  /* chips / partner trio */
+  .chips{display:flex;flex-wrap:wrap;gap:calc(var(--u)*.7)}
+  .chip{border:2px solid rgba(143,211,255,.5);border-radius:999px;padding:.4em .95em;font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:clamp(11px,calc(var(--u)*1),28px);color:var(--white)}
+  .trio .row{display:grid;grid-template-columns:auto 1fr;gap:calc(var(--u)*1.2);align-items:baseline;padding:calc(var(--u)*.95) 0;border-top:2px solid rgba(143,211,255,.22)}
+  .trio .row:first-child{border-top:none;padding-top:0}
+  .trio .who{font-weight:900;color:var(--mustard);text-transform:uppercase;font-size:clamp(20px,calc(var(--u)*2.4),66px);line-height:1;min-width:6em;letter-spacing:-.01em}
+  .trio .where{font-size:clamp(12px,calc(var(--u)*1.1),30px);font-weight:600;color:rgba(255,255,255,.86);line-height:1.3}
+  .flow{display:flex;align-items:center;gap:.5em;font-weight:900;text-transform:uppercase;color:var(--mustard);font-size:clamp(24px,calc(var(--u)*3.6),100px);line-height:1}
+  .flow .arrow{flex:1;height:2px;background:var(--ice);position:relative;min-width:1em}
+  .flow .arrow::after{content:"";position:absolute;right:-2px;top:50%;width:.28em;height:.28em;border-top:2px solid var(--ice);border-right:2px solid var(--ice);transform:translateY(-50%) rotate(45deg)}
+
+  /* ---------- footer ---------- */
+  .footer{display:flex;justify-content:space-between;align-items:center;gap:1em;font-size:clamp(10px,calc(var(--u)*.8),22px);color:rgba(255,255,255,.5);font-weight:600;letter-spacing:.06em}
+  .footer a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.18);transition:color .2s,border-color .2s}
+  .footer a:hover,.footer a:focus-visible{color:rgba(255,255,255,.9);text-decoration:underline;text-underline-offset:3px;border-bottom-color:transparent;outline:none}
+  .wordmark{font-weight:900;letter-spacing:.24em;color:rgba(255,255,255,.85)}
+  .hint{opacity:.0;transition:opacity .6s} body.showhint .hint{opacity:.7}
+
+  /* ---------- section 2: unfolding comparison table ---------- */
+  .slide.cmpslide{gap:calc(var(--u)*1.2)}
+  .cmpslide h1.hl{font-size:clamp(28px,calc(var(--u)*3.6),100px);display:flex;flex-wrap:wrap;align-items:baseline;column-gap:.6em}
+  .cmpslide .hl-sub{font-size:clamp(14px,calc(var(--u)*1.45),40px);margin-top:.3em;display:inline-block}
+  .cmpwrap{background:var(--glass);border:2px solid rgba(143,211,255,.75);border-radius:var(--radius);
+           padding:calc(var(--u)*1.1) calc(var(--u)*1.6);box-shadow:0 18px 50px rgba(0,0,0,.35);
+           backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+  .cmp{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed;font-size:clamp(13px,calc(var(--u)*1.32),38px);line-height:1.24}
+  .cmp col.c1{width:17%} .cmp col.c2{width:39%} .cmp col.c3{width:44%}
+  .cmp th{text-align:left;font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:.72em;padding:.1em .7em .55em;color:rgba(255,255,255,.6)}
+  .cmp th.nov{color:var(--mustard)}
+  .cmp td{padding:.42em .7em;border-top:2px solid rgba(143,211,255,.2);vertical-align:top;font-weight:500;color:rgba(255,255,255,.82)}
+  .cmp td.k{font-weight:900;text-transform:uppercase;letter-spacing:.02em;color:var(--white);font-size:.9em;padding-top:.6em}
+  .cmp td.nov{color:var(--mustard);font-weight:600}
+  .cmp td.muted{color:rgba(255,255,255,.45);font-style:italic;font-weight:500}
+  .cmp td.muted::before{content:"✕ ";font-style:normal;color:rgba(255,255,255,.35)}
+  .cmp .ln{display:block} .cmp .ln + .ln{margin-top:.18em}
+  .cmp .ln b{font-weight:800}
+  .cmp tr.hide{visibility:hidden}
+  .cmp tr.cur td{background:rgba(221,187,56,.09)}
+  .cmp tr.cur td.k{color:var(--mustard);box-shadow:inset 4px 0 0 var(--mustard)}
+  .cmp tr.cur.anim td{animation:rowIn .45s var(--ease) both}
+  @keyframes rowIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  /* ---------- status badges + legend ---------- */
+  .meta{display:flex;flex-wrap:wrap;align-items:center;gap:.7em 1.3em;margin-bottom:calc(var(--u)*.9)}
+  .meta .num{margin-bottom:0}
+  .badges{display:flex;flex-wrap:wrap;gap:.6em}
+  .badge{display:inline-flex;align-items:center;gap:.55em;font-weight:900;letter-spacing:.12em;text-transform:uppercase;line-height:1.1;
+         font-size:clamp(11px,calc(var(--u)*.95),26px);padding:.42em .95em;border-radius:999px;border:2px solid;white-space:nowrap}
+  .badge::before{content:"";width:.6em;height:.6em;border-radius:50%;flex-shrink:0}
+  .badge .bn{font-weight:600;letter-spacing:.02em;text-transform:none;padding-left:.6em;border-left:1px solid currentColor;opacity:.9}
+  .b-aus{background:var(--mustard);border-color:var(--mustard);color:#1b1b1b}
+  .b-aus::before{background:#1b1b1b}
+  .b-markt{background:transparent;border-color:var(--mustard);color:var(--mustard)}
+  .b-markt::before{border:2px solid var(--mustard);box-sizing:border-box}
+  .b-paid{background:var(--mustard);border-color:var(--mustard);color:#1b1b1b}
+  .b-paid::before{background:#1b1b1b}
+  .b-offen{background:rgba(44,44,44,.6);border-color:rgba(255,255,255,.5);color:rgba(255,255,255,.82)}
+  .b-offen::before{border:2px solid rgba(255,255,255,.6);box-sizing:border-box}
+  .b-prod{background:var(--ice);border-color:var(--ice);color:#12233a}
+  .b-prod::before{background:#12233a;border-radius:2px}
+  .b-test{background:rgba(221,187,56,.08);border-color:var(--mustard);border-style:dashed;color:var(--mustard)}
+  .b-test::before{border:2px dashed var(--mustard);box-sizing:border-box}
+  .b-ang{background:rgba(143,211,255,.08);border-color:var(--ice);color:#fff}
+  .b-ang::before{border:2px solid var(--ice);box-sizing:border-box}
+  .b-ber,.b-nicht{background:rgba(44,44,44,.65);border-color:rgba(255,255,255,.38);border-style:dashed;color:rgba(255,255,255,.66);font-style:italic}
+  .b-ber::before{border:2px dashed rgba(255,255,255,.55);box-sizing:border-box}
+  .b-nicht::before{content:"✕";width:auto;height:auto;border-radius:0;font-style:normal;font-size:.95em;line-height:1}
+  .legend{display:flex;flex-wrap:wrap;align-items:center;gap:.5em .7em;margin-top:.7em;font-size:clamp(9px,calc(var(--u)*.78),21px)}
+  .legend .lg-t{font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-right:.2em}
+  .legend .badge{font-size:inherit;padding:.32em .8em}
+  .chipcap{font-size:clamp(11px,calc(var(--u)*.9),26px);font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.7em}
+  .fig.note p{font-size:clamp(13px,calc(var(--u)*1.12),30px);line-height:1.38;font-weight:500;color:rgba(255,255,255,.82)}
+  .fig.stats .split{margin-top:0;padding-top:0;border-top:none}
+  /* ---------- section 3: roadmap (rows unfold one per click) ---------- */
+  .road{display:flex;flex-direction:column}
+  .road .rcap{font-size:clamp(11px,calc(var(--u)*.9),26px);font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.6em}
+  .road .row{display:grid;grid-template-columns:auto 1fr;gap:calc(var(--u)*1);align-items:baseline;padding:calc(var(--u)*.42) calc(var(--u)*.8);border-top:2px solid rgba(143,211,255,.18);border-radius:.4em}
+  .road .row:first-of-type{border-top:none}
+  .road .when{font-weight:900;color:rgba(221,187,56,.62);font-size:clamp(15px,calc(var(--u)*1.5),42px);line-height:1;white-space:nowrap;min-width:5.6em}
+  .road .what{font-size:clamp(12px,calc(var(--u)*1.08),30px);font-weight:600;line-height:1.28;color:rgba(255,255,255,.66);display:flex;align-items:baseline;gap:.55em}
+  .road .sd{display:inline-block;width:.62em;height:.62em;border-radius:50%;flex-shrink:0;transform:translateY(.05em)}
+  .sd-aus{background:var(--mustard)} .sd-prod{background:var(--ice);border-radius:2px} .sd-test{border:2px dashed var(--mustard)} .sd-ang{border:2px solid var(--ice)} .sd-ber,.sd-nicht{border:2px dashed rgba(255,255,255,.5)}
+  .road .row.hide{visibility:hidden}
+  .road .row.cur{background:rgba(221,187,56,.1);box-shadow:inset 4px 0 0 var(--mustard)}
+  .road .row.cur .when{color:var(--mustard)} .road .row.cur .what{color:#fff}
+  .road .row.ber .what,.road .row.nicht .what{font-style:italic}
+  .app{grid-template-columns:minmax(0,1fr)} .topbar{grid-template-columns:minmax(0,1fr) auto} .topbar>*{min-width:0}
+  .body:has(.road){grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}
+  .footer>span:last-child{white-space:nowrap;flex-shrink:0}
+  .footer a{white-space:nowrap}
+  .copy{font-weight:700;letter-spacing:.06em;color:rgba(255,255,255,.7);margin-right:1.2em}
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 900px), (max-aspect-ratio: 1/1){
+    :root{--u0:min(2.1vw,1.25vh)}
+    body{background-attachment:scroll}
+    body{overflow-y:auto}
+    .app{height:auto;min-height:100dvh}
+    .topbar{grid-template-columns:1fr;gap:12px}
+    .nav-tab{font-size:13px;padding:10px 14px 9px} .nav-tab .long{display:none} .nav-tab .short{display:inline}
+    .recbtn .rlabel{display:none} .recbtn{padding:8px 10px;margin-bottom:5px}
+    body.rec .app{padding-top:58px}
+    .progress{text-align:left;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+    .segs{margin-top:0;justify-content:flex-start;flex:1}
+    .seg{flex:1;width:auto}
+    .stage{min-height:0}
+    .slide{position:relative;inset:auto;justify-content:flex-start;padding-top:6px}
+    .slide.leave{position:absolute;inset:0}
+    .body,.body.nofig{grid-template-columns:1fr}
+    .panel p{font-size:clamp(17px,4.6vw,24px);line-height:1.45}
+    h1.hl{font-size:clamp(28px,8.6vw,64px)}
+    .hl-sub{font-size:clamp(14px,4vw,24px)}
+    .big{font-size:clamp(40px,13vw,90px)}
+    .footer{flex-direction:column;align-items:flex-start;gap:4px}
+    .hint{display:none}
+    .badge{font-size:12px;white-space:normal} .legend{font-size:10px} .road .when{font-size:16px} .road .what{font-size:15px} .body:has(.road){grid-template-columns:minmax(0,1fr)} .road .row.hide{display:none}
+    .app{grid-template-columns:minmax(0,1fr)} .topbar{grid-template-columns:minmax(0,1fr)} .topbar>*{min-width:0}
+    .cmpwrap{padding:14px 16px}
+    .cmp,.cmp tbody,.cmp tr,.cmp td{display:block;width:100%}
+    .cmp colgroup,.cmp thead{display:none}
+    .cmp{font-size:16px}
+    .cmp tr{padding:12px 0;border-top:2px solid rgba(143,211,255,.2)}
+    .cmp tr:first-child{border-top:none}
+    .cmp tr.hide{display:none}
+    .cmp td{border-top:none;padding:4px 10px}
+    .cmp td.k{font-size:15px;padding-top:4px}
+    .cmp td[data-label]::before{display:block;content:attr(data-label);font-style:normal;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:2px}
+    .cmp td.nov[data-label]::before{color:rgba(221,187,56,.75)}
+    .cmp td.muted[data-label]::before{content:attr(data-label)}
+    .cmp tr.cur td{background:none} .cmp tr.cur{background:rgba(221,187,56,.09);border-radius:14px;box-shadow:inset 4px 0 0 var(--mustard)}
+    .cmp tr.cur td.k{box-shadow:none}
+  }
+  @media (prefers-reduced-motion: reduce){ .slide{transition:opacity .2s linear;transform:none!important} }
+</style>
+</head>
+<body>
+<button type="button" class="exitrec" id="exitrec" title="Aufnahmemodus beenden (R / Esc)">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+  Aufnahmemodus beenden
+</button>
+<div class="app">
+  <header class="hdr">
+  <div class="topbar">
+    <div>
+      <div class="kicker" id="kicker">Volkswagen Konzern · Heute auf deutschen Straßen · Stand 24.11.2026</div>
+      <div class="title">VW und <em>automatisiertes Fahren</em></div>
+      <div class="legend" id="legend"></div>
+      <p class="intro" id="intro">Recherche mit Stand 24. November 2026: was VW, Audi und Porsche heute bieten, welche Technik und Partner dahinterstehen und was bis 2028 kommen soll.</p>
+    </div>
+    <div class="progress" aria-live="polite">
+      <div class="count"><span class="cur" id="cur">01</span><span class="sep"> / </span><span class="tot" id="tot">06</span></div>
+      <div class="segs" id="segs"></div>
+    </div>
+  </div>
+  <div class="navrow">
+    <nav class="nav-tabs" id="tabs" aria-label="Abschnitte"></nav>
+    <button type="button" class="recbtn" id="recbtn" title="Blendet Leisten für Videoaufnahme aus">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3z"/></svg>
+      <span class="rlabel">Aufnahmemodus</span>
+    </button>
+  </div>
+  </header>
+
+  <main class="stage" id="stage"></main>
+
+  <footer class="footer">
+    <span id="source"></span>
+    <span class="hint">Klick / → weiter · ← zurück · Pos1 / Ende · 1 bis 3 Abschnitt · R Aufnahmemodus · F Vollbild</span>
+    <span><span class="copy">© @tpgoebel</span><span class="wordmark">TESLATOBI</span></span>
+  </footer>
+</div>
+
+<script>
+/* =====================================================================
+   DATA - a presentation is a list of SECTIONS, each with a list of STEPS.
+   Each step has a "type" that picks a renderer (see RENDERERS below).
+   URL hash = global 1-based step number across all sections (#1 … #N).
+
+   A "table" section (see section 2) needs no steps: one step per row is
+   generated automatically; step k shows rows 1..k (newest highlighted).
+   Cells may be a string or an array of strings (= one line each).
+   Cells starting with "Gestrichen"/"Komplett gestrichen" are shown muted.
+   ===================================================================== */
+const A = (t,u) => `<a href="${u}" target="_blank" rel="noopener">${t}</a>`;
+const SRC = {
+  vwn99: A('VW Newsroom 9.9.2026','https://www.volkswagen-newsroom.com/de/der-neue-id-polo-international-media-drive-20668/assistenzsysteme-im-ueberblick-und-detail-20672'),
+  matrix: A('VW Ausstattungsmatrix 04-2026','https://www.volkswagen.de/idhub/content/dam/onehub_master/pc/models/fas/Produktverfuegbarkeitsmatrix_04-2026.pdf'),
+  audiq9: A('Audi 29.7.2026','https://www.audi.com/de/medieninformationen/neue-spitze-im-portfolio-der-audi-q9-definiert-raum-und-komfort-als-erster-seiner-art-18145'),
+  audiTech: A('Audi Technology Portal','https://www.audi-technology-portal.de/en/electrics-electronics/driver-assistant-systems/audi-sq9-adaptive-cruise-assist-plus-with-hands-free-driving-ven'),
+  kba: A('KBA 5.11.2026','https://www.kba.de/EN/Themen_en/Typgenehmigung_en/Autonomes_automatisiertes_Fahren_en/Erprobungsgenehmigung_en/dl_liste_erprobungsgenehmigungen_en.pdf'),
+  ndr: A('NDR 15.7.2026','https://www.ndr.de/nachrichten/hamburg/hamburg-moia-startet-testbetrieb-mit-fahrgaesten-in-autonomen-kleinbussen,moia-112.html'),
+  moia1: A('MOIA Testphase','https://ride.moia.io/en/autonomous/test-phase'),
+  moia2: A('MOIA Testing','https://ride.moia.io/en/autonomous/testing'),
+  vwn63: A('VWN 6.3.2026','https://www.porscheholding-newsroom.at/pressemeldungen/detail/2026-03-06-wandel-als-tradition-volkswagen-nutzfahrzeuge-feiert-den-70-geburtstag-des-hauptwerks-hannover'),
+  mbl: A('Mobileye Q3-Call 29.10.2026','https://ir.mobileye.com/static-files/4a154810-26f7-4f00-8e29-43321f024c4a'),
+  china: A('VW Group China 22.7.2026','https://www.volkswagengroupchina.com.cn/en/news/c9c47e2a-95e2-4754-ac86-e4e9d0216f7c'),
+  qcom: A('VW/Qualcomm 8.1.2026','https://www.volkswagen-group.com/en/press-releases/volkswagen-group-and-qualcomm-sign-letter-of-intent-to-power-next-generation-driving-experiences-20061'),
+  nvda: A('Nvidia 21.10.2026','https://nvidianews.nvidia.com/news/european-mobility-leaders-build-safe-vehicles-and-robotaxi-fleets-on-nvidia-hyperion'),
+  bosch: A('VW 2.7.2026','https://www.volkswagen-group.com/en/articles/bosch-and-cariad-deliver-level-2-driving-system-for-the-mass-market-and-conclude-collaboration-in-the-automated-driving-alliance-20509'),
+  valeo: A('VW/Valeo/Mobileye 25.3.2025','https://www.volkswagen-group.com/de/pressemitteilungen/volkswagen-konzern-kooperiert-mit-valeo-und-mobileye-zur-verbesserung-der-fahrerassistenzsysteme-in-zukuenftigen-mqb-fahrzeugen-19130'),
+  uber: A('MOIA 8.4.2026','https://www.moia.io/en-US/news/moia-america-to-deploy-autonomous-vehicles-on-Uber-platform-los-angeles'),
+  beep: A('MOIA 24.9.2026','https://www.moia.io/en-US/news/moia-america-welcomes-first-riders-in-autonomous-id-buzz-with-beep'),
+  rq3: A('Rivian Q3, 29.10.2026','https://rivian.com/newsroom/article/rivian-releases-third-quarter-2026-financial-results'),
+  tenq: A('Rivian 10-Q','https://www.sec.gov/Archives/edgar/data/1874178/000187417826000066/rivn-20260930.htm'),
+  q9radar: A('Audi Q9-Funkakte 1.10.2026','https://emea-dam.audi.com/adobe/assets/urn:aaid:aem:ea1d586f-3190-4439-9558-e5c35667e0c6/original/as/q9-radar-sensors-for-assistance-systems-2027.pdf'),
+  e3: A('Audi E³ 1.2, 18.3.2024','https://www.audi.com/de/medieninformationen/neue-audi-elektronikarchitektur-e3-12-macht-vorsprung-durch-technik-erlebbar-15925'),
+  rvtech: A('VW RV Tech','https://www.volkswagen-group.com/en/press-releases/one-year-after-its-founding-joint-venture-between-volkswagen-group-and-rivian-shows-strong-progress-19980'),
+  canaccord: A('Canaccord 12.8.2026','https://www.investing.com/news/transcripts/mobileye-at-canaccord-growth-conference-eyeing-highervalue-products-93CH-4855627'),
+  porsche: A('Porsche Hilfeseite Drive Assist Macan','https://ask.porsche.com/de/de-DE/drive-assist-macan-electric/'),
+  electrive: A('Automobilwoche/dpa 23.10.2026 (via electrive)','https://www.electrive.com/2026/10/23/vw-centralising-adas-development-under-audis-leadership/')
+};
+const Q = (...xs) => 'Quellen: ' + xs.join(' · ');
+const SECTIONS = [
+  {
+    id:'heute', label:'Heute auf deutschen Straßen', tab:'1. Heute auf deutschen Straßen (Klick-für-Klick)', tabShort:'1. Heute', icon:'car',
+    kicker:'Volkswagen Konzern · Heute auf deutschen Straßen · Stand 24.11.2026',
+    source:Q(SRC.vwn99, SRC.audiq9, SRC.kba, SRC.ndr),
+    steps:[
+      { type:'point', status:[['aus','']], source:Q(SRC.vwn99, SRC.matrix),
+        hl:'VW <em>Travel Assist</em>', sub:'(SAE Level 2, Hände am Lenkrad)',
+        text:'Travel Assist und Connected Travel Assist übernehmen Spur, Abstand und Tempo, setzen erkannte Tempolimits um und fahren vorausschauend bei Kurven und Kreisverkehren. Auf mehrspurigen Autobahnen gibt es den assistierten Spurwechsel per Blinker; der Fahrer muss dabei mitlenken. Die Connected-Version nutzt zusätzlich Car2X- und Schwarmdaten.',
+        figs:[ {kind:'big', value:'L2', cap:'SAE Level, hands-on'},
+               {kind:'chips', cap:'Modelle, unter anderem', items:['Golf','Passat','Tiguan','T-Roc','Tayron','ID.-Modelle','ID. Polo']} ] },
+      { type:'point', status:[['aus','']], source:Q(SRC.vwn99, SRC.audiq9),
+        hl:'<em>Parken</em> und <em>Nothalt</em>', sub:'(Park Assist Plus/Pro, Emergency Assist)',
+        text:'Park Assist Plus und Pro übernehmen Lenken, Gas und Bremse. Die Pro-Version merkt sich die letzten 50 Meter mit bis zu 5 Manövern und parkt per App von außerhalb, solange man in der Nähe des Fahrzeugs bleibt. Emergency Assist hält das Auto an, wenn der Fahrer nicht mehr reagiert, möglichst auf dem rechten Streifen oder dem Standstreifen.',
+        figs:[ {kind:'big', value:'50<small>m</small>', cap:'Memory (Pro), bis 5 Manöver'},
+               {kind:'chips', items:['Remote-Parken per App','Nothalt bei Fahrer-Inaktivität']} ] },
+      { type:'point', status:[['aus','']], source:Q('Audi-Medien', SRC.porsche),
+        hl:'<em>Audi</em> und <em>Porsche</em>', sub:'(Level 2, Hände am Lenkrad)',
+        text:'Audi bietet den Adaptive Cruise Assist, Porsche InnoDrive und Drive Assist. Alle arbeiten nach Level 2, die Hände bleiben am Lenkrad. Der Macan Electric beherrscht zusätzlich den automatisierten Spurwechsel.',
+        figs:[ {kind:'trio', rows:[['Audi','Adaptive Cruise Assist'],['Porsche','InnoDrive, Drive Assist. Macan Electric mit automatisiertem Spurwechsel']]} ] },
+      { type:'point', status:[['markt','November 2026, DE/USA/Kanada']], source:Q(SRC.audiq9, SRC.audiTech, SRC.rq3),
+        hl:'Audi Q9: <em>Hände weg</em> vom Lenkrad', sub:'(adaptiver Fahrassistent plus, weiter Level 2)',
+        text:'Das erste Hands-off-System im Konzern, es bleibt Level 2. Auf freigegebenen Autobahnabschnitten bis 130 km/h, eine Kamera an der Lenksäule überwacht den Blick. Sensoren: Front-Langstreckenradar, Seitenradar, Frontkamera, Geodaten. Bestellbar seit Ende Juli 2026. Laut Audi starten Marktstart und Auslieferung im November 2026 in Deutschland, den USA und Kanada.',
+        figs:[ {kind:'stats', rows:[['130 km/h','Hands-off bis, freigegebene Autobahn'],['108.400 Euro','Einstieg DE, Q9 TDI 220 kW']]},
+               {kind:'note', cap:'Zum Vergleich, nicht als VW-Funktion', text:'Rivian bietet in den USA und Kanada mit Autonomy+ bereits Universal Hands-Free (Level 2, Augen bleiben auf der Straße, laut Rivian rund 3,5 Millionen Meilen). Rivian verkauft in Europa nicht, und dieser Stack ist nicht Teil des Joint Ventures mit VW.'} ] },
+      { type:'point', status:[['nicht','Serien-Level-3']], source:Q(SRC.kba),
+        hl:'Kein <em>Level 3</em> in Serie', sub:'(VW, Audi, Porsche)',
+        text:'VW, Audi und Porsche haben kein Level-3-System in Serie. Laut KBA-Liste mit Stand 5.11.2026 hat Audi Erprobungsgenehmigungen für Level 3 und VW für Level 4. Das gilt nur für Testfahrzeuge.',
+        figs:[ {kind:'trio', rows:[['Audi','KBA-Erprobung Level 3'],['VW','KBA-Erprobung Level 4']]},
+               {kind:'chips', items:['Nur Testfahrzeuge']} ] },
+      { type:'point', status:[['test','mit Sicherheitsfahrer'],['nicht','fahrerlos']], source:Q(SRC.ndr, SRC.moia1, SRC.moia2),
+        hl:'MOIA <em>Hamburg</em>', sub:'(ID. Buzz AD im Ridepooling, Testbetrieb)',
+        text:'Seit 15.7.2026 können ausgewählte, registrierte Fahrgäste kostenlos mitfahren, in einem festgelegten Gebiet in Teilen von Winterhude, Barmbek und Wandsbek. Bis zu 10 Fahrzeuge, immer mit Sicherheitsfahrer, Start über ein Jahr später als geplant. Für fahrerlosen Regelbetrieb fehlt die AFGBV-Betriebserlaubnis. Fahrerlos bis Ende 2026 ist laut NDR unwahrscheinlich.',
+        figs:[ {kind:'big', value:'10', cap:'Fahrzeuge, bis zu (früher 25 genannt)'},
+               {kind:'chips', cap:'Festgelegtes Gebiet, in Teilen von', items:['Winterhude','Barmbek','Wandsbek']} ] }
+    ]
+  }
+  ,{
+    id:'technik', label:'Technik und Partner', tab:'2. Technik und Partner (Klick-für-Klick)', tabShort:'2. Technik', icon:'cpu',
+    kicker:'Volkswagen Konzern · Technik und Partner · Stand 24.11.2026',
+    source:Q(SRC.mbl, SRC.china, SRC.qcom, SRC.nvda),
+    steps:[
+      { type:'point', status:[['aus','Europa']], source:Q(SRC.vwn99, SRC.audiTech),
+        hl:'Heute: <em>Kamera</em> und <em>Radar</em>', sub:'(Serie in Europa)',
+        text:'Die heutige Serie in Europa arbeitet mit Kamera und Radar, dazu wo ausgestattet Car2X. Wer den aktuellen Travel Assist zuliefert, ist nicht offengelegt; Mobileye ist langjähriger Kamerapartner des Konzerns, ohne modellgenaue Stückliste.',
+        figs:[ {kind:'chips', cap:'Sensorik', items:['Kamera','Radar','Car2X']},
+               {kind:'big', value:'Offen', cap:'Zulieferer Travel Assist'} ] },
+      { type:'point', status:[['markt','November 2026, DE/USA/Kanada']], source:Q(SRC.audiTech, SRC.q9radar, SRC.e3),
+        hl:'Audi Q9: <em>wer liefert?</em>', sub:'(Hands-off-Assistent, nicht Mobileye SuperVision)',
+        text:'Beim Q9-Hands-off sind die Radare belegt: vorn Bosch (Typen FR5CUEC und F5CP42), seitlich Hella/Forvia (RS5.3 und RS5.5), laut Audi-Funkakte zum Q9 vom 1.10.2026. Die Softwaregeneration kommt von Cariad, modellspezifisch von Audi appliziert. Unbenannt bleiben Frontkamera, Fahrerüberwachungskamera, die Geodatenquelle und der Hersteller des Assistenzrechners HCP2. Das Q9-System ist nicht Mobileye SuperVision.',
+        figs:[ {kind:'chips', cap:'Q9-Radare, belegt', items:['Bosch FR5CUEC','Bosch F5CP42','Hella RS5.3','Hella RS5.5']},
+               {kind:'chips', cap:'Weiter unbenannt', items:['Frontkamera','Fahrerüberwachung','Karten','HCP2-Rechner']} ] },
+      { type:'point', status:[['test','mit Sicherheitsfahrer'],['nicht','fahrerlos']], source:Q(SRC.ndr, SRC.moia1, SRC.moia2, SRC.vwn63, SRC.mbl),
+        hl:'ID. Buzz AD: <em>Mobileye Drive</em>', sub:'(ausgelegt für Level 4 in einem festgelegten Gebiet)',
+        text:'Das Fahrsystem ist Mobileye Drive, ausgelegt für Level 4 in einem festgelegten Gebiet. Der Fahrgastbetrieb in Hamburg ist ein Test mit Sicherheitsfahrer: in Teilen von Winterhude, Barmbek und Wandsbek, seit 15.7.2026 kostenlos für ausgewählte, registrierte Fahrgäste, mit bis zu 10 Fahrzeugen.',
+        figs:[ {kind:'stats', rows:[['13','Kameras'],['9','Lidar'],['5','Radare']]},
+               {kind:'trio', rows:[['MOIA','Betrieb, App, Flotte, Leitstelle'],['VWN','VW Nutzfahrzeuge baut']]} ] },
+      { type:'point', status:[['prod','laut VW China seit Q3 2026']], source:Q(SRC.china),
+        hl:'China: <em>CARIZON</em>', sub:'(mit Horizon Robotics)',
+        text:'In China arbeitet CARIZON von VW China mit Horizon Robotics. Laut VW Group China (22.7.2026) ist ein L2++-System mit Urban-NOA seit dem dritten Quartal 2026 in Serie und soll 2026 über sieben neue NEV-Modelle ausgerollt werden. Es läuft auf dem Chip C7H. Unabhängige Nachweise einzelner Kundenauslieferungen liegen nicht vor.',
+        figs:[ {kind:'big', value:'Q3<small>2026</small>', cap:'Laut VW China, Serie seit'},
+               {kind:'chips', items:['L2++','Urban-NOA','Chip C7H']} ] },
+      { type:'point', status:[['ang','ID. EVERY1 2027']], source:Q(SRC.tenq, SRC.rq3, SRC.rvtech),
+        hl:'<em>RV Tech</em> mit Rivian', sub:'(Elektronik- und Softwarearchitektur, nicht Rivians Autonomie-Stack)',
+        text:'Seit November 2024 gibt es das Joint Venture Rivian and Volkswagen Group Technologies, kurz RV Tech. Es entwickelt eine zonale Elektronik- und Softwarearchitektur für Elektroautos im Westen, nicht Rivians Autonomie-Stack (kein Autonomy+, kein RAP1). Am 29.10.2026 hat Rivian Elemente des Rivian Assistant, einer Sprach-KI, in das JV lizenziert. Zuerst kommt die Architektur 2027 im ID. EVERY1, später in SSP.',
+        figs:[ {kind:'timeline', rows:[['Nov. 2024','Start RV Tech'],['29.10.2026','Lizenz Rivian Assistant'],['2027','Zuerst im ID. EVERY1'],['Später','SSP']]} ] },
+      { type:'point', status:[['paid','1 Mrd. $ am 7.10.2026'],['offen','460 Mio. $, fällig zum VW-Serienstart mit RV Tech, spätestens 3.1.2028']], source:Q(SRC.tenq),
+        hl:'RV Tech: das <em>Geld</em>', sub:'(laut Rivian 10-Q)',
+        text:'Ein Kredit über 1 Milliarde Dollar wurde am 7.10.2026 ausgezahlt. Offen sind 460 Millionen Dollar Eigenkapital, fällig zum früheren Zeitpunkt von VW-Serienstart mit RV-Tech-Hardware und -Software oder dem 3. Januar 2028. Der 2024 vereinbarte Rahmen liegt bei bis zu 5,8 Milliarden Dollar.',
+        figs:[ {kind:'big', value:'5,8<small>Mrd. $</small>', cap:'Rahmen, bis zu'},
+               {kind:'timeline', rows:[['7.10.2026','1 Mrd. $ Kredit ausgezahlt'],['3.1.2028','460 Mio. $ Eigenkapital, spätestens']]} ] },
+      { type:'point', status:[['ang','']], source:Q(SRC.qcom),
+        hl:'Chips von <em>Qualcomm</em>', sub:'(Absichtserklärung 8.1.2026)',
+        text:'Am 8.1.2026 haben VW und Qualcomm eine Absichtserklärung geschlossen. Ab 2027 soll Snapdragon Cockpit zum Einsatz kommen.',
+        figs:[ {kind:'big', value:'2027', cap:'Snapdragon Cockpit ab'} ] },
+      { type:'point', status:[['ang','bereits gezeigt, 21.10.2026']], source:Q(SRC.nvda),
+        hl:'<em>Nvidia</em> Hyperion', sub:'(GTC Berlin, 21.10.2026)',
+        text:'Auf der GTC in Berlin wurde die Plattform des ID. Buzz AD mit NVIDIA Hyperion als Rechner- und Sensorarchitektur gezeigt. Das ist eine Plattform-Demo und kein Ersatz für Mobileye.',
+        figs:[ {kind:'chips', items:['Rechnerarchitektur','Sensorarchitektur']},
+               {kind:'big', value:'Demo', cap:'Kein Ersatz für Mobileye'} ] }
+    ]
+  }
+  ,{
+    id:'ausblick', label:'Was kommen soll', tab:'3. Was kommen soll (Klick-für-Klick)', tabShort:'3. Ausblick', icon:'road', roadmap:true,
+    kicker:'Volkswagen Konzern · Was kommen soll · Stand 24.11.2026',
+    source:Q(SRC.bosch, SRC.mbl, SRC.valeo, SRC.uber, SRC.beep),
+    steps:[
+      { type:'point', status:[['test','Orlando, mit Operator'],['nicht','fahrerlos'],['nicht','Uber LA']], dot:'nicht', source:Q(SRC.uber, SRC.beep),
+        when:'Ende 2026', short:'USA: Uber LA, Start nicht belegt',
+        hl:'USA: <em>MOIA America</em>', sub:'(Los Angeles, Austin, Orlando)',
+        text:'MOIA America, früher VW ADMT, testet in Los Angeles, Austin und Orlando. In Orlando läuft seit 24.9.2026 ein Testbetrieb mit Beep: nur eingeladene Fahrgäste, Buchung über die Beep-App, Operator an Bord. Den Start mit Uber in Los Angeles hat MOIA America am 8.4.2026 für Ende 2026 angekündigt, bis 24.11.2026 ist er nicht belegt.' },
+      { type:'point', status:[['ang','']], source:Q(SRC.canaccord, SRC.mbl),
+        when:'Q1 2027', short:'Mobileye SuperVision: Porsche, Audi später 2027',
+        hl:'Mobileye <em>SuperVision</em>', sub:'(L2++, hands-off von A nach B unter Aufsicht)',
+        text:'Mobileye SuperVision fährt hands-off von A nach B, der Fahrer behält die Aufsicht. Der erste Porsche damit kommt im ersten Quartal 2027, Audi folgt später im Jahr 2027.' },
+      { type:'point', status:[['ang',''],['ber','Motiv']], source:Q(SRC.bosch, 'Handelsblatt (Motiv)'),
+        when:'2027', short:'Bosch/CARIAD-Stack im ID. EVERY1',
+        hl:'Bosch und CARIAD: <em>ID. EVERY1</em>', sub:'(KI-Level-2-Stack, später auch hands-off)',
+        text:'Am 2.7.2026 wurde die Allianz von Bosch und CARIAD beendet. Ergebnis ist ein fertiger KI-Stack für Level 2, später auch hands-off. Das erste Auto damit ist 2027 der ID. EVERY1. Motiv laut Handelsblatt: Level 3 zu langsam.' },
+      { type:'point', status:[['prod','Vorserie in Hannover seit März 2026'],['ang','Serie 2027']], dot:'ang', source:Q(SRC.vwn63, SRC.mbl),
+        when:'2027', short:'ID. Buzz AD in Serie',
+        hl:'ID. Buzz AD in <em>Serie</em>', sub:'(Vorserie in Hannover)',
+        text:'Die Vorserie läuft seit März 2026 in Hannover. Für 2026 ist ein Hochlauf auf rund 500 Fahrzeuge geplant, die Serie folgt 2027. Mobileye nannte am 29.10.2026 rund 100 eingesetzte Prototypen.' },
+      { type:'point', status:[['ang','Ziel']], source:Q(SRC.china),
+        when:'H2 2027', short:'China: Level 3 (Ziel)',
+        hl:'China: <em>Level 3</em>', sub:'(Ziel ab zweiter Hälfte 2027)',
+        text:'In China ist Level 3 ab der zweiten Hälfte 2027 das Ziel, so VW Group China am 22.7.2026.' },
+      { type:'point', status:[['ang','']], source:Q(SRC.canaccord, SRC.mbl),
+        when:'H1 2028', short:'Mobileye Chauffeur (Level 3) bei Audi',
+        hl:'Mobileye <em>Chauffeur</em>', sub:'(Level 3 bei Audi)',
+        text:'Mobileye Chauffeur ist ein Level-3-System. Audi soll es in der ersten Hälfte 2028 bekommen.' },
+      { type:'point', status:[['ang','']], source:Q(SRC.valeo, SRC.mbl),
+        when:'2028', short:'Surround ADAS für VW (MQB)',
+        hl:'<em>Surround ADAS</em> für VW', sub:'(Mobileye und Valeo, EyeQ6 High)',
+        text:'Mobileye und Valeo liefern Surround ADAS mit dem Chip EyeQ6 High für Volumenmodelle der Marke VW auf MQB-Basis. Start ist 2028. Das System erlaubt hands-off auf freigegebenen Autobahnabschnitten.' },
+      { type:'point', status:[['ber','']], source:Q('Spiegel 1.10.2026', SRC.electrive),
+        when:'Offen', short:'Zweitpartner Wayve? OneTeam',
+        hl:'Zweiter Partner für <em>CARIAD</em>?', sub:'(Wayve, OneTeam)',
+        text:'Laut Spiegel (1.10.2026) setzt VW als neuen Partner für höhere Automatisierung auf das britische Unternehmen Wayve statt auf Nvidia. Einen unterschriebenen Vertrag haben VW, CARIAD und Wayve öffentlich nicht bestätigt. Unabhängig davon berichteten Automobilwoche und dpa am 23.10.2026 über eine neue Einheit „OneTeam“ unter Audi-Entwicklungsvorstand Rouven Mohr, die die konzernweite ADAS-Entwicklung bündeln soll.' }
+    ]
+  }
+];
+
+/* ---------------- renderers ---------------- */
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pad = n => String(n).padStart(2,'0');
+
+function renderFig(f){
+  switch(f.kind){
+    case 'big': return `<div class="fig"><div class="big">${f.value}</div><div class="cap">${esc(f.cap||'')}</div>${
+        f.split?`<div class="split">${f.split.map(([n,l])=>`<div><div class="n">${esc(n)}</div><div class="l">${esc(l)}</div></div>`).join('')}</div>`:''}</div>`;
+    case 'chips': return `<div class="fig">${f.cap?`<div class="chipcap">${esc(f.cap)}</div>`:''}<div class="chips">${f.items.map(i=>`<span class="chip">${esc(i)}</span>`).join('')}</div></div>`;
+    case 'flow': return `<div class="fig"><div class="flow"><span>${esc(f.from)}</span><span class="arrow"></span><span>${esc(f.to)}</span></div></div>`;
+    case 'timeline': return `<div class="fig tl">${f.rows.map(([w,t])=>`<div class="row"><div class="when">${esc(w)}</div><div class="what">${esc(t)}</div></div>`).join('')}</div>`;
+    case 'note': return `<div class="fig note"><div class="chipcap">${esc(f.cap||'')}</div><p>${esc(f.text)}</p></div>`;
+    case 'stats': return `<div class="fig stats"><div class="split" style="grid-template-columns:repeat(${f.rows.length},1fr)">${f.rows.map(([n,l])=>`<div><div class="n">${esc(n)}</div><div class="l">${esc(l)}</div></div>`).join('')}</div></div>`;
+    case 'roadmap': return `<div class="fig road"><div class="rcap">Fahrplan</div>${f.rows.map((r,i)=>`<div class="row ${r.dot}${i>f.cur?' hide':''}${i===f.cur?' cur':''}"><div class="when">${esc(r.when)}</div><div class="what"><span class="sd sd-${r.dot}"></span><span>${esc(r.short)}</span></div></div>`).join('')}</div>`;
+    case 'trio': return `<div class="fig trio">${f.rows.map(([w,t])=>`<div class="row"><div class="who">${esc(w)}</div><div class="where">${esc(t)}</div></div>`).join('')}</div>`;
+  }
+  return '';
+}
+
+const STATUS = {aus:'Ausgeliefert', markt:'Marktstart', paid:'Ausgezahlt', offen:'Offen', prod:'In Produktion', test:'Testbetrieb', ang:'Angekündigt', ber:'Nur berichtet', nicht:'Nicht gestartet'};
+const badge = (k,note) => `<span class="badge b-${k}"><span class="bl">${STATUS[k]}</span>${note?`<span class="bn">${esc(note)}</span>`:''}</span>`;
+const badges = st => st && st.length ? `<div class="badges">${st.map(([k,n])=>badge(k,n)).join('')}</div>` : '';
+document.getElementById('legend').innerHTML = '<span class="lg-t">Status</span>' + ['aus','prod','test','ang','ber','nicht'].map(k=>badge(k,'')).join('');
+
+const RENDERERS = {
+  point(step, ctx){
+    if (ctx.section.roadmap) step.figs = [{kind:'roadmap', cur:ctx.local-1, rows:ctx.section.steps.map(s=>({when:s.when, short:s.short, dot:s.dot||s.status[0][0]}))}];
+    const figs = step.figs && step.figs.length;
+    return `<div><div class="meta"><div class="num">PUNKT ${pad(ctx.local)}</div>${badges(step.status)}</div>
+      <h1 class="hl">${step.hl}${step.sub?`<span class="hl-sub">${esc(step.sub)}</span>`:''}</h1></div>
+      <div class="body${figs?'':' nofig'}">
+        <div class="panel"><p>${esc(step.text)}</p></div>
+        ${figs?`<div class="figs">${step.figs.map(renderFig).join('')}</div>`:''}
+      </div>`;
+  },
+  /* section 2: all rows are laid out from the start (layout never jumps),
+     rows after the current one are hidden → table "unfolds" row by row */
+  compare(step, ctx){
+    const t = ctx.section.table, cls=['k','okt','nov'];
+    const cell = (c,ci) => {
+      const lines = Array.isArray(c) ? c : [c];
+      const muted = ci>0 && /^(komplett )?gestrichen/i.test(lines[0]);
+      const html = Array.isArray(c)
+        ? lines.map(l=>{const m=l.match(/^([^:]{1,40}):\s(.*)$/); return `<span class="ln">${m?`<b>${esc(m[1])}:</b> ${esc(m[2])}`:esc(l)}</span>`;}).join('')
+        : esc(c);
+      return `<td class="${cls[ci]}${muted?' muted':''}"${ci?` data-label="${esc(t.cols[ci])}"`:''}>${html}</td>`;
+    };
+    return `<div><h1 class="hl"><span>${t.headline}</span>${t.sub?`<span class="hl-sub">${esc(t.sub)}</span>`:''}</h1></div>
+      <div class="cmpwrap panel-like"><table class="cmp">
+        <colgroup><col class="c1"><col class="c2"><col class="c3"></colgroup>
+        <thead><tr>${t.cols.map((c,i)=>`<th class="${cls[i]}">${esc(c)}</th>`).join('')}</tr></thead>
+        <tbody>${ctx.section.rows.map((r,i)=>`<tr class="${i>step.upto?'hide':''}${i===step.upto?' cur':''}">${r.map(cell).join('')}</tr>`).join('')}</tbody>
+      </table></div>`;
+  }
+};
+
+/* ---------------- flatten sections → global step list ---------------- */
+const FLAT = [];
+SECTIONS.forEach((sec, si) => {
+  if (!sec.steps && sec.rows) sec.steps = sec.rows.map((_,i)=>({type:'compare', upto:i}));
+  sec.steps.forEach((st, li) => FLAT.push({step:st, section:sec, si, local:li+1, localTotal:sec.steps.length}));
+});
+
+/* ---------------- navigation ---------------- */
+const stage = document.getElementById('stage');
+let idx = -1, busy = null;
+
+function clampIdx(i){ return Math.max(0, Math.min(FLAT.length-1, i)); }
+function fromHash(){ const n = parseInt((location.hash||'').replace('#',''),10); return isNaN(n)?0:clampIdx(n-1); }
+
+function updateChrome(){
+  const it = FLAT[idx], sec = it.section;
+  document.getElementById('cur').textContent = pad(it.local);
+  document.getElementById('tot').textContent = pad(it.localTotal);
+  document.getElementById('kicker').textContent = sec.kicker || '';
+  document.getElementById('source').innerHTML = it.step.source || sec.source || '';
+  document.querySelectorAll('#tabs .nav-tab').forEach((t,k)=>{ const on = k===it.si; t.classList.toggle('on',on); t.setAttribute('aria-current', on?'true':'false'); });
+  document.getElementById('intro').style.display = it.si===0 ? '' : 'none';
+  const segs = document.getElementById('segs'); segs.innerHTML='';
+  const base = idx - it.local + 1;
+  for(let k=0;k<it.localTotal;k++){
+    const s=document.createElement('div');
+    s.className='seg'+(k+1<it.local?' done':'')+(k+1===it.local?' on':'');
+    s.title=(it.step.type==='compare'?'Zeile ':'Punkt ')+(k+1);
+    s.addEventListener('click',e=>{e.stopPropagation();go(base+k);});
+    segs.appendChild(s);
+  }
+  document.title = `${pad(it.local)}/${pad(it.localTotal)} · VW und automatisiertes Fahren · TeslaTobi`;
+}
+
+function go(i, opts={}){
+  i = clampIdx(i);
+  if (i === idx) return;
+  const back = i < idx;
+  const it = FLAT[i];
+  const old0 = stage.querySelector('.slide:not(.leave)');
+  if (old0 && !opts.instant && idx>=0 && it.step.type==='compare' && FLAT[idx].section===it.section){
+    // same table: just reveal / hide rows, no slide transition
+    old0.querySelectorAll('.cmp tbody tr').forEach((tr,k)=>{
+      tr.classList.toggle('hide', k>it.step.upto);
+      tr.classList.toggle('cur', k===it.step.upto);
+      tr.classList.toggle('anim', k===it.step.upto && !back);
+    });
+    idx = i; updateChrome();
+    const h = '#'+(i+1); if (location.hash !== h) history.replaceState(null,'',h);
+    return;
+  }
+  const el = document.createElement('section');
+  el.className = 'slide' + (opts.instant ? '' : ' enter' + (back?' back':''));
+  el.innerHTML = RENDERERS[it.step.type](it.step, it);
+  if (it.step.type==='compare') el.classList.add('cmpslide');
+  const old = stage.querySelector('.slide:not(.leave)');
+  if (old && !opts.instant){
+    old.classList.add('leave'); if(back) old.classList.add('back');
+    setTimeout(()=>old.remove(), 450);
+  } else if (old) old.remove();
+  stage.appendChild(el);
+  if (!opts.instant){ void el.offsetWidth; requestAnimationFrame(()=>el.classList.remove('enter','back')); }
+  idx = i;
+  fit(el);
+  updateChrome();
+  const h = '#'+(i+1);
+  if (location.hash !== h) history.replaceState(null,'',h);
+}
+/* shrink a slide slightly (never below 78%; tables 60%) if it does not fit the stage - desktop only */
+function fit(el){
+  el.style.setProperty('--fit',1);
+  if (getComputedStyle(el).position!=='absolute') return;
+  const limit = stage.clientHeight - 8;
+  const h = () => { let lo=Infinity, hi=0; el.querySelectorAll('.meta,.num,.hl,.body,.panel,.cmpwrap').forEach(n=>{const b=n.getBoundingClientRect(); lo=Math.min(lo,b.top); hi=Math.max(hi,b.bottom);}); return hi-lo; };
+  const min = el.classList.contains('cmpslide') ? .6 : .78;
+  let f=1; while (h() > limit && f > min){ f -= .03; el.style.setProperty('--fit', f.toFixed(2)); }
+}
+window.addEventListener('resize', ()=>{ const el=stage.querySelector('.slide:not(.leave)'); if(el) fit(el); });
+const next = () => go(idx+1), prev = () => go(idx-1);
+/* section tabs + number keys (1 = section 1, 2 = section 2, …) */
+const SEC_START = SECTIONS.map(sec => FLAT.findIndex(f => f.section===sec));
+const goSection = k => { if (k>=0 && k<SECTIONS.length) go(SEC_START[k]); };
+const ICONS = {
+  car:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17h14M6 17v2M18 17v2M4 13l2-5h12l2 5v4H4z"/><circle cx="8" cy="14.5" r=".6"/><circle cx="16" cy="14.5" r=".6"/></svg>',
+  cpu:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg>',
+  road:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="1.5"/><circle cx="14" cy="12" r="1.5"/><circle cx="18" cy="18" r="1.5"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>',
+  doc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>',
+  compare:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16M6 9h3M15 9h3M6 13h3M15 13h3"/></svg>'
+};
+function switchTab(k){ goSection(k); }
+SECTIONS.forEach((sec,k)=>{
+  const b=document.createElement('button'); b.type='button'; b.className='nav-tab'; b.id='tab-btn-'+sec.id; b.title=sec.label;
+  b.innerHTML=(ICONS[sec.icon]||'')+`<span class="long">${esc(sec.tab||sec.label)}</span><span class="short">${esc(sec.tabShort||sec.tab||sec.label)}</span>`;
+  b.addEventListener('click',e=>{ e.stopPropagation(); switchTab(k); b.blur(); });
+  document.getElementById('tabs').appendChild(b);
+});
+/* clean recording mode (R / Esc): hides tab row + helper chrome for video */
+let isRecordingMode=false, recDimTimer=null;
+function toggleRecordingMode(force){
+  isRecordingMode = typeof force==='boolean' ? force : !isRecordingMode;
+  document.body.classList.toggle('rec', isRecordingMode);
+  document.body.classList.remove('recdim'); clearTimeout(recDimTimer);
+  if (isRecordingMode) recDimTimer=setTimeout(()=>document.body.classList.add('recdim'), 3000);  // exit button fades so it barely shows on video
+  const el=stage.querySelector('.slide:not(.leave)'); if(el) fit(el);
+}
+['recbtn','exitrec'].forEach(id=>document.getElementById(id).addEventListener('click',e=>{ e.stopPropagation(); toggleRecordingMode(); e.currentTarget.blur(); }));
+
+document.addEventListener('keydown', e=>{
+  if (e.metaKey||e.ctrlKey||e.altKey) return;
+  switch(e.key){
+    case 'ArrowRight': case ' ': case 'PageDown': case 'ArrowDown': case 'Enter': e.preventDefault(); next(); break;
+    case 'ArrowLeft': case 'PageUp': case 'Backspace': case 'ArrowUp': e.preventDefault(); prev(); break;
+    case 'Home': e.preventDefault(); go(0); break;
+    case 'End': e.preventDefault(); go(FLAT.length-1); break;
+    case 'f': case 'F': e.preventDefault(); toggleFS(); break;
+    case 'r': case 'R': e.preventDefault(); toggleRecordingMode(); break;
+    case 'Escape': if (isRecordingMode) toggleRecordingMode(false); break;
+    default: if (/^[1-9]$/.test(e.key)) { e.preventDefault(); goSection(+e.key-1); }
+  }
+});
+let touchX=null, touchY=null, swiped=false;
+document.addEventListener('touchstart',e=>{touchX=e.touches[0].clientX;touchY=e.touches[0].clientY;swiped=false;},{passive:true});
+document.addEventListener('touchend',e=>{
+  if(touchX===null) return;
+  const dx=e.changedTouches[0].clientX-touchX, dy=e.changedTouches[0].clientY-touchY;
+  if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)*1.3){ swiped=true; dx<0?next():prev(); }
+  touchX=null;
+},{passive:true});
+document.addEventListener('click', e=>{ if(e.target.closest('a,button')) return; if(swiped){swiped=false;return;} if(window.getSelection().toString()) return; next(); });
+window.addEventListener('hashchange', ()=>go(fromHash()));
+
+function toggleFS(){
+  const d=document, el=d.documentElement;
+  if(!(d.fullscreenElement||d.webkitFullscreenElement)) (el.requestFullscreen||el.webkitRequestFullscreen).call(el);
+  else (d.exitFullscreen||d.webkitExitFullscreen).call(d);
+}
+
+go(fromHash(), {instant:true});
+document.body.classList.add('showhint'); setTimeout(()=>document.body.classList.remove('showhint'), 4000);
+</script>
+</body>
+</html>

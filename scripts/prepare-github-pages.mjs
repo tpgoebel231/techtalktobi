@@ -123,6 +123,8 @@ export const LEGACY_PAGE_REDIRECTS = {
   "/research/tesla-gruenheide": "/de/research/tesla-gruenheide",
   "/research/mercedes-mb-drive-assist-pro": "/de/research/mercedes-mb-drive-assist-pro",
   "/research/tuev-adac-ev-tests": "/de/research/tuev-adac-ev-tests",
+  "/research/vw-automatisiertes-fahren": "/de/research/vw-automatisiertes-fahren",
+  "/en/research/vw-automatisiertes-fahren": "/de/research/vw-automatisiertes-fahren",
   // Bare category URLs follow /research (English index).
   "/research/topics": "/en/research",
   "/research/topics/autonomous-driving": "/en/research/topics/autonomous-driving",
@@ -381,10 +383,25 @@ export function seoForRoute(route, pieces) {
     if (!piece) {
       throw new Error(`prepare-github-pages: unknown research slug ${researchMatch[1]}`);
     }
+    const published = researchModule?.researchPublishedLocales
+      ? researchModule.researchPublishedLocales(piece)
+      : piece.locales ?? locales;
+    if (!published.includes(locale)) {
+      throw new Error(
+        `prepare-github-pages: ${researchMatch[1]} is not published in ${locale}`,
+      );
+    }
     const title = `${piece.title[locale]} · TechTalkTobi`;
     const description = piece.dek[locale];
     const datePublished = piece.published ?? piece.date;
     const lastmod = sitemapLastmod(route);
+    const pieceAlternates =
+      published.length === 1
+        ? published.map((lang) => ({
+            hreflang: lang,
+            href: `${SITE_ORIGIN}/${lang}/research/${piece.slug}`,
+          }))
+        : alternates;
     return {
       title,
       description,
@@ -396,7 +413,7 @@ export function seoForRoute(route, pieces) {
       type: "article",
       locale: locale === "de" ? "de_DE" : "en_US",
       htmlLang: locale,
-      alternates,
+      alternates: pieceAlternates,
     };
   }
 
@@ -619,7 +636,12 @@ export function canonicalRoutes(pieces) {
       routes.push(page ? `/${locale}/${page}` : `/${locale}`);
     }
     for (const piece of pieces) {
-      routes.push(`/${locale}/research/${piece.slug}`);
+      const published = researchModule?.researchPublishedLocales
+        ? researchModule.researchPublishedLocales(piece)
+        : piece.locales ?? locales;
+      if (published.includes(locale)) {
+        routes.push(`/${locale}/research/${piece.slug}`);
+      }
     }
     for (const topic of researchTopicSlugs(pieces)) {
       routes.push(`/${locale}/research/topics/${topic}`);

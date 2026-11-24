@@ -25,6 +25,8 @@ test("Article JSON-LD carries datePublished and dateModified", async () => {
   const pieces = await loadResearchPieces();
   for (const locale of ["en", "de"]) {
     for (const piece of pieces) {
+      const published = piece.locales ?? ["en", "de"];
+      if (!published.includes(locale)) continue;
       const seo = seoForRoute(`/${locale}/research/${piece.slug}`, pieces);
       const page = graph(seo).find((n) => n["@type"] === "Article");
       assert.match(page.datePublished, /^\d{4}-\d{2}(-\d{2})?$/, piece.slug);
@@ -36,6 +38,10 @@ test("Article JSON-LD carries datePublished and dateModified", async () => {
     (n) => n["@type"] === "Article",
   );
   assert.equal(tuev.datePublished, "2026-11-19");
+  const vw = graph(seoForRoute("/de/research/vw-automatisiertes-fahren", pieces)).find(
+    (n) => n["@type"] === "Article",
+  );
+  assert.equal(vw.datePublished, "2026-11-24");
 });
 
 test("Person JSON-LD has image, jobTitle, description and sameAs", async () => {

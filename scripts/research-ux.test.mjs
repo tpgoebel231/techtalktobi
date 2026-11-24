@@ -22,13 +22,19 @@ test("home shows the three newest pieces", async () => {
   const mod = await loadResearchModule();
   const newest = mod.newestResearch(3).map((p) => p.slug);
   assert.deepEqual(newest, [
+    "vw-automatisiertes-fahren",
+    "tuev-adac-ev-tests",
+    "mercedes-mb-drive-assist-pro",
+  ]);
+  assert.deepEqual(mod.newestResearch(3, "en").map((p) => p.slug), [
     "tuev-adac-ev-tests",
     "mercedes-mb-drive-assist-pro",
     "tesla-gruenheide",
   ]);
+  assert.deepEqual(mod.newestResearch(3, "de").map((p) => p.slug), newest);
   const dates = mod.researchNewestFirst().map((p) => p.date);
   assert.deepEqual(dates, [...dates].sort().reverse());
-  assert.match(source("src/pages/home.tsx"), /newestResearch\(3\)/);
+  assert.match(source("src/pages/home.tsx"), /newestResearch\(3, locale\)/);
 });
 
 test("More research prefers the same topic, then the newest pieces", async () => {
@@ -48,6 +54,10 @@ test("More research prefers the same topic, then the newest pieces", async () =>
   }
   assert.deepEqual(
     mod.relatedResearch("tesla-gruenheide", 3).map((p) => p.slug),
+    ["ai-robotics", "vw-automatisiertes-fahren", "tuev-adac-ev-tests"],
+  );
+  assert.deepEqual(
+    mod.relatedResearch("tesla-gruenheide", 3, "en").map((p) => p.slug),
     ["ai-robotics", "tuev-adac-ev-tests", "mercedes-mb-drive-assist-pro"],
   );
 });
@@ -55,7 +65,7 @@ test("More research prefers the same topic, then the newest pieces", async () =>
 test("piece back link goes to its topic page", () => {
   const detail = source("src/pages/research-detail.tsx");
   assert.match(detail, /to="\/\$locale\/research\/topics\/\$topic"/);
-  assert.match(detail, /relatedResearch\(slug, 3\)/);
+  assert.match(detail, /relatedResearch\(slug, 3, locale\)/);
 });
 
 test("internal cards and links open in the same tab", () => {
@@ -64,6 +74,7 @@ test("internal cards and links open in the same tab", () => {
     "src/pages/home.tsx",
     "src/components/tuev-adac-ev-tests-dashboard.tsx",
     "src/components/mb-drive-assist-pro-dashboard.tsx",
+    "src/components/vw-automatisiertes-fahren-dashboard.tsx",
     "src/components/gruenheide-dashboard.tsx",
   ]) {
     const text = source(file);
@@ -84,6 +95,7 @@ test("slide-deck embeds get a phone height and an Open deck button", () => {
   for (const file of [
     "src/components/tuev-adac-ev-tests-dashboard.tsx",
     "src/components/mb-drive-assist-pro-dashboard.tsx",
+    "src/components/vw-automatisiertes-fahren-dashboard.tsx",
   ]) {
     const text = source(file);
     assert.match(text, /className=\{DECK_FRAME_CLASS\}/, file);

@@ -7,6 +7,7 @@ import { FsdPriceChart } from "@/components/fsd-price-chart";
 import { GruenheideDashboard } from "@/components/gruenheide-dashboard";
 import { MbDriveAssistProDashboard } from "@/components/mb-drive-assist-pro-dashboard";
 import { TuevAdacEvTestsDashboard } from "@/components/tuev-adac-ev-tests-dashboard";
+import { VwAutomatisiertesFahrenDashboard } from "@/components/vw-automatisiertes-fahren-dashboard";
 import { MuskonomyMap } from "@/components/muskonomy-map";
 import { ResearchCard } from "@/components/research-card";
 import { RoboticsMap } from "@/components/robotics-map";
@@ -27,7 +28,7 @@ export function ResearchDetailPage({ slug }: { slug: ResearchSlug }) {
   const locale = useLocale();
   const copy = useCopy();
   const piece = getResearch(slug)!;
-  const related = relatedResearch(slug, 3);
+  const related = relatedResearch(slug, 3, locale);
   const category = getResearchCategory(piece.category)!;
   const widget = widgetFor(slug);
   const hoistWidget = piece.kind !== "essay";
@@ -143,6 +144,8 @@ function widgetFor(slug: ResearchSlug) {
       return <MbDriveAssistProDashboard />;
     case "tuev-adac-ev-tests":
       return <TuevAdacEvTestsDashboard />;
+    case "vw-automatisiertes-fahren":
+      return <VwAutomatisiertesFahrenDashboard />;
   }
 }
 

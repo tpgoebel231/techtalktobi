@@ -15,7 +15,7 @@ export function ResearchCategoryPage({ slug }: { slug: ResearchCategorySlug }) {
   const locale = useLocale();
   const copy = useCopy();
   const category = getResearchCategory(slug)!;
-  const pieces = researchInCategory(slug);
+  const pieces = researchInCategory(slug, locale);
   const count = `${pieces.length} ${pieces.length === 1 ? copy.research.pieceSingular : copy.research.piecePlural}`;
 
   return (
