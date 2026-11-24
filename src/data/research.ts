@@ -365,22 +365,19 @@ export const research: ResearchPiece[] = [
     published: "2026-11-24",
     image: "/images/research-vw-automatisiertes-fahren.jpg",
     noBanner: true,
-    // German only for now. EN title/dek/tags satisfy LocalizedText and are
-    // unpublished mirrors of the German strings until a translation ships.
     // Title from the deck. Page dek from the deck meta description (without
-    // the trailing Stand date). Card dek from the deck intro, without the
-    // "Recherche mit Stand ..." prefix. COPY-REVIEW.
-    locales: ["de"],
+    // the trailing as-of date). Card dek from the deck intro, without the
+    // "Research as of ..." / "Recherche mit Stand ..." prefix. COPY-REVIEW.
     title: {
-      en: "VW und automatisiertes Fahren",
+      en: "VW and Automated Driving",
       de: "VW und automatisiertes Fahren",
     },
     dek: {
-      en: "Volkswagen Konzern und automatisiertes Fahren (ADAS und ADS): was heute auf deutschen Straßen fährt, welche Technik und Partner dahinterstehen und was bis 2028 kommen soll.",
+      en: "The Volkswagen Group and automated driving (ADAS and ADS): what is on German roads today, the technology and partners behind it, and what is planned to arrive by 2028.",
       de: "Volkswagen Konzern und automatisiertes Fahren (ADAS und ADS): was heute auf deutschen Straßen fährt, welche Technik und Partner dahinterstehen und was bis 2028 kommen soll.",
     },
     cardDek: {
-      en: "Was VW, Audi und Porsche heute bieten, welche Technik und Partner dahinterstehen und was bis 2028 kommen soll",
+      en: "What VW, Audi, and Porsche offer today, the technology and partners behind it, and what is planned to arrive by 2028",
       de: "Was VW, Audi und Porsche heute bieten, welche Technik und Partner dahinterstehen und was bis 2028 kommen soll",
     },
     tags: [

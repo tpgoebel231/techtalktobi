@@ -124,7 +124,6 @@ export const LEGACY_PAGE_REDIRECTS = {
   "/research/mercedes-mb-drive-assist-pro": "/de/research/mercedes-mb-drive-assist-pro",
   "/research/tuev-adac-ev-tests": "/de/research/tuev-adac-ev-tests",
   "/research/vw-automatisiertes-fahren": "/de/research/vw-automatisiertes-fahren",
-  "/en/research/vw-automatisiertes-fahren": "/de/research/vw-automatisiertes-fahren",
   // Bare category URLs follow /research (English index).
   "/research/topics": "/en/research",
   "/research/topics/autonomous-driving": "/en/research/topics/autonomous-driving",
