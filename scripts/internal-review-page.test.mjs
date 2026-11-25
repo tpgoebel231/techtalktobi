@@ -84,3 +84,22 @@ test("savedLabel names the action and any reactions", () => {
   assert.equal(savedLabel({ action: "", like: false, heart: true }), "Heart");
   assert.equal(savedLabel({ action: "post" }), "Post");
 });
+
+test("submit keeps the current scroll position and does not jump to the banner", () => {
+  assert.match(html, /const scrollY = window\.scrollY;/);
+  assert.match(html, /window\.scrollTo\(0, scrollY\)/);
+  assert.match(html, /list\.style\.minHeight = prevHeight \+ "px"/);
+  assert.match(html, /\$\("pager"\)\.scrollIntoView\(\{ block: "nearest", inline: "nearest" \}\)/);
+  assert.doesNotMatch(html, /\$\("banner"\)\.scrollIntoView/);
+  const submitStart = html.indexOf('$("reviewForm").addEventListener("submit"');
+  const submitEnd = html.indexOf("if (token) load()");
+  assert.ok(submitStart > 0 && submitEnd > submitStart, "submit handler should sit above boot");
+  const submit = html.slice(submitStart, submitEnd);
+  assert.match(submit, /window\.scrollTo\(0, scrollY\)/);
+  assert.doesNotMatch(submit, /scrollTo\(0,\s*0\)/);
+});
+
+test("next and previous still scroll to the top of the new page", () => {
+  assert.match(html, /\$\("prevBtn"\)\.addEventListener\("click", \(\) => \{ if \(page > 0\) \{ page--; render\(\); scrollTo\(0, 0\); \} \}\);/);
+  assert.match(html, /\$\("nextBtn"\)\.addEventListener\("click", \(\) => \{ if \(\(page \+ 1\) \* PER_PAGE < flat\.length\) \{ page\+\+; render\(\); scrollTo\(0, 0\); \} \}\);/);
+});
