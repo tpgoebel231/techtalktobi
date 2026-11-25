@@ -390,16 +390,24 @@
     const btn = $("submitBtn");
     btn.disabled = true;
     banner("info", "Saving...");
+    const scrollY = window.scrollY;
     try {
       const r = await call("POST", "/api/decisions", { batch_id: batch.batch_id, decisions });
       for (const d of r.decisions) { saved.set(d.comment_id, d); clearDraft(d.comment_id); }
+      const list = $("list");
+      const prevHeight = list.offsetHeight;
+      if (prevHeight) list.style.minHeight = prevHeight + "px";
       render();
       banner("ok", "Saved " + r.saved + " decision" + (r.saved === 1 ? "" : "s") + " on page " + (page + 1) + "." + (open ? " " + open + " comment" + (open === 1 ? " is" : "s are") + " still open on this page." : ""));
+      window.scrollTo(0, scrollY);
+      list.style.minHeight = "";
+      window.scrollTo(0, scrollY);
+      $("pager").scrollIntoView({ block: "nearest", inline: "nearest" });
     } catch (err) {
       if (err.message !== "unauthorized") banner("err", "Not saved: " + err.message + ". Your edits are kept on this device; try again.");
+      window.scrollTo(0, scrollY);
     } finally {
       btn.disabled = false;
-      $("banner").scrollIntoView({ block: "nearest" });
     }
   });
 
