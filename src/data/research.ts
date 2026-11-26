@@ -12,6 +12,7 @@ export const RESEARCH_SLUGS = [
   "mercedes-mb-drive-assist-pro",
   "tuev-adac-ev-tests",
   "vw-automatisiertes-fahren",
+  "tesla-sicherheit-model-3-y",
 ] as const;
 
 export type ResearchSlug = (typeof RESEARCH_SLUGS)[number];
@@ -384,6 +385,41 @@ export const research: ResearchPiece[] = [
       { en: "Volkswagen", de: "Volkswagen" },
       { en: "ADAS", de: "ADAS" },
       { en: "ADS", de: "ADS" },
+    ],
+    paragraphs: [],
+  },
+  {
+    slug: "tesla-sicherheit-model-3-y",
+    kind: "tool",
+    category: "muskonomy",
+    date: "2026-11",
+    published: "2026-11-26",
+    image: "/images/research-tesla-sicherheit-model-3-y.jpg",
+    noBanner: true,
+    // Title from the deck. Page dek from the deck meta description (without
+    // the trailing as-of date). Card title from the deck headline, card dek
+    // from the deck intro, without the "Stand November 2026" / "As of
+    // November 2026" suffix. COPY-REVIEW.
+    title: {
+      en: "How Safe Are the Tesla Model 3 and Model Y?",
+      de: "Wie sicher sind Tesla Model 3 und Model Y?",
+    },
+    dek: {
+      en: "Tesla Model 3 and Model Y safety check: Euro NCAP 2025, equipment, Sentry Mode, points of criticism, ADAC, TÜV Report 2027, Vehicle Safety Report, and the safety paradox.",
+      de: "Tesla Model 3 und Model Y im Sicherheits-Check: Euro NCAP 2025, Ausstattung, Wächter-Modus, Kritikpunkte, ADAC, TÜV-Report 2027, Vehicle Safety Report und das Sicherheitsparadoxon.",
+    },
+    cardTitle: {
+      en: "How Safe Is Tesla?",
+      de: "Wie sicher ist Tesla?",
+    },
+    cardDek: {
+      en: "Model 3 Highland and Model Y Juniper: crash tests, equipment, criticism, and statistics",
+      de: "Model 3 Highland und Model Y Juniper: Crashtests, Ausstattung, Kritik und Statistik",
+    },
+    tags: [
+      { en: "Tesla", de: "Tesla" },
+      { en: "Euro NCAP", de: "Euro NCAP" },
+      { en: "TÜV", de: "TÜV" },
     ],
     paragraphs: [],
   },

@@ -103,6 +103,11 @@
       "permanent": true
     },
     {
+      "source": "/research/tesla-sicherheit-model-3-y",
+      "destination": "/de/research/tesla-sicherheit-model-3-y",
+      "permanent": true
+    },
+    {
       "source": "/ai-robotics/Humanoid_Robotics_Stack_May2026.pdf",
       "destination": "/research/Humanoid_Robotics_Stack_May2026.pdf",
       "permanent": true

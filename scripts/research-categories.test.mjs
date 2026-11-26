@@ -34,6 +34,7 @@ const EXPECTED = {
   muskonomy: "muskonomy",
   "tesla-ecosystem": "muskonomy",
   "tuev-adac-ev-tests": "muskonomy",
+  "tesla-sicherheit-model-3-y": "muskonomy",
 };
 
 test("Research intro uses Tobias's wording in both languages, old line is gone", () => {
@@ -119,7 +120,7 @@ test("sitemap lists all six category pages with lastmod and hreflang", () => {
       const loc = `${SITE_ORIGIN}/${locale}/research/topics/${topic}`;
       const block = sitemap.split("<url>").find((chunk) => chunk.includes(`<loc>${loc}</loc>`));
       assert.ok(block, loc);
-      const lastmod = topic === "autonomous-driving" ? "2026-11-24" : "2026-11-20";
+      const lastmod = topic === "autonomous-driving" ? "2026-11-24" : topic === "muskonomy" ? "2026-11-26" : "2026-11-20";
       assert.ok(block.includes(`<lastmod>${lastmod}</lastmod>`), `${loc} lastmod ${lastmod}`);
       assert.ok(block.includes(`hreflang="de" href="${SITE_ORIGIN}/de/research/topics/${topic}"`));
       assert.ok(block.includes(`hreflang="x-default" href="${SITE_ORIGIN}/en/research/topics/${topic}"`));
@@ -136,6 +137,8 @@ test("bare category URLs bounce to the English pages; existing bounces stay", ()
   assert.equal(LEGACY_PAGE_REDIRECTS["/research/tuev-adac-ev-tests"], "/de/research/tuev-adac-ev-tests");
   assert.equal(LEGACY_PAGE_REDIRECTS["/research/vw-automatisiertes-fahren"], "/de/research/vw-automatisiertes-fahren");
   assert.ok(!("/en/research/vw-automatisiertes-fahren" in LEGACY_PAGE_REDIRECTS));
+  assert.equal(LEGACY_PAGE_REDIRECTS["/research/tesla-sicherheit-model-3-y"], "/de/research/tesla-sicherheit-model-3-y");
+  assert.ok(!("/en/research/tesla-sicherheit-model-3-y" in LEGACY_PAGE_REDIRECTS));
 });
 
 test("German nav label stays Recherche", () => {
