@@ -7,6 +7,7 @@ import { FsdPriceChart } from "@/components/fsd-price-chart";
 import { GruenheideDashboard } from "@/components/gruenheide-dashboard";
 import { MbDriveAssistProDashboard } from "@/components/mb-drive-assist-pro-dashboard";
 import { TuevAdacEvTestsDashboard } from "@/components/tuev-adac-ev-tests-dashboard";
+import { TeslaSicherheitModel3YDashboard } from "@/components/tesla-sicherheit-model-3-y-dashboard";
 import { VwAutomatisiertesFahrenDashboard } from "@/components/vw-automatisiertes-fahren-dashboard";
 import { MuskonomyMap } from "@/components/muskonomy-map";
 import { ResearchCard } from "@/components/research-card";
@@ -146,6 +147,8 @@ function widgetFor(slug: ResearchSlug) {
       return <TuevAdacEvTestsDashboard />;
     case "vw-automatisiertes-fahren":
       return <VwAutomatisiertesFahrenDashboard />;
+    case "tesla-sicherheit-model-3-y":
+      return <TeslaSicherheitModel3YDashboard />;
   }
 }
 

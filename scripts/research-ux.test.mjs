@@ -22,14 +22,14 @@ test("home shows the three newest pieces", async () => {
   const mod = await loadResearchModule();
   const newest = mod.newestResearch(3).map((p) => p.slug);
   assert.deepEqual(newest, [
+    "tesla-sicherheit-model-3-y",
     "vw-automatisiertes-fahren",
     "tuev-adac-ev-tests",
-    "mercedes-mb-drive-assist-pro",
   ]);
   assert.deepEqual(mod.newestResearch(3, "en").map((p) => p.slug), [
+    "tesla-sicherheit-model-3-y",
     "vw-automatisiertes-fahren",
     "tuev-adac-ev-tests",
-    "mercedes-mb-drive-assist-pro",
   ]);
   assert.deepEqual(mod.newestResearch(3, "de").map((p) => p.slug), newest);
   const dates = mod.researchNewestFirst().map((p) => p.date);
@@ -54,11 +54,11 @@ test("More research prefers the same topic, then the newest pieces", async () =>
   }
   assert.deepEqual(
     mod.relatedResearch("tesla-gruenheide", 3).map((p) => p.slug),
-    ["ai-robotics", "vw-automatisiertes-fahren", "tuev-adac-ev-tests"],
+    ["ai-robotics", "tesla-sicherheit-model-3-y", "vw-automatisiertes-fahren"],
   );
   assert.deepEqual(
     mod.relatedResearch("tesla-gruenheide", 3, "en").map((p) => p.slug),
-    ["ai-robotics", "vw-automatisiertes-fahren", "tuev-adac-ev-tests"],
+    ["ai-robotics", "tesla-sicherheit-model-3-y", "vw-automatisiertes-fahren"],
   );
 });
 
@@ -75,6 +75,7 @@ test("internal cards and links open in the same tab", () => {
     "src/components/tuev-adac-ev-tests-dashboard.tsx",
     "src/components/mb-drive-assist-pro-dashboard.tsx",
     "src/components/vw-automatisiertes-fahren-dashboard.tsx",
+    "src/components/tesla-sicherheit-model-3-y-dashboard.tsx",
     "src/components/gruenheide-dashboard.tsx",
   ]) {
     const text = source(file);
@@ -96,6 +97,7 @@ test("slide-deck embeds get a phone height and an Open deck button", () => {
     "src/components/tuev-adac-ev-tests-dashboard.tsx",
     "src/components/mb-drive-assist-pro-dashboard.tsx",
     "src/components/vw-automatisiertes-fahren-dashboard.tsx",
+    "src/components/tesla-sicherheit-model-3-y-dashboard.tsx",
   ]) {
     const text = source(file);
     assert.match(text, /className=\{DECK_FRAME_CLASS\}/, file);
